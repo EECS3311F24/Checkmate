@@ -4,3 +4,5 @@
 |                  |         |            |                      |                     |                  |                 |
 |                  |         |            |                      |                     |                  |                 |
 |                  |         |            |                      |                     |                  |                 |
+
+**Discord Chat/Server Invite :** [insert link here]

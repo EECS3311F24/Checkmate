@@ -22,11 +22,11 @@ Checkmate aims to teach beginners, in a more beginner-friendly environment. Begi
 Checkmate is focused on the fun of chess. That it! Other websites focus on other games, causing users to be split between the various games offered by the other websites. Checkmate has other game modes, but these game modes will be chess-focused and fun!
 
 ## **How is it better for casual players?**
-Not everyone want to live and breath chess everyday of their lives! Checkmate does not focus on skill, but on the fun of chess. There won't be major competition between all players on Checkmate. Players are encouraged to play when and how they play. You do not have to feel bad about quitting a game early, losing multiple games in a row, or being out matched every single game!
+Not everyone wants to live and breathe chess every day of their lives! Checkmate does not focus on skill but on the fun of chess. There won't be major competition between all players on Checkmate. Players are encouraged to play when and how they play. You do not have to feel bad about quitting a game early, losing multiple games in a row, or being outmatched every single game!
 
 ## **Why won't the other website support these players?**
 Other players may want to be very competitive. That is always great! Other players may want a quick match against a friend.
 
-chess.com and lichess.org aim to improve the skills of their players. They prefer to have competition and higher tier ranking systems.
+chess.com and lichess.org aim to improve the skills of their players. They prefer to have competition and higher-tier ranking systems.
 
-cardgame.io and boardgamesarena.com aim to provide a variety of games. They prefer to provide as many games as possible, rather then focus on chess itself.
+cardgame.io and boardgamesarena.com aim to provide a variety of games. They prefer to provide as many games as possible, rather than focus on chess itself.

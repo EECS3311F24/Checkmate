@@ -22,6 +22,22 @@ public class User {
         this.email = email;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    protected void setUsername(String username) {
+        this.username = username;
+    }
+
+    protected void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return String.format(

@@ -19,7 +19,26 @@ public class UserService {
         return repository.findAll();
     }
 
-    public User getUser(String username) {
+    public User getUserByUsername(String username) {
         return repository.findByUsername(username);
+    }
+
+    public User getUserByID(String ID) {
+        return repository.findByID(ID);
+    }
+
+    public void addUser(User user) {
+        repository.save(user);
+    }
+
+    public void updateUser(String ID, User newUser) {
+        User user = getUserByID(ID);
+        user.setUsername(newUser.getUsername());
+        user.setEmail(newUser.getEmail());
+        repository.save(user);
+    }
+
+    public void deleteUser(User user) {
+        repository.delete(user);
     }
 }

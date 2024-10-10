@@ -3,9 +3,11 @@ package ca.yorku.checkmate.Controller;
 import ca.yorku.checkmate.Model.User;
 import ca.yorku.checkmate.Model.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -13,8 +15,7 @@ import java.util.List;
  * Controller for user information, providing a rest endpoint
  * that allows looking at all users, or a specific user
  */
-@RestController
-@RequestMapping(path = "api/v1/user")
+@Controller
 public class UserController {
     private final UserService userService;
 
@@ -23,13 +24,57 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @ResponseBody
+    @GetMapping("api/v1/user")
     public List<User> getUsers() {
         return userService.getUsers();
     }
 
-    @GetMapping(params = "username")
-    public User getUsers(String username) {
-        return userService.getUser(username);
+    @ResponseBody
+    @GetMapping(path = "api/v1/user", params = "username")
+    public User getUser(String username) {
+        return userService.getUserByUsername(username);
+    }
+
+    @GetMapping("/signup")
+    public String showSignUpForm(User user) {
+        return "add-user";
+    }
+
+    @PostMapping("/add-user")
+    public String addUser(@Validated User user, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "add-user";
+        }
+        userService.addUser(user);
+        model.addAttribute("username", user.getUsername());
+        return "user";
+    }
+
+    @GetMapping("/edit/{ID}")
+    public String showUpdateForm(@PathVariable("ID") String ID, Model model) {
+        User user = userService.getUserByID(ID);
+
+        if (user == null) return "Error! No user by " + ID;
+
+        model.addAttribute("user", user);
+        return "update-user";
+    }
+
+    @PostMapping("/update/{ID}")
+    public String updateUser(@PathVariable("ID") String ID, @Validated User user, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "update-user";
+        }
+
+        userService.updateUser(ID, user);
+        return "redirect:/";
+    }
+
+    @GetMapping("/delete/{ID}")
+    public String deleteUser(@PathVariable("ID") String ID, Model model) {
+        User user = userService.getUserByID(ID);
+        userService.deleteUser(user);
+        return "redirect:/";
     }
 }

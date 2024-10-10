@@ -1,0 +1,33 @@
+package ca.yorku.checkmate.Model;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+
+import java.util.Date;
+
+/**
+ * User model that represents a simple user
+ */
+public class User {
+    @Id
+    public String ID;
+    @CreatedDate
+    public Date createdOn;
+
+    public String username;
+    public String email;
+
+    public User(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "User[id=%s, username='%s', email='%s', createdOn='%s']",
+                ID, username, email, createdOn
+        );
+    }
+
+}

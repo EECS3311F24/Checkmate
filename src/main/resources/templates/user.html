@@ -6,6 +6,7 @@
 </head>
 <body>
 <p th:text="|${user}|"></p>
+<p><a href="/">Home</a></p>
 <form action="#"
       th:action="@{/edit/{ID}(ID=${user.ID})}"
       th:object="${user}"

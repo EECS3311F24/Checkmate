@@ -10,7 +10,9 @@ No installation required to use Checkmate. Users may create an account or play a
 If you would like to contribute see [#Building](#building).
 
 ## Building
-Install [mongodb](https://www.mongodb.com/docs/manual/installation/) for the platform of your choice. Launch mongodb to start up the database.
+Install [mongodb](https://www.mongodb.com/docs/manual/installation/). Launch mongodb to start up the database service.
+
+Install [java](https://www.oracle.com/java/technologies/downloads/) 17 or later.
 
 Clone the repository and install the maven dependencies.
 

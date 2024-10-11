@@ -1,19 +1,16 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Editing User</title>
+    <title>Search User</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <form action="#"
-      th:action="@{/update/{ID}(ID=${user.ID})}"
+      th:action="search-user"
       th:object="${user}"
       method="post">
     <label for="username">Username</label>
     <input type="text" th:field="*{username}" id="username" placeholder="Username">
     <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
-    <label for="email">Email</label>
-    <input type="text" th:field="*{email}" id="email" placeholder="Email">
-    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-    <input type="submit" value="Update User">
+    <input type="submit" value="Search User">
 </form>
 </html>

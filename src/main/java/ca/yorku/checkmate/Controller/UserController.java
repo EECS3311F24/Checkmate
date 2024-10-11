@@ -25,15 +25,30 @@ public class UserController {
     }
 
     @ResponseBody
-    @GetMapping("api/v1/user")
+    @GetMapping("/api/v1/user")
     public List<User> getUsers() {
         return userService.getUsers();
     }
 
     @ResponseBody
-    @GetMapping(path = "api/v1/user", params = "username")
+    @GetMapping(path = "/api/v1/user", params = "username")
     public User getUser(String username) {
         return userService.getUserByUsername(username);
+    }
+
+    @GetMapping(path = "/search")
+    public String showSearchUserForm(User user) {
+        return "search-user";
+    }
+
+    @PostMapping("/search-user")
+    public String searchUser(@Validated User u, BindingResult result, Model model) {
+        User user = userService.getUserByUsername(u.username);
+        if (result.hasErrors()) {
+            return "search-user";
+        }
+        model.addAttribute("user", user);
+        return "user";
     }
 
     @GetMapping("/signup")
@@ -72,7 +87,7 @@ public class UserController {
     }
 
     @GetMapping("/delete/{ID}")
-    public String deleteUser(@PathVariable("ID") String ID, Model model) {
+    public String deleteUser(@PathVariable("ID") String ID) {
         User user = userService.getUserByID(ID);
         userService.deleteUser(user);
         return "redirect:/";

@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * A user service that is meant to be used to store
- * and get user information from database
+ * and get or edit user information from database
  */
 @Service
 public class UserService {
@@ -27,8 +27,11 @@ public class UserService {
         return repository.findByID(ID);
     }
 
-    public void addUser(User user) {
+    public boolean addUser(User user) {
+        if (getUserByUsername(user.username) != null)
+            return false;
         repository.save(user);
+        return true;
     }
 
     public void updateUser(String ID, User newUser) {

@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Controller for user information, providing a rest endpoint
- * that allows looking at all users, or a specific user
+ * that allows viewing, adding, editing, or deleting users
  */
 @Controller
 public class UserController {
@@ -61,7 +61,7 @@ public class UserController {
         if (result.hasErrors()) {
             return "add-user";
         }
-        userService.addUser(user);
+        if (!userService.addUser(user)) return "Username taken!";
         model.addAttribute("username", user.getUsername());
         return "user";
     }

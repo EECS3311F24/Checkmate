@@ -92,4 +92,15 @@ public class UserController {
         userService.deleteUser(user);
         return "redirect:/";
     }
+
+    @GetMapping("/delete-all")
+    public String deleteAll() {
+        return "delete-all";
+    }
+
+    @PostMapping("/clear-database")
+    public String clearDatabase() {
+        userService.deleteAll();
+        return "redirect:/";
+    }
 }

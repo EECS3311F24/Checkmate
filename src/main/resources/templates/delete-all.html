@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Clear Database?</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p>Would you like to delete all users?</p>
+<p>This will clear the database and is not recoverable!</p>
+<p><a href="/">Home</a></p>
+<form action="#"
+      th:action="clear-database"
+      method="post">
+    <input type="submit" value="Delete All Users!">
+</form>
+</body>
+</html>

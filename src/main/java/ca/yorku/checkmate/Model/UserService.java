@@ -44,4 +44,8 @@ public class UserService {
     public void deleteUser(User user) {
         repository.delete(user);
     }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }

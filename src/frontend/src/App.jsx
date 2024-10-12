@@ -1,12 +1,19 @@
 import './App.css'
-import CheckmateHome from './CheckmateHome'
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import HeaderComponent from './components/HeaderComponent'
 import ListUserComponent from './components/ListUserComponent'
+import SignupComponent from './components/SignupComponent'
 
 function App() {
   return (
     <>
-    <CheckmateHome />
-    <ListUserComponent />
+    <BrowserRouter>
+      <HeaderComponent/>
+      <Routes>
+        <Route path='/users' element = {<ListUserComponent/>}></Route>
+        <Route path='/signup' element = {<SignupComponent/>}></Route>
+      </Routes>
+    </BrowserRouter>
     </>
   )
 }

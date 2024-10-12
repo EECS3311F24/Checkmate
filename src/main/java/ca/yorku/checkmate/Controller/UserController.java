@@ -15,6 +15,7 @@ import java.util.List;
  * Controller for user information, providing a rest endpoint
  * that allows viewing, adding, editing, or deleting users
  */
+@CrossOrigin("*")
 @Controller
 public class UserController {
     private final UserService userService;

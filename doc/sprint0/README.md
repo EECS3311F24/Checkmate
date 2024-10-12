@@ -12,12 +12,21 @@ If you would like to contribute see [#Building](#building).
 ## Building
 Install [mongodb](https://www.mongodb.com/docs/manual/installation/). Launch mongodb to start up the database service.
 
+Install [nodejs and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
 Install [java](https://www.oracle.com/java/technologies/downloads/) 17 or later.
 
 Clone the repository and install the maven dependencies.
 
-Run  	
-`./mvnw spring-boot:run`or directly run the CheckmateApplication to start up the application.
+Run `./mvnw spring-boot:run`or directly run the CheckmateApplication to start up the backend application.
+
+To run the React frontend application use the following commands.
+```
+cd src/frontend/
+npm install
+npm run
+```
+In the console it will display the link to the frontend application
 
 ## Contributing
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change. Features that are not within the focus of Checkmate will not be added!

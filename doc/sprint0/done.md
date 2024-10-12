@@ -1,4 +1,4 @@
-Standard steps towards our definitions of Done:
+Standard steps towards our definition of Done:
 1. Code Completeness:
 All code related to the feature is written, fully functional, and meets the acceptance criteria of the relevant user story.
 2. Code Review:

@@ -1,26 +1,49 @@
-import React, { useState } from 'react'
-import { createUser } from '../services/UserService';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { createUser, getUser, updateUser } from '../services/UserService';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const SignupComponent = () => {
+const UserFormComponent = () => {
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
+
+    const { id } = useParams();
 
     const [errors, setErrors] = useState({
         username: '',
         email: ''
     })
 
+    useEffect(() => {
+        if (id) {
+            getUser(id).then((response) => {
+                setUsername(response.data.username);
+                setEmail(response.data.email);
+            })
+        }
+    }, [id])
+
     const navigator = useNavigate();
+
 
     function saveUser(e) {
         e.preventDefault();
         if (validateForm()) {
             const user = { username, email }
-            createUser(user).then((response) => {
-                console.log(response.data);
-                navigator("/users")
-            })
+            if (id) {
+                updateUser(id, user).then((response) => {
+                    console.log(response.data);
+                    navigator("/users")
+                }).catch(error => {
+                    console.error(error);
+                })
+            } else {
+                createUser(user).then((response) => {
+                    console.log(response.data);
+                    navigator("/users")
+                }).catch(error => {
+                    console.error(error);
+                })
+            }
         }
     }
 
@@ -46,10 +69,18 @@ const SignupComponent = () => {
         return valid;
     }
 
+    function pageTitle() {
+        if (id) {
+            return <h2 className='text-center'>Edit User</h2>
+        } else {
+            return <h2 className='text-center'>Signup</h2>
+        }
+    }
+
     return (
         <div className='container'>
             <div className='card col-md-6 offset-md-3 offset-md-3'>
-                <h2 className='text-center'>Signup</h2>
+                {pageTitle()}
                 <div className='card-body'>
                     <form>
                         <div className='form-group mb-2'>
@@ -86,4 +117,4 @@ const SignupComponent = () => {
     )
 }
 
-export default SignupComponent
+export default UserFormComponent

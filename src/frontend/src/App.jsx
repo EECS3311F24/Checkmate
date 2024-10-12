@@ -2,7 +2,7 @@ import './App.css'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import HeaderComponent from './components/HeaderComponent'
 import ListUserComponent from './components/ListUserComponent'
-import SignupComponent from './components/SignupComponent'
+import UserFormComponent from './components/UserFormComponent'
 
 function App() {
   return (
@@ -11,7 +11,8 @@ function App() {
       <HeaderComponent/>
       <Routes>
         <Route path='/users' element = {<ListUserComponent/>}></Route>
-        <Route path='/signup' element = {<SignupComponent/>}></Route>
+        <Route path='/signup' element = {<UserFormComponent/>}></Route>
+        <Route path='/edit-user/:id' element = {<UserFormComponent/>}></Route>
       </Routes>
     </BrowserRouter>
     </>

@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import { useNavigate } from 'react-router-dom';
 import { listUsers } from '../services/UserService'
 
 const ListUserComponent = () => {
@@ -10,6 +11,13 @@ const ListUserComponent = () => {
             console.error(error);
         })
     }, [])
+
+    const navigator = useNavigate();
+
+    function editUser(id) {
+        navigator(`/edit-user/${id}`)
+    }
+
     return (
         <div className="container text-center">
             <h2>List of Users</h2>
@@ -20,6 +28,7 @@ const ListUserComponent = () => {
                         <th>User username</th>
                         <th>User email</th>
                         <th>User date created</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,6 +39,9 @@ const ListUserComponent = () => {
                                 <td>{user.username}</td>
                                 <td>{user.email}</td>
                                 <td>{user.createdOn}</td>
+                                <td>
+                                    <button className='btn btn-info' onClick={() => editUser(user.id)}>Edit</button>
+                                </td>
                             </tr>
                         )
                     }

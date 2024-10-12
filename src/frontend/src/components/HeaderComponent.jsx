@@ -11,20 +11,6 @@ const HeaderComponent = () => {
                     <Nav.Link href="/users">Users</Nav.Link>
                     <Nav.Link href="/signup">Signup</Nav.Link>
                 </Nav>
-                <Form inline>
-                    <Row>
-                        <Col xs="auto">
-                            <Form.Control
-                                type="text"
-                                placeholder="Search User"
-                                className=" mr-sm-2"
-                            />
-                        </Col>
-                        <Col xs="auto">
-                            <Button type="user">Delete All Users</Button>
-                        </Col>
-                    </Row>
-                </Form>
             </Navbar.Collapse>
         </Navbar>
     )

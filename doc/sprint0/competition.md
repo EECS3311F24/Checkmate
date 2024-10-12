@@ -4,7 +4,7 @@
 |![lichess.org icon](https://lichess1.org/assets/logo/lichess-favicon-32.png) [lichess.org](https://lichess.org)|❌|❌|✅|✅|✅|✅|
 |![cardgames.io icon](https://cardgames.io/shared/images/favicon32.png) [cardgames.io](https://cardgames.io)|✅|✅|❌|❌|✅|✅|
 |![boardgamearena.com](https://x.boardgamearena.net/data/themereleases/241002-1009/img/favicon/favicon-32x32.png) [boardgamearena.com](https://boardgamearena.com)|✅|✅|❌|✅|❌|✅|
-|Checkmate|✅|✅|✅|✅|✅|✅|
+|![Checkmate icon](/src/main/resources/static/images/favicon.png) Checkmate|✅|✅|✅|✅|✅|✅|
 
 ## **How Checkmate is different**
 Checkmate aims to be a more beginner-friendly and casual-focused website that is dedicated to chess! 

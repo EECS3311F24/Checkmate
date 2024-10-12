@@ -1,8 +1,5 @@
-# Checkmate
-<!---
-Include icon and images of website design. Maybe just show concepts for now?
--->
-
+# ![Checkmate icon](/src/main/resources/static/images/favicon.png) Checkmate 
+ 
 Checkmate is a website designed and focused on the beginner and casual players of chess. Checkmate wants players to learn in a friendly environment and not feel frustrated or intimidated by the more competitive sides of chess. Checkmate wants players to have fun playing the game of chess!
 
 ## Installation

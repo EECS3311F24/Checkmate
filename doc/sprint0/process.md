@@ -116,7 +116,7 @@ Additional Updates(Discord chat and voice calls):
 *Note: All the meetings are planned in advance considering everyone’s schedule conflicts. Meetings are held either in-person or via zoom depending on availability of each member.*
 
 
-**6. Next Phase:**
+**5. Next Phase:**
 For the next phase of our project, we have focused on some key areas in our user stories and team organization.
 
 1. Core Gameplay and User Authentification:

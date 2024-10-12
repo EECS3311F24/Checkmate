@@ -24,7 +24,7 @@ To run the React frontend application use the following commands.
 ```
 cd src/frontend/
 npm install
-npm run
+npm run dev
 ```
 In the console it will display the link to the frontend application
 

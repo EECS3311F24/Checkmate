@@ -1,21 +1,29 @@
 import React, {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom';
-import { listUsers } from '../services/UserService'
+import { deleteUser, listUsers } from '../services/UserService'
 
 const ListUserComponent = () => {
     const [users, setUsers] = useState([])
     useEffect(() => {
+        getAllUsers();
+    }, [])
+
+    function getAllUsers() {
         listUsers().then((response) => {
             setUsers(response.data);
         }).catch(error => {
             console.error(error);
         })
-    }, [])
+    }
 
     const navigator = useNavigate();
 
     function editUser(id) {
         navigator(`/edit-user/${id}`)
+    }
+
+    function removeUser(id) {
+        deleteUser(id).then((response) => {getAllUsers()}).catch(error => {console.error(error)})
     }
 
     return (
@@ -41,6 +49,7 @@ const ListUserComponent = () => {
                                 <td>{user.createdOn}</td>
                                 <td>
                                     <button className='btn btn-info' onClick={() => editUser(user.id)}>Edit</button>
+                                    <button className='btn btn-danger' onClick={() => removeUser(user.id)}style={{marginLeft: '10px'}}>Delete</button>
                                 </td>
                             </tr>
                         )

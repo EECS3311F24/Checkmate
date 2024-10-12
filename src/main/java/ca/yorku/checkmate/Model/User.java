@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public class User {
     @Id
-    public String ID;
+    public String id;
     @CreatedDate
     public Date createdOn;
 
@@ -42,7 +42,7 @@ public class User {
     public String toString() {
         return String.format(
                 "User[id=%s, username='%s', email='%s', createdOn='%s']",
-                ID, username, email, createdOn
+                id, username, email, createdOn
         );
     }
 

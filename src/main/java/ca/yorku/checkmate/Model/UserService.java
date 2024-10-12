@@ -23,8 +23,8 @@ public class UserService {
         return repository.findByUsername(username);
     }
 
-    public User getUserByID(String ID) {
-        return repository.findByID(ID);
+    public User getUserById(String id) {
+        return repository.findByid(id);
     }
 
     public boolean addUser(User user) {
@@ -34,8 +34,8 @@ public class UserService {
         return true;
     }
 
-    public void updateUser(String ID, User newUser) {
-        User user = getUserByID(ID);
+    public void updateUser(String id, User newUser) {
+        User user = getUserById(id);
         user.setUsername(newUser.getUsername());
         user.setEmail(newUser.getEmail());
         repository.save(user);

@@ -13,7 +13,9 @@ Install [nodejs and npm](https://docs.npmjs.com/downloading-and-installing-node-
 
 Install [java](https://www.oracle.com/java/technologies/downloads/) 17 or later.
 
-Clone the repository and install the maven dependencies.
+Clone the repository.
+
+Install the maven dependencies `./mvnw install`
 
 Run `./mvnw spring-boot:run`or directly run the CheckmateApplication to start up the backend application.
 

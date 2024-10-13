@@ -25,7 +25,9 @@ cd src/frontend/
 npm install
 npm run dev
 ```
-In the console it will display the link to the frontend application
+If npm install fails try removing both package-lock.json and node_modules directory, and trying again
+
+When running the console it will display the link to the frontend application.
 
 ## Contributing
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change. Features that are not within the focus of Checkmate will not be added!

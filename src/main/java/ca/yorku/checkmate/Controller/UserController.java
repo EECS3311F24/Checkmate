@@ -55,9 +55,9 @@ public class UserController {
      * @return The user associated with the username if it exists.
      */
     @GetMapping(params = "username")
-    public User getUserByUsername(String username) {
-        // TODO user Response Entity?
-        return userService.getUserByUsername(username);
+    public ResponseEntity<User> getUserByUsername(String username) {
+        if (!userService.hasUserByUsername(username)) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(userService.getUserByUsername(username));
     }
 
     /**
@@ -69,7 +69,7 @@ public class UserController {
      */
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        if (!userService.addUser(user)) return new ResponseEntity<>(HttpStatus.CONFLICT);
+        if (!userService.createUser(user)) return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
@@ -86,6 +86,16 @@ public class UserController {
         if (!userService.hasUserById(id)) return createUser(user);
         userService.updateUser(id, user);
         return ResponseEntity.ok(user);
+    }
+
+    //TODO example of Patch, Patch is like update but less info sent
+    @PatchMapping("{id}")
+    public ResponseEntity<User> patchUsername(@PathVariable("id") String id, @RequestBody String username) {
+        if (username == null || username.isEmpty()) return ResponseEntity.badRequest().build();
+        return userService.getUserById(id).map(user -> {
+            userService.patchUserUsername(user, username);
+            return ResponseEntity.ok(user);
+        }).orElse(new ResponseEntity<>(HttpStatus.CONFLICT));
     }
 
     /**

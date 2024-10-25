@@ -35,12 +35,12 @@ public class UserService {
         return repository.existsById(id);
     }
 
-    public boolean hasUserByUsername(User user) {
-        return getUserByUsername(user.username) != null;
+    public boolean hasUserByUsername(String username) {
+        return getUserByUsername(username) != null;
     }
 
-    public boolean addUser(User user) {
-        if (hasUserByUsername(user)) return false;
+    public boolean createUser(User user) {
+        if (hasUserByUsername(user.username)) return false;
         repository.save(user);
         return true;
     }
@@ -51,6 +51,11 @@ public class UserService {
             user.setEmail(newUser.getEmail());
             repository.save(user);
         });
+    }
+
+    public void patchUserUsername(User user, String username) {
+        user.setUsername(username);
+        repository.save(user);
     }
 
     public void deleteUser(User user) {

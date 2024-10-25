@@ -22,4 +22,29 @@ public class ChessBoardService {
     public Optional<ChessBoard> getBoardById(String id) {
         return repository.findById(id);
     }
+
+    public boolean hasUserById(String id) {
+        return repository.existsById(id);
+    }
+
+    public boolean createChessBoard(ChessBoard chessBoard) {
+        // TODO if important info not allowed to duplicate check here first
+        repository.save(chessBoard);
+        return true;
+    }
+
+    public void updateChessBoard(String id, ChessBoard newChessBoard) {
+        getBoardById(id).ifPresent(chessBoard -> {
+            // TODO update information when chess board gets more info.
+            repository.save(chessBoard);
+        });
+    }
+
+    public void deleteUser(ChessBoard chessBoard) {
+        repository.delete(chessBoard);
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }

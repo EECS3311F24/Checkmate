@@ -1,4 +1,4 @@
-package ca.yorku.checkmate.Model;
+package ca.yorku.checkmate.Model.user;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;

@@ -1,7 +1,7 @@
 package ca.yorku.checkmate.Controller;
 
-import ca.yorku.checkmate.Model.User;
-import ca.yorku.checkmate.Model.UserService;
+import ca.yorku.checkmate.Model.user.User;
+import ca.yorku.checkmate.Model.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

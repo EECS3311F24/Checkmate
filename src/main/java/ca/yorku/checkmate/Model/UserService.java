@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A user service that is meant to be used to store
@@ -11,9 +12,12 @@ import java.util.List;
  */
 @Service
 public class UserService {
+    private final UserRepository repository;
 
     @Autowired
-    private UserRepository repository;
+    public UserService(UserRepository repository) {
+        this.repository = repository;
+    }
 
     public List<User> getUsers() {
         return repository.findAll();
@@ -23,12 +27,12 @@ public class UserService {
         return repository.findByUsername(username);
     }
 
-    public User getUserById(String id) {
-        return repository.findByid(id);
+    public Optional<User> getUserById(String id) {
+        return repository.findById(id);
     }
 
     public boolean hasUserById(String id) {
-        return getUserById(id) != null;
+        return getUserById(id).isPresent();
     }
 
     public boolean hasUserByUsername(User user) {
@@ -42,7 +46,9 @@ public class UserService {
     }
 
     public void updateUser(String id, User newUser) {
-        User user = getUserById(id);
+        Optional<User> userOptional = getUserById(id);
+        if (userOptional.isEmpty()) return;
+        User user = userOptional.get();
         user.setUsername(newUser.getUsername());
         user.setEmail(newUser.getEmail());
         repository.save(user);

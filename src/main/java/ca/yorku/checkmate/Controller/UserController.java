@@ -11,8 +11,8 @@ import java.util.List;
 
 /**
  * <p>Endpoint is api/v1/user</p>
- * Controller for user information, providing a rest endpoint
- * that allows viewing, adding, editing, or deleting users
+ * Controller for users, providing a rest endpoint
+ * that allows getting, creating, updating, or deleting users.
  */
 @CrossOrigin("*")
 @RestController
@@ -27,30 +27,30 @@ public class UserController {
 
     /**
      * <p>URL: api/v1/user</p>
-     * Gets all users in database.
-     * @return a List of users.
+     * Gets all users in the database.
+     * @return A list of users.
      */
     @GetMapping
     public List<User> getUsers() {
-        // TODO user Response Entity?
         return userService.getUsers();
     }
 
     /**
      * <p>URL: api/v1/user/{id}<p>
-     * Gets user by id in database.
+     * Gets user by id in the database.
      * @param id The id of the user.
      * @return The user associated with the id if it exists.
      */
     @GetMapping("{id}")
-    public User getUserById(@PathVariable("id") String id) {
-        // TODO user Response Entity?
-        return userService.getUserById(id);
+    public ResponseEntity<User> getUserById(@PathVariable("id") String id) {
+        return userService.getUserById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
      * <p>URL: api/v1/user?username={username}</p>
-     * Gets user by username in database.
+     * Gets user by username in the database.
      * @param username The username of the user.
      * @return The user associated with the username if it exists.
      */
@@ -93,13 +93,14 @@ public class UserController {
      * Delete a user by id in the database.
      * @param id The id of the user.
      * @return A response entity with a message, informing client
-     * with Http status 200.
+     * with Http status 200 if deleted or 404 if not found.
      */
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") String id) {
-        User user = userService.getUserById(id);
-        userService.deleteUser(user);
-        return ResponseEntity.ok("Deleted user " + user + "!");
+        return userService.getUserById(id).map(user -> {
+            userService.deleteUser(user);
+            return ResponseEntity.ok("Deleted user " + user + "!");
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     /**

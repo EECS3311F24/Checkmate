@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * <p>Endpoint is api/v1/user/</p>
+ * <p>Endpoint is api/v1/user</p>
  * Controller for user information, providing a rest endpoint
  * that allows viewing, adding, editing, or deleting users
  */
 @CrossOrigin("*")
 @RestController
-@RequestMapping("api/v1/user/")
+@RequestMapping("api/v1/user")
 public class UserController {
     private final UserService userService;
 
@@ -26,7 +26,7 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/user/</p>
+     * <p>URL: api/v1/user</p>
      * Gets all users in database.
      * @return a List of users.
      */
@@ -61,7 +61,7 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/user/</p>
+     * <p>URL: api/v1/user</p>
      * Create a new user in the database.
      * @param user The user to be created.
      * @return A response entity with user, informing client
@@ -103,7 +103,7 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/user/</p>
+     * <p>URL: api/v1/user</p>
      * Delete all users in the database.
      * @return A response entity with a message, informing client
      * with Http status 200.

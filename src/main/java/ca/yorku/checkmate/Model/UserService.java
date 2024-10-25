@@ -32,7 +32,7 @@ public class UserService {
     }
 
     public boolean hasUserById(String id) {
-        return getUserById(id).isPresent();
+        return repository.existsById(id);
     }
 
     public boolean hasUserByUsername(User user) {
@@ -46,12 +46,11 @@ public class UserService {
     }
 
     public void updateUser(String id, User newUser) {
-        Optional<User> userOptional = getUserById(id);
-        if (userOptional.isEmpty()) return;
-        User user = userOptional.get();
-        user.setUsername(newUser.getUsername());
-        user.setEmail(newUser.getEmail());
-        repository.save(user);
+        getUserById(id).ifPresent(user -> {
+            user.setUsername(newUser.getUsername());
+            user.setEmail(newUser.getEmail());
+            repository.save(user);
+        });
     }
 
     public void deleteUser(User user) {

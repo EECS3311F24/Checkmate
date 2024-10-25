@@ -23,7 +23,7 @@ public class ChessBoardService {
         return repository.findById(id);
     }
 
-    public boolean hasUserById(String id) {
+    public boolean hasBoardById(String id) {
         return repository.existsById(id);
     }
 
@@ -40,7 +40,7 @@ public class ChessBoardService {
         });
     }
 
-    public void deleteUser(ChessBoard chessBoard) {
+    public void deleteChessBoard(ChessBoard chessBoard) {
         repository.delete(chessBoard);
     }
 

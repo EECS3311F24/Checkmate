@@ -72,22 +72,22 @@ public class ChessBoardController {
      */
     @PutMapping("{id}")
     public ResponseEntity<ChessBoard> updateUser(@PathVariable("id") String id, @RequestBody ChessBoard chessBoard) {
-        if (!service.hasUserById(id)) return createUser(chessBoard);
+        if (!service.hasBoardById(id)) return createUser(chessBoard);
         service.updateChessBoard(id, chessBoard);
         return ResponseEntity.ok(chessBoard);
     }
 
     /**
      * <p>URL: api/v1/board/{id}</p>
-     * Delete a user by id in the database.
-     * @param id The id of the user.
+     * Delete a chess board by id in the database.
+     * @param id The id of the chess board.
      * @return A response entity with a message, informing client
      * with Http status 200 if deleted or 404 if not found.
      */
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") String id) {
         return service.getBoardById(id).map(chessBoard -> {
-            service.deleteUser(chessBoard);
+            service.deleteChessBoard(chessBoard);
             return ResponseEntity.ok("Deleted chess board " + chessBoard + "!");
         }).orElse(ResponseEntity.notFound().build());
     }

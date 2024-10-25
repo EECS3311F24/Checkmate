@@ -111,6 +111,7 @@ public class UserController {
      */
     @DeleteMapping
     public ResponseEntity<String> deleteAll() {
+        userService.deleteAll();
         return ResponseEntity.ok("Deleted all users");
     }
 }

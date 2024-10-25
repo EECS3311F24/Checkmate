@@ -6,6 +6,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * A ChessBoard service that will get, create, update, and delete ChessBoard
+ * data that is stored in the ChessBoardRepository. It is to be used by a controller
+ * that will get and receive information to be performed on the Mongodb database.
+ */
 @Service
 public class ChessBoardService {
     private final ChessBoardRepository repository;

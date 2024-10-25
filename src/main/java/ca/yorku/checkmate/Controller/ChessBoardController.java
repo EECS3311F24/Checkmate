@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * <p>Endpoint is api/v1/board</p>
+ * Endpoint is api/v1/board
+ * <br>
  * Controller for chess boards, providing a rest endpoint
  * that allows getting, creating, updating, or deleting chess boards.
  */
@@ -26,7 +27,8 @@ public class ChessBoardController {
     }
 
     /**
-     * <p>URL: api/v1/board</p>
+     * URL: api/v1/board
+     * <br>
      * Gets all chess boards in the database.
      * @return A list of chess boards.
      */
@@ -36,7 +38,8 @@ public class ChessBoardController {
     }
 
     /**
-     * <p>URL: api/v1/board/{id}<p>
+     * URL: api/v1/board/{id}
+     * <br>
      * Gets chess board by id in the database.
      * @param id The id of the chess board.
      * @return A response entity with chess board, informing client
@@ -50,7 +53,8 @@ public class ChessBoardController {
     }
 
     /**
-     * <p>URL: api/v1/board</p>
+     * URL: api/v1/board
+     * <br>
      * Create a new chess board in the database.
      * @param chessBoard The chess board to be created.
      * @return A response entity with chess board, informing client
@@ -63,7 +67,8 @@ public class ChessBoardController {
     }
 
     /**
-     * <p>URL: api/v1/board/{id}</p>
+     * URL: api/v1/board/{id}
+     * <br>
      * Update a chess board by id in the database.
      * @param id The id of the chess board.
      * @param chessBoard The chessBoard to be created.
@@ -78,7 +83,8 @@ public class ChessBoardController {
     }
 
     /**
-     * <p>URL: api/v1/board/{id}</p>
+     * URL: api/v1/board/{id}
+     * <br>
      * Delete a chess board by id in the database.
      * @param id The id of the chess board.
      * @return A response entity with a message, informing client
@@ -93,7 +99,8 @@ public class ChessBoardController {
     }
 
     /**
-     * <p>URL: api/v1/board</p>
+     * URL: api/v1/board
+     * <br>
      * Delete all chess boards in the database.
      * @return A response entity with a message, informing client
      * with Http status 200.

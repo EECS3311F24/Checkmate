@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * A user service that is meant to be used to store
- * and get or edit user information from database
+ * A User service that will get, create, update, and delete User
+ * data that is stored in the UserRepository. It is to be used by a controller
+ * that will get and receive information to be performed on the Mongodb database.
  */
 @Service
 public class UserService {

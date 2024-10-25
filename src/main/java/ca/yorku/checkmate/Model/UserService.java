@@ -27,9 +27,16 @@ public class UserService {
         return repository.findByid(id);
     }
 
+    public boolean hasUserById(String id) {
+        return getUserById(id) != null;
+    }
+
+    public boolean hasUserByUsername(User user) {
+        return getUserByUsername(user.username) != null;
+    }
+
     public boolean addUser(User user) {
-        if (getUserByUsername(user.username) != null)
-            return false;
+        if (hasUserByUsername(user)) return false;
         repository.save(user);
         return true;
     }

@@ -1,4 +1,4 @@
-package ca.yorku.checkmate.Model;
+package ca.yorku.checkmate.Model.chess;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

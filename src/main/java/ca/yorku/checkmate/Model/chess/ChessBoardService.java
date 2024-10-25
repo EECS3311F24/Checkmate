@@ -1,4 +1,4 @@
-package ca.yorku.checkmate.Model;
+package ca.yorku.checkmate.Model.chess;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

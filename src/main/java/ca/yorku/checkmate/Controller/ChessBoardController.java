@@ -1,7 +1,7 @@
 package ca.yorku.checkmate.Controller;
 
-import ca.yorku.checkmate.Model.ChessBoard;
-import ca.yorku.checkmate.Model.ChessBoardService;
+import ca.yorku.checkmate.Model.chess.ChessBoard;
+import ca.yorku.checkmate.Model.chess.ChessBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +43,7 @@ public class ChessBoardController {
      * with Http status 200 if found or 404 if not found.
      */
     @GetMapping("{id}")
-    public ResponseEntity<ChessBoard> getUserById(@PathVariable("id") String id) {
+    public ResponseEntity<ChessBoard> getChessBoardById(@PathVariable("id") String id) {
         return service.getBoardById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -57,7 +57,7 @@ public class ChessBoardController {
      * with Http status 201 if created or 409 if not created.
      */
     @PostMapping
-    public ResponseEntity<ChessBoard> createUser(@RequestBody ChessBoard chessBoard) {
+    public ResponseEntity<ChessBoard> createChessBoard(@RequestBody ChessBoard chessBoard) {
         if (!service.createChessBoard(chessBoard)) return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(chessBoard, HttpStatus.CREATED);
     }
@@ -71,8 +71,8 @@ public class ChessBoardController {
      * with Http status 200 if updated, 201 if created, 409 if not created.
      */
     @PutMapping("{id}")
-    public ResponseEntity<ChessBoard> updateUser(@PathVariable("id") String id, @RequestBody ChessBoard chessBoard) {
-        if (!service.hasBoardById(id)) return createUser(chessBoard);
+    public ResponseEntity<ChessBoard> updateChessBoard(@PathVariable("id") String id, @RequestBody ChessBoard chessBoard) {
+        if (!service.hasBoardById(id)) return createChessBoard(chessBoard);
         service.updateChessBoard(id, chessBoard);
         return ResponseEntity.ok(chessBoard);
     }
@@ -85,7 +85,7 @@ public class ChessBoardController {
      * with Http status 200 if deleted or 404 if not found.
      */
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") String id) {
+    public ResponseEntity<String> deleteChessBoard(@PathVariable("id") String id) {
         return service.getBoardById(id).map(chessBoard -> {
             service.deleteChessBoard(chessBoard);
             return ResponseEntity.ok("Deleted chess board " + chessBoard + "!");

@@ -7,6 +7,8 @@ public class ChessBoard {
     static final char white = 'W';
     private ChessPiece[] blackPieces;
     private ChessPiece[] whitePieces;
+    private boolean whiteInCheck;
+    private boolean blackInCheck;
 
     //setup standard chess board
     public ChessBoard(){
@@ -112,6 +114,24 @@ public class ChessBoard {
     public void move(ChessPiece cp, Move move) {
         //TODO: check validity, replace placeholder, move cp to new coordinate
     }
+
+    public boolean hasMove(Player player) {
+        //TODO: checks for move for player, checks at start of turn
+        return false;
+    }
+
+    public boolean inCheck(Player player) {
+        //TODO: checks for checks beginning of each turn
+        return false;
+    }
+
+    public boolean castle(){
+        //TODO: check if can castle: check at start of player input (if >1 square from king origin)
+        return false;
+    }
+
+    //TODO: add methods: getAllValidMoves for checksForChecks and/or castling
+    //TODO: en passant
 
     public static void main(String[] args){
         new ChessBoard();

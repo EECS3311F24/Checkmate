@@ -2,7 +2,7 @@ package ca.yorku.checkmate.Model.mainGame;
 
 public class Player {
     private ChessBoard cb;
-    private char playerColor;s
+    private char playerColor;
 
     public Player(ChessBoard cb, char playerColor) {
         this.cb = cb;

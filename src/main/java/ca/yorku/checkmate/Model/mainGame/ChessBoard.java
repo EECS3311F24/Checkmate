@@ -47,4 +47,16 @@ public class ChessBoard {
         board[dimensions-1][6] = new Placeholder(new Knight(white));
         board[dimensions-1][7] = new Placeholder(new Rook(white));
     }
+
+    public Placeholder[][] getBoard(){
+        return this.board;
+    }
+
+    public ChessPiece[] getBlackPieces() {
+        return blackPieces;
+    }
+
+    public ChessPiece[] getWhitePieces() {
+        return whitePieces;
+    }
 }

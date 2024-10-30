@@ -1,6 +1,12 @@
 package ca.yorku.checkmate.Model.mainGame;
 
 public abstract class ChessPiece {
-
-    public char getChar;
+    char color;
+    char symbol;
+    public char getChar() {
+        return this.symbol;
+    };
+    public char getColor() {
+        return this.color;
+    }
 }

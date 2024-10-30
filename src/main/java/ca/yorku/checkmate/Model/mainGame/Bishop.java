@@ -1,6 +1,8 @@
 package ca.yorku.checkmate.Model.mainGame;
 
 public class Bishop extends ChessPiece {
-    public Bishop(char black) {
+    public Bishop(char color) {
+        this.color = color;
+        this.symbol = 'B';
     }
 }

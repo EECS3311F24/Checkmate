@@ -10,7 +10,7 @@ public class Placeholder {
 
     public Placeholder(ChessPiece cp) {
         this.chessPiece = cp;
-        this.piece = cp.getChar;
+        this.piece = cp.getChar();
     }
 
     public char getChar(){

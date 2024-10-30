@@ -1,6 +1,10 @@
 package ca.yorku.checkmate.Model.mainGame;
 
 public class Knight extends ChessPiece {
-    public Knight(char black) {
+
+    public Knight(char color) {
+        this.color = color;
+        this.symbol = 'N';
     }
+
 }

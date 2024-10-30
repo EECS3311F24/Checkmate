@@ -7,4 +7,8 @@ public class Queen extends ChessPiece {
         this.symbol = 'Q';
     }
 
+    @Override
+    public void move() {
+
+    }
 }

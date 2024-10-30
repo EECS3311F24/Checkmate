@@ -7,4 +7,8 @@ public class Pawn extends ChessPiece {
         this.symbol = 'P';
     }
 
+    @Override
+    public void move() {
+
+    }
 }

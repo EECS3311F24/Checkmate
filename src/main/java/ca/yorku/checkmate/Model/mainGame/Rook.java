@@ -5,4 +5,9 @@ public class Rook extends ChessPiece {
         this.color = color;
         this.symbol = 'R';
     }
+
+    @Override
+    public void move() {
+
+    }
 }

@@ -7,4 +7,8 @@ public class Knight extends ChessPiece {
         this.symbol = 'N';
     }
 
+    @Override
+    public void move() {
+
+    }
 }

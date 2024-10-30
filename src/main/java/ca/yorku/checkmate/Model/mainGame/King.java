@@ -7,4 +7,8 @@ public class King extends ChessPiece {
         this.symbol = 'K';
     }
 
+    @Override
+    public void move() {
+
+    }
 }

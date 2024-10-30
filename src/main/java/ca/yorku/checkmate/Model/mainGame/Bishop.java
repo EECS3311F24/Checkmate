@@ -5,4 +5,9 @@ public class Bishop extends ChessPiece {
         this.color = color;
         this.symbol = 'B';
     }
+
+    @Override
+    public void move() {
+
+    }
 }

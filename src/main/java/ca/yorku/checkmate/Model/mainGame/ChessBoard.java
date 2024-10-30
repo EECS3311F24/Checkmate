@@ -8,6 +8,7 @@ public class ChessBoard {
     private ChessPiece[] blackPieces;
     private ChessPiece[] whitePieces;
 
+    //setup standard chess board
     public ChessBoard(){
         board = new Placeholder[dimensions][dimensions];
         //place blank spaces
@@ -18,34 +19,82 @@ public class ChessBoard {
         }
         //place black pawns
         for(int i = 0; i < dimensions; i++){
-            board[0][i] = new Placeholder(new Pawn(ChessBoard.black));
+            Pawn blackPawn = new Pawn(black);
+            board[0][i] = new Placeholder(blackPawn);
+            blackPawn.addMove(new Move(0, i));
         }
         //place white pawns
         for(int i = 0; i < dimensions; i++) {
-            board[dimensions-2][i] = new Placeholder(new Pawn(ChessBoard.white));
+            Pawn whitePawn = new Pawn(white);
+            board[dimensions-2][i] = new Placeholder(whitePawn);
+            whitePawn.addMove(new Move(dimensions-2, i));
         }
     //place black pieces
-        board[0][0] = new Placeholder(new Rook(black));
-        board[0][1] = new Placeholder(new Knight(black));
-        board[0][2] = new Placeholder(new Bishop(black));
+        ChessPiece blackRook = new Rook(black);
+        board[0][0] = new Placeholder(blackRook);
+        blackRook.addMove(new Move(0,0));
 
-        board[0][3] = new Placeholder( new Queen(black));
-        board[0][4] = new Placeholder(new King(black));
+        ChessPiece blackKnight = new Knight(black);
+        board[0][1] = new Placeholder(blackKnight);
+        blackKnight.addMove(new Move(0,1));
 
-        board[0][5] = new Placeholder(new Bishop(black));
-        board[0][6] = new Placeholder(new Knight(black));
-        board[0][7] = new Placeholder(new Rook(black));
+        ChessPiece blackBishop = new Bishop(black);
+        board[0][2] = new Placeholder(blackBishop);
+        blackBishop.addMove(new Move(0,2));
+
+        ChessPiece blackQueen = new Queen(black);
+        board[0][3] = new Placeholder(blackQueen);
+        blackQueen.addMove(new Move(0,3));
+
+        ChessPiece blackKing = new King(black);
+        board[0][4] = new Placeholder(blackKing);
+        blackKing.addMove(new Move(0,4));
+
+        ChessPiece blackBishop2 = new Bishop(black);
+        board[0][5] = new Placeholder(blackBishop2);
+        blackBishop2.addMove(new Move(0,5));
+
+        ChessPiece blackKnight2 = new Knight(black);
+        board[0][6] = new Placeholder(blackKnight2);
+        blackKnight2.addMove(new Move(0,6));
+
+        ChessPiece blackRook2 = new Rook(black);
+        board[0][7] = new Placeholder(blackRook2);
+        blackRook2.addMove(new Move(0,7));
+
+
     //place white pieces
-        board[dimensions-1][0] = new Placeholder(new Rook(white));
-        board[dimensions-1][1] = new Placeholder(new Knight(white));
-        board[dimensions-1][2] = new Placeholder(new Bishop(white));
+        ChessPiece whiteRook = new Rook(white);
+        board[dimensions-1][0] = new Placeholder(whiteRook);
+        whiteRook.addMove(new Move(dimensions-1,0));
 
-        board[dimensions-1][3] = new Placeholder(new Queen(white));
-        board[dimensions-1][4] = new Placeholder(new King(white));
+        ChessPiece whiteKnight = new Knight(white);
+        board[dimensions-1][1] = new Placeholder(whiteKnight);
+        whiteKnight.addMove(new Move(dimensions-1,1));
 
-        board[dimensions-1][5] = new Placeholder(new Bishop(white));
-        board[dimensions-1][6] = new Placeholder(new Knight(white));
-        board[dimensions-1][7] = new Placeholder(new Rook(white));
+        ChessPiece whiteBishop = new Bishop(white);
+        board[dimensions-1][2] = new Placeholder(whiteBishop);
+        whiteBishop.addMove(new Move(dimensions-1,2));
+
+        ChessPiece whiteQueen = new Queen(white);
+        board[dimensions-1][3] = new Placeholder(whiteQueen);
+        whiteQueen.addMove(new Move(dimensions-1,3));
+
+        ChessPiece whiteKing = new King(white);
+        board[dimensions-1][4] = new Placeholder(whiteKing);
+        whiteKing.addMove(new Move(dimensions-1,4));
+
+        ChessPiece whiteBishop2 = new Bishop(white);
+        board[dimensions-1][5] = new Placeholder(whiteBishop2);
+        whiteBishop2.addMove(new Move(dimensions-1,5));
+
+        ChessPiece whiteKnight2 = new Knight(white);
+        board[dimensions-1][6] = new Placeholder(whiteKnight2);
+        whiteKnight2.addMove(new Move(dimensions-1,6));
+
+        ChessPiece whiteRook2 = new Rook(white);
+        board[dimensions-1][7] = new Placeholder(whiteRook2);
+        whiteRook2.addMove(new Move(dimensions-1,7));
     }
 
     public Placeholder[][] getBoard(){
@@ -58,5 +107,13 @@ public class ChessBoard {
 
     public ChessPiece[] getWhitePieces() {
         return whitePieces;
+    }
+
+    public void move(ChessPiece cp, Move move) {
+        //TODO: check validity, replace placeholder, move cp to new coordinate
+    }
+
+    public static void main(String[] args){
+        new ChessBoard();
     }
 }

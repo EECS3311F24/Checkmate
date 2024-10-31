@@ -12,6 +12,8 @@ public class ChessBoard {
     private ChessPiece[] whitePieces;
     private boolean whiteInCheck;
     private boolean blackInCheck;
+    private Move whiteKingLocation;
+    private Move blackKingLocation;
 
     //setup standard chess board
     public ChessBoard(){
@@ -53,7 +55,8 @@ public class ChessBoard {
 
         ChessPiece blackKing = new King(black);
         board[0][4] = new Placeholder(blackKing);
-        blackKing.addMove(new Move(0,4));
+        this.blackKingLocation = new Move(0,4);
+        blackKing.addMove(this.blackKingLocation);
 
         ChessPiece blackBishop2 = new Bishop(black);
         board[0][5] = new Placeholder(blackBishop2);
@@ -87,7 +90,8 @@ public class ChessBoard {
 
         ChessPiece whiteKing = new King(white);
         board[dimensions-1][4] = new Placeholder(whiteKing);
-        whiteKing.addMove(new Move(dimensions-1,4));
+        this.whiteKingLocation = new Move(dimensions-1,4);
+        whiteKing.addMove(this.whiteKingLocation);
 
         ChessPiece whiteBishop2 = new Bishop(white);
         board[dimensions-1][5] = new Placeholder(whiteBishop2);
@@ -114,6 +118,11 @@ public class ChessBoard {
         return whitePieces;
     }
 
+    public void updateKingLocation(Move move, King king) {
+        if(king.getColor() == ChessBoard.white) this.whiteKingLocation = move;
+        else this.blackKingLocation = move;
+    }
+
     public boolean move(ChessPiece cp, Move move) {
         //TODO: DEAL WITH CAPTURES TOO
         boolean ifValid = this.isValid(cp, move) && cp.move(move);
@@ -122,19 +131,13 @@ public class ChessBoard {
             path = cp.getPathWay(move); //get array of squares to check for empty
         }
         else return false;
-        boolean emptyPath = true;
-        for (Move currentMove : path) {
-            if (this.board[currentMove.getRow()][currentMove.getColumn()].getChar() != ' ') {
-                emptyPath = false;
-                break;
-            }
-        }
-        if(emptyPath) {
+        if(this.checkForAllClearPath(path)) {
             int oldRow = cp.movesHistory.getLast().getRow();
             int oldCol = cp.movesHistory.getLast().getColumn();
             this.board[move.getRow()][move.getColumn()] = this.board[oldRow][oldCol];
             this.board[oldRow][oldCol] = new Placeholder();
             cp.addMove(move);
+            if(cp instanceof King) this.updateKingLocation(move, (King) cp);
             return true;
         }
         else return false;
@@ -150,35 +153,56 @@ public class ChessBoard {
     }
 
     public boolean hasMove(Player player) {
-        //TODO: checks for move for player, checks at start of turn
+        //checks for move for player, checks at start of turn
         if (player.getPlayerColor() == ChessBoard.white) {
             //have player return array of moves that needs to be checked for empty
             //create isEmpty method
             List<Move> possibleMoves = new ArrayList<>();
             for(ChessPiece cp: this.whitePieces) {
-                if(this.isEmpty(cp.canThisMove())) return true;
+                if(this.checkForFirstEmpty(cp.canThisMove())) return true;
             }
         }
         else {
             List<Move> possibleMoves = new ArrayList<>();
             for(ChessPiece cp: this.blackPieces) {
-                if(this.isEmpty(cp.canThisMove())) return true;
+                if(this.checkForFirstEmpty(cp.canThisMove())) return true;
             }
         }
         //needs to run beginning of every turn to check for draws
         return false;
     }
 
-    private boolean isEmpty(List<Move> moveList) {
+    private boolean checkForFirstEmpty(List<Move> moveList) {
         for(Move m: moveList) {
             if(board[m.getRow()][m.getColumn()].getChar() != ' ') return true;
         }
         return false;
     }
 
+    private boolean checkForAllClearPath(List<Move> path) {
+        for (Move currentMove : path) {
+            if (this.board[currentMove.getRow()][currentMove.getColumn()].getChar() != ' ') {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean inCheck(Player player) {
-        //TODO: checks for checks beginning of each turn
+        //checks for checks beginning of each turn
         //create move in King position and pass to each chess piece
+        if(player.getPlayerColor() == ChessBoard.white) {
+            Move kingLoc = this.whiteKingLocation;
+            for(ChessPiece cp: this.blackPieces) {
+                if(cp.move(kingLoc) && this.checkForAllClearPath(cp.getPathWay(kingLoc))) return true;
+            }
+        }
+        else {
+            Move kingLoc = this.blackKingLocation;
+            for(ChessPiece cp: this.whitePieces) {
+                if(cp.move(kingLoc) && this.checkForAllClearPath(cp.getPathWay(kingLoc))) return true;
+            }
+        }
         return false;
     }
 

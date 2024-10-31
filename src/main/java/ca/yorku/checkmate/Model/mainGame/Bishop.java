@@ -55,4 +55,15 @@ public class Bishop extends ChessPiece {
         }
         return path;
     }
+
+    @Override
+    public List<Move> canThisMove() {
+        List<Move> list = new ArrayList<>();
+        Move lastMove = movesHistory.getLast();
+        list.add(new Move(lastMove.getRow() - 1, lastMove.getColumn()-1));
+        list.add(new Move(lastMove.getRow() - 1, lastMove.getColumn()+1));
+        list.add(new Move(lastMove.getRow() + 1, lastMove.getColumn()-1));
+        list.add(new Move(lastMove.getRow() + 1, lastMove.getColumn()+1));
+        return list;
+    }
 }

@@ -24,4 +24,11 @@ public class King extends ChessPiece {
         path.add(move);
         return path;
     }
+
+    @Override
+    public List<Move> canThisMove() {
+        Rook fakeRook = new Rook(ChessBoard.black);
+        fakeRook.addMove(this.movesHistory.getLast());
+        return fakeRook.canThisMove();
+    }
 }

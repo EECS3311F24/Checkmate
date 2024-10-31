@@ -25,4 +25,22 @@ public class Knight extends ChessPiece {
         path.add(move);
         return path;
     }
+
+    @Override
+    public List<Move> canThisMove() {
+        List<Move> list = new ArrayList<>();
+        Move lastMove = this.movesHistory.getLast();
+        for(int i = 1; i <=2; i++) {
+            for(int j = 2; j >= 1; j--) {
+                if(!((i==2 && j == 2) || (i==1 && j == 1))) {
+                    //12,11,22,21
+                    list.add(new Move(lastMove.getRow()-i, lastMove.getColumn()-j)); //-1-2, -2-1
+                    list.add(new Move(lastMove.getRow()-i, lastMove.getColumn()+j)); //-1+2, -2+1
+                    list.add(new Move(lastMove.getRow()+i, lastMove.getColumn()-j)); //+1-2, +2-1
+                    list.add(new Move(lastMove.getRow()+i, lastMove.getColumn()+j)); //+1+2, +2+1
+                }
+            }
+        }
+        return list;
+    }
 }

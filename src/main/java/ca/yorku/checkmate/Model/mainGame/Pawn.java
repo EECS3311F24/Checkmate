@@ -34,5 +34,12 @@ public class Pawn extends ChessPiece {
         return path;
     }
 
+    @Override
+    public List<Move> canThisMove() {
+        List<Move> list = new ArrayList<>();
+        list.add(new Move(this.getMovesHistory().getLast().getRow(), this.getMovesHistory().getLast().getColumn()));
+        return list;
+    }
+
 
 }

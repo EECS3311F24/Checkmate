@@ -1,5 +1,6 @@
 package ca.yorku.checkmate.Model.mainGame;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChessBoard {
@@ -151,15 +152,27 @@ public class ChessBoard {
     public boolean hasMove(Player player) {
         //TODO: checks for move for player, checks at start of turn
         if (player.getPlayerColor() == ChessBoard.white) {
-
+            //have player return array of moves that needs to be checked for empty
+            //create isEmpty method
+            List<Move> possibleMoves = new ArrayList<>();
+            for(ChessPiece cp: this.whitePieces) {
+                if(this.isEmpty(cp.canThisMove())) return true;
+            }
         }
         else {
-
+            List<Move> possibleMoves = new ArrayList<>();
+            for(ChessPiece cp: this.blackPieces) {
+                if(this.isEmpty(cp.canThisMove())) return true;
+            }
         }
-        //needs to run beginning of every turn
+        //needs to run beginning of every turn to check for draws
+        return false;
+    }
 
-        //1 move in every direction for each chesspiece//implement within chesspiece
-        //DO TONIGHT
+    private boolean isEmpty(List<Move> moveList) {
+        for(Move m: moveList) {
+            if(board[m.getRow()][m.getColumn()].getChar() != ' ') return true;
+        }
         return false;
     }
 

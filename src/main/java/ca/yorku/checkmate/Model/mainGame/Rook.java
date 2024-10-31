@@ -17,7 +17,7 @@ public class Rook extends ChessPiece {
 
     @Override
     public List<Move> getPathWay(Move move) {
-        List<Move> path = new ArrayList<Move>();
+        List<Move> path = new ArrayList<>();
         Move lastMove = this.movesHistory.getLast();
         if(lastMove.getRow() != move.getRow()) {
             if(lastMove.getRow() < move.getRow()) {
@@ -52,5 +52,16 @@ public class Rook extends ChessPiece {
             }
         }
         return path;
+    }
+
+    @Override
+    public List<Move> canThisMove() {
+        List<Move> list = new ArrayList<>();
+        Move lastMove = this.movesHistory.getLast();
+        list.add(new Move(lastMove.getRow() - 1, lastMove.getColumn())); //up
+        list.add(new Move(lastMove.getRow() + 1, lastMove.getColumn())); //down
+        list.add(new Move(lastMove.getRow(), lastMove.getColumn()-1)); //left
+        list.add(new Move(lastMove.getRow(), lastMove.getColumn()+1)); //right
+        return list;
     }
 }

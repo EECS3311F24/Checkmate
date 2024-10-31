@@ -34,4 +34,15 @@ public class Queen extends ChessPiece {
         }
         return path;
     }
+
+    @Override
+    public List<Move> canThisMove() {
+        Rook fakeRook = new Rook(ChessBoard.black);
+        fakeRook.addMove(this.movesHistory.getLast());
+        Bishop fakeBishop = new Bishop(ChessBoard.black);
+        fakeBishop.addMove(this.movesHistory.getLast());
+        List<Move> list = new ArrayList<>(fakeRook.canThisMove());
+        list.addAll(fakeBishop.canThisMove());
+        return list;
+    }
 }

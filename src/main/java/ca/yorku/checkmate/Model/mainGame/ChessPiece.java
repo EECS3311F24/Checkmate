@@ -26,4 +26,6 @@ public abstract class ChessPiece {
     public abstract boolean move(Move move);
 
     public abstract List<Move> getPathWay(Move move);
+
+    public abstract List<Move> canThisMove();
 }

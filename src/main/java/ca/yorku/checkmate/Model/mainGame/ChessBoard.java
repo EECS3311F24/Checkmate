@@ -113,16 +113,30 @@ public class ChessBoard {
         return whitePieces;
     }
 
-    public void move(ChessPiece cp, Move move) {
-        //TODO: check validity, replace placeholder, move cp to new coordinate, not same move as prev
-        boolean isValid = this.isValid(cp, move);
-        //TODO: check from chesspiece side
-        boolean validPieceMove = cp.move(move);
-        //get array of squares to check for empty
-        List<Move> path = cp.getPathWay(move);
-        //TODO: check from this class for empties
-
-        //TODO: add to movesHistory from chesspiece side
+    public boolean move(ChessPiece cp, Move move) {
+        //TODO: DEAL WITH CAPTURES TOO
+        boolean ifValid = this.isValid(cp, move) && cp.move(move);
+        List<Move> path = null;
+        if(ifValid) {
+            path = cp.getPathWay(move); //get array of squares to check for empty
+        }
+        else return false;
+        boolean emptyPath = true;
+        for (Move currentMove : path) {
+            if (this.board[currentMove.getRow()][currentMove.getColumn()].getChar() != ' ') {
+                emptyPath = false;
+                break;
+            }
+        }
+        if(emptyPath) {
+            int oldRow = cp.movesHistory.getLast().getRow();
+            int oldCol = cp.movesHistory.getLast().getColumn();
+            this.board[move.getRow()][move.getColumn()] = this.board[oldRow][oldCol];
+            this.board[oldRow][oldCol] = new Placeholder();
+            cp.addMove(move);
+            return true;
+        }
+        else return false;
     }
 
     private boolean isValid(ChessPiece cp, Move move) {
@@ -136,11 +150,22 @@ public class ChessBoard {
 
     public boolean hasMove(Player player) {
         //TODO: checks for move for player, checks at start of turn
+        if (player.getPlayerColor() == ChessBoard.white) {
+
+        }
+        else {
+
+        }
+        //needs to run beginning of every turn
+
+        //1 move in every direction for each chesspiece//implement within chesspiece
+        //DO TONIGHT
         return false;
     }
 
     public boolean inCheck(Player player) {
         //TODO: checks for checks beginning of each turn
+        //create move in King position and pass to each chess piece
         return false;
     }
 

@@ -24,4 +24,6 @@ public abstract class ChessPiece {
         this.movesHistory.add(move);
     }
     public abstract boolean move(Move move);
+
+    public abstract List<Move> getPathWay(Move move);
 }

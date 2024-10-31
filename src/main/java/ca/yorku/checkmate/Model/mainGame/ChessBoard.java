@@ -1,5 +1,7 @@
 package ca.yorku.checkmate.Model.mainGame;
 
+import java.util.List;
+
 public class ChessBoard {
     static final int dimensions = 8;
     private Placeholder[][] board;
@@ -113,9 +115,23 @@ public class ChessBoard {
 
     public void move(ChessPiece cp, Move move) {
         //TODO: check validity, replace placeholder, move cp to new coordinate, not same move as prev
+        boolean isValid = this.isValid(cp, move);
         //TODO: check from chesspiece side
-        //TODO: check from this class
+        boolean validPieceMove = cp.move(move);
+        //get array of squares to check for empty
+        List<Move> path = cp.getPathWay(move);
+        //TODO: check from this class for empties
+
         //TODO: add to movesHistory from chesspiece side
+    }
+
+    private boolean isValid(ChessPiece cp, Move move) {
+        //checks coordinates and not same
+        return (move.getRow() > 0 && move.getRow() < ChessBoard.dimensions &&
+                move.getColumn() > 0 && move.getColumn() < ChessBoard.dimensions)
+                &&
+                (move.getRow() != cp.getMovesHistory().getLast().getRow() ||
+                move.getColumn() != cp.getMovesHistory().getLast().getColumn());
     }
 
     public boolean hasMove(Player player) {

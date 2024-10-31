@@ -1,5 +1,8 @@
 package ca.yorku.checkmate.Model.mainGame;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Pawn extends ChessPiece {
 
     public Pawn(char color) {
@@ -19,4 +22,17 @@ public class Pawn extends ChessPiece {
             return rowsMoved > 0 && rowsMoved < 3;
         }
     }
+
+    @Override
+    public List<Move> getPathWay(Move move) {
+        List<Move> path = new ArrayList<Move>();
+        int counter = this.getMovesHistory().getLast().getRow() + 1;
+        while(move.getRow() >= counter) {
+            path.add(new Move(counter, this.getMovesHistory().getLast().getColumn()));
+            counter++;
+        }
+        return path;
+    }
+
+
 }

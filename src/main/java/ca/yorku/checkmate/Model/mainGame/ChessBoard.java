@@ -112,7 +112,10 @@ public class ChessBoard {
     }
 
     public void move(ChessPiece cp, Move move) {
-        //TODO: check validity, replace placeholder, move cp to new coordinate
+        //TODO: check validity, replace placeholder, move cp to new coordinate, not same move as prev
+        //TODO: check from chesspiece side
+        //TODO: check from this class
+        //TODO: add to movesHistory from chesspiece side
     }
 
     public boolean hasMove(Player player) {

@@ -7,8 +7,12 @@ public class Knight extends ChessPiece {
         this.symbol = 'N';
     }
 
-    @Override
-    public void move() {
 
+    //pass back array of coordinates to check if empty
+    @Override
+    public boolean move(Move move) {
+        int rowDiff = Math.abs(this.movesHistory.getLast().getRow()-move.getRow());
+        int colDiff = Math.abs(this.movesHistory.getLast().getColumn()-move.getColumn());
+        return ((rowDiff==2 && colDiff==1) || (rowDiff==1 && colDiff==2));
     }
 }

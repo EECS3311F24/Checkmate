@@ -7,7 +7,8 @@ public class Rook extends ChessPiece {
     }
 
     @Override
-    public void move() {
-
+    public boolean move(Move move) {
+        return this.movesHistory.getLast().getRow() == move.getRow() ||
+                this.movesHistory.getLast().getColumn() == move.getColumn();
     }
 }

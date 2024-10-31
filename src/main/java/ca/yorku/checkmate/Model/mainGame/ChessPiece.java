@@ -23,5 +23,5 @@ public abstract class ChessPiece {
     public void addMove(Move move) {
         this.movesHistory.add(move);
     }
-    public abstract void move();
+    public abstract boolean move(Move move);
 }

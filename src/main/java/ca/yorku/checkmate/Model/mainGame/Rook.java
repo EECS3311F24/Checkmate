@@ -1,4 +1,4 @@
-package ca.yorku.checkmate.Model.mainGame;
+package mainGame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +11,14 @@ public class Rook extends ChessPiece {
 
     @Override
     public boolean move(Move move) {
-        return this.movesHistory.getLast().getRow() == move.getRow() ||
-                this.movesHistory.getLast().getColumn() == move.getColumn();
+        return this.movesHistory.get(this.movesHistory.size()-1).getRow() == move.getRow() ||
+                this.movesHistory.get(this.movesHistory.size() - 1).getColumn() == move.getColumn();
     }
 
     @Override
     public List<Move> getPathWay(Move move) {
         List<Move> path = new ArrayList<>();
-        Move lastMove = this.movesHistory.getLast();
+        Move lastMove = this.movesHistory.get(this.movesHistory.size() - 1);
         if(lastMove.getRow() != move.getRow()) {
             if(lastMove.getRow() < move.getRow()) {
                 int counter = lastMove.getRow() + 1;
@@ -57,7 +57,7 @@ public class Rook extends ChessPiece {
     @Override
     public List<Move> canThisMove() {
         List<Move> list = new ArrayList<>();
-        Move lastMove = this.movesHistory.getLast();
+        Move lastMove = this.movesHistory.get(this.movesHistory.size() - 1);
         list.add(new Move(lastMove.getRow() - 1, lastMove.getColumn())); //up
         list.add(new Move(lastMove.getRow() + 1, lastMove.getColumn())); //down
         list.add(new Move(lastMove.getRow(), lastMove.getColumn()-1)); //left

@@ -13,22 +13,34 @@ public class Pawn extends ChessPiece {
     //checks validity of move based on squares moved (board stuff dealt with in ChessBoard)
     @Override
     public boolean move(Move move) {
-        if(this.movesHistory.getLast().getColumn() != move.getColumn()) return false; //en passant not currently supported
+        if(this.movesHistory.get(this.movesHistory.size() - 1).getColumn() != move.getColumn()) return false; //en passant not currently supported
         if(this.movesHistory.size() > 1) { //if not first move, only +1 row moves
-            return move.getRow() == 1 + this.movesHistory.getLast().getRow();
+            if(this.color == ChessBoard.black) {
+                return move.getRow() == 1 + this.movesHistory.get(this.movesHistory.size() - 1).getRow();
+            }
+            else {
+                return move.getRow() == this.movesHistory.get(this.movesHistory.size() - 1).getRow() - 1;
+            }
         }
         else {
-            int rowsMoved = move.getRow()-movesHistory.getLast().getRow();
+            int rowsMoved = -1;
+            if(this.color == ChessBoard.black) {
+                rowsMoved = move.getRow()-this.movesHistory.get(this.movesHistory.size() - 1).getRow();
+            }
+            else {
+                rowsMoved = this.movesHistory.get(this.movesHistory.size() - 1).getRow() - move.getRow();
+            }
             return rowsMoved > 0 && rowsMoved < 3;
         }
     }
 
     @Override
     public List<Move> getPathWay(Move move) {
+        //TODO: fix black white pawn
         List<Move> path = new ArrayList<Move>();
-        int counter = this.getMovesHistory().getLast().getRow() + 1;
+        int counter = this.getMovesHistory().get(this.getMovesHistory().size()-1).getRow() + 1;
         while(move.getRow() >= counter) {
-            path.add(new Move(counter, this.getMovesHistory().getLast().getColumn()));
+            path.add(new Move(counter, this.getMovesHistory().get(this.getMovesHistory().size()-1).getColumn()));
             counter++;
         }
         return path;
@@ -37,9 +49,7 @@ public class Pawn extends ChessPiece {
     @Override
     public List<Move> canThisMove() {
         List<Move> list = new ArrayList<>();
-        list.add(new Move(this.getMovesHistory().getLast().getRow(), this.getMovesHistory().getLast().getColumn()));
+        list.add(new Move(this.getMovesHistory().get(this.getMovesHistory().size()-1).getRow(), this.getMovesHistory().get(this.getMovesHistory().size()-1).getColumn()));
         return list;
     }
-
-
 }

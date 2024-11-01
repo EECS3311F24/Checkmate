@@ -1,4 +1,4 @@
-package ca.yorku.checkmate.Model.mainGame;
+package mainGame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,8 @@ public class King extends ChessPiece {
     @Override
     public boolean move(Move move) {
         //TODO: implement castle and checks later
-        int rowDiff = Math.abs(this.movesHistory.getLast().getRow()-move.getRow());
-        int colDiff = Math.abs(this.movesHistory.getLast().getColumn()-move.getColumn());
+        int rowDiff = Math.abs(this.movesHistory.get(this.movesHistory.size() - 1).getRow()-move.getRow());
+        int colDiff = Math.abs(this.movesHistory.get(this.movesHistory.size() - 1).getColumn()-move.getColumn());
         return rowDiff == 1 ^ colDiff == 1;
     }
 
@@ -28,7 +28,7 @@ public class King extends ChessPiece {
     @Override
     public List<Move> canThisMove() {
         Rook fakeRook = new Rook(ChessBoard.black);
-        fakeRook.addMove(this.movesHistory.getLast());
+        fakeRook.addMove(this.movesHistory.get(this.movesHistory.size() - 1));
         return fakeRook.canThisMove();
     }
 }

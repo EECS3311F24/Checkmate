@@ -1,4 +1,4 @@
-package ca.yorku.checkmate.Model.mainGame;
+package mainGame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +13,9 @@ public class Queen extends ChessPiece {
     @Override
     public boolean move(Move move) {
         Rook temp0 = new Rook(ChessBoard.black);
-        temp0.addMove(this.movesHistory.getLast());
+        temp0.addMove(this.movesHistory.get(this.movesHistory.size() - 1));
         Bishop temp1 = new Bishop(ChessBoard.black);
-        temp1.addMove(this.movesHistory.getLast());
+        temp1.addMove(this.movesHistory.get(this.movesHistory.size() - 1));
         return temp0.move(move) || temp1.move(move);
     }
 
@@ -23,9 +23,9 @@ public class Queen extends ChessPiece {
     public List<Move> getPathWay(Move move) {
         List<Move> path = new ArrayList<Move>();
         Rook fakeRook = new Rook(ChessBoard.black);
-        fakeRook.addMove(this.movesHistory.getLast());
+        fakeRook.addMove(this.movesHistory.get(this.movesHistory.size() - 1));
         Bishop fakeBishop = new Bishop(ChessBoard.black);
-        fakeBishop.addMove(this.movesHistory.getLast());
+        fakeBishop.addMove(this.movesHistory.get(this.movesHistory.size() - 1));
         if(fakeRook.move(move)) {
             path = fakeRook.getPathWay(move);
         }
@@ -38,9 +38,9 @@ public class Queen extends ChessPiece {
     @Override
     public List<Move> canThisMove() {
         Rook fakeRook = new Rook(ChessBoard.black);
-        fakeRook.addMove(this.movesHistory.getLast());
+        fakeRook.addMove(this.movesHistory.get(this.movesHistory.size() - 1));
         Bishop fakeBishop = new Bishop(ChessBoard.black);
-        fakeBishop.addMove(this.movesHistory.getLast());
+        fakeBishop.addMove(this.movesHistory.get(this.movesHistory.size() - 1));
         List<Move> list = new ArrayList<>(fakeRook.canThisMove());
         list.addAll(fakeBishop.canThisMove());
         return list;

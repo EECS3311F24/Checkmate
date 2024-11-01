@@ -1,4 +1,4 @@
-package ca.yorku.checkmate.Model.mainGame;
+package mainGame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ public abstract class ChessPiece {
     List<Move> movesHistory;
 
     public ChessPiece() {
-        this.movesHistory = new ArrayList<Move>();
+        this.movesHistory = new ArrayList<>();
     }
     public char getChar() {
         return this.symbol;

@@ -1,4 +1,4 @@
-package ca.yorku.checkmate.Model.mainGame;
+package mainGame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +31,8 @@ public class ChessBoard {
         //place black pawns
         for(int i = 0; i < dimensions; i++){
             Pawn blackPawn = new Pawn(black);
-            board[0][i] = new Placeholder(blackPawn);
-            blackPawn.addMove(new Move(0, i));
+            board[1][i] = new Placeholder(blackPawn);
+            blackPawn.addMove(new Move(1, i));
             this.blackPieces.add(blackPawn);
         }
         //place white pawns
@@ -42,7 +42,7 @@ public class ChessBoard {
             whitePawn.addMove(new Move(dimensions-2, i));
             this.whitePieces.add(whitePawn);
         }
-    //place black pieces
+        //place black pieces
         ChessPiece blackRook = new Rook(black);
         board[0][0] = new Placeholder(blackRook);
         blackRook.addMove(new Move(0,0));
@@ -85,7 +85,7 @@ public class ChessBoard {
         this.blackPieces.add(blackRook2);
 
 
-    //place white pieces
+        //place white pieces
         ChessPiece whiteRook = new Rook(white);
         board[dimensions-1][0] = new Placeholder(whiteRook);
         whiteRook.addMove(new Move(dimensions-1,0));
@@ -151,23 +151,50 @@ public class ChessBoard {
             List<Move> path = cp.getPathWay(move);
             List<Move> pathMinusLast = path.subList(0, path.size()-1);
             if(this.checkForAllClearPath(pathMinusLast)) {
-                Placeholder last = board[path.getLast().getRow()][path.getLast().getColumn()];
+                Placeholder last = board[path.get(path.size()-1).getRow()][path.get(path.size()-1).getColumn()];
+                boolean moveable = true;
                 if(last.getChar() == this.getOtherPlayerColor(player)) {
-                    this.capturedPieces.add(last.getChessPiece());
-                    if(this.getOtherPlayerColor(player) == ChessBoard.white) this.whitePieces.remove(last.getChessPiece());
-                    else this.blackPieces.remove(last.getChessPiece());
-                    last.emptyPlaceholder();
+                    if(cp instanceof King) {
+                        moveable = this.canKingGoHere((King)cp, move); //at this point, move is valid, and captured piece
+                    }
+                    if(moveable) {
+                        this.capturedPieces.add(last.getChessPiece());
+                        if(this.getOtherPlayerColor(player) == ChessBoard.white) this.whitePieces.remove(last.getChessPiece());
+                        else this.blackPieces.remove(last.getChessPiece());
+                        last.emptyPlaceholder();
+                    }
                 }
-                int oldRow = cp.movesHistory.getLast().getRow();
-                int oldCol = cp.movesHistory.getLast().getColumn();
-                this.board[move.getRow()][move.getColumn()] = this.board[oldRow][oldCol];
-                this.board[oldRow][oldCol].emptyPlaceholder();
-                cp.addMove(move);
-                if(cp instanceof King) this.updateKingLocation(move, (King) cp);
-                return true;
+                if(moveable) {
+                    int oldRow = cp.movesHistory.get(cp.movesHistory.size() - 1).getRow();
+                    int oldCol = cp.movesHistory.get(cp.movesHistory.size() - 1).getColumn();
+                    this.board[move.getRow()][move.getColumn()] = this.board[oldRow][oldCol];
+                    this.board[oldRow][oldCol] = new Placeholder();
+                    cp.addMove(move);
+
+                    if(cp instanceof King) this.updateKingLocation(move, (King) cp);
+                    return true;
+                }
             }
         }
         return false;
+    }
+
+    private boolean canKingGoHere(King cp, Move move) {
+        //TODO: check chain
+        boolean result = false;
+        if(cp.getColor() == ChessBoard.white) {
+            Move temp = this.whiteKingLocation;
+            this.whiteKingLocation = move;
+            result = inCheck(cp.getColor());
+            this.whiteKingLocation = temp;
+        }
+        else {
+            Move temp = this.blackKingLocation;
+            this.blackKingLocation = move;
+            result = inCheck(cp.getColor());
+            this.blackKingLocation = temp;
+        }
+        return result;
     }
 
     private char getOtherPlayerColor(Player player) {
@@ -179,11 +206,11 @@ public class ChessBoard {
 
     private boolean isValid(ChessPiece cp, Move move) {
         //checks coordinates and not same
-        return (move.getRow() > 0 && move.getRow() < ChessBoard.dimensions &&
-                move.getColumn() > 0 && move.getColumn() < ChessBoard.dimensions)
+        return (move.getRow() >= 0 && move.getRow() < ChessBoard.dimensions &&
+                move.getColumn() >= 0 && move.getColumn() < ChessBoard.dimensions)
                 &&
-                (move.getRow() != cp.getMovesHistory().getLast().getRow() ||
-                move.getColumn() != cp.getMovesHistory().getLast().getColumn());
+                (move.getRow() != cp.getMovesHistory().get(cp.getMovesHistory().size()-1).getRow() ||
+                        move.getColumn() != cp.getMovesHistory().get(cp.getMovesHistory().size()-1).getColumn());
     }
 
     public boolean hasMove(Player player) {
@@ -222,10 +249,10 @@ public class ChessBoard {
         return true;
     }
 
-    public boolean inCheck(Player player) {
+    public boolean inCheck(char player) {
         //checks for checks beginning of each turn
         //create move in King position and pass to each chess piece
-        if(player.getPlayerColor() == ChessBoard.white) {
+        if(player == ChessBoard.white) {
             Move kingLoc = this.whiteKingLocation;
             for(ChessPiece cp: this.blackPieces) {
                 if(cp.move(kingLoc) && this.checkForAllClearPath(cp.getPathWay(kingLoc))) return true;
@@ -252,7 +279,23 @@ public class ChessBoard {
     //TODO: add methods: getAllValidMoves for checksForChecks and/or castling
     //TODO: en passant
 
+    @Override
+    public String toString(){
+        String s = "______________________________" +'\n';
+        for(int i = 0; i < ChessBoard.dimensions; i++){
+            s+= "|";
+            for(int j = 0; j < ChessBoard.dimensions; j++){
+                Placeholder p = this.board[i][j];
+                s += p.getChar() + "|";
+            }
+            s += "\n";
+        }
+        return s +'\n' + "______________________________";
+
+    }
     public static void main(String[] args){
-        new ChessBoard();
+        ChessBoard cp =  new ChessBoard();
+        System.out.println(cp.toString());
+        System.out.println(cp.toString());
     }
 }

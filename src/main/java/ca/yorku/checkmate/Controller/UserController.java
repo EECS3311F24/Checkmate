@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * <p>Endpoint is api/v1/user</p>
+ * <p>Endpoint is api/v1/users</p>
  * Controller for users, providing a rest endpoint
  * that allows getting, creating, updating, or deleting users.
  */
 @CrossOrigin("*")
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("api/v1/users")
 public class UserController {
     private final UserService userService;
 
@@ -26,7 +26,7 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/user</p>
+     * <p>URL: api/v1/users</p>
      * Gets all users in the database.
      * @return A list of users.
      */
@@ -36,7 +36,7 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/user/{id}<p>
+     * <p>URL: api/v1/users/{id}<p>
      * Gets user by id in the database.
      * @param id The id of the user.
      * @return The user associated with the id if it exists.
@@ -49,7 +49,7 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/user?username={username}</p>
+     * <p>URL: api/v1/users?username={username}</p>
      * Gets user by username in the database.
      * @param username The username of the user.
      * @return The user associated with the username if it exists.
@@ -61,7 +61,7 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/user</p>
+     * <p>URL: api/v1/users</p>
      * Create a new user in the database.
      * @param user The user to be created.
      * @return A response entity with user, informing client
@@ -74,7 +74,7 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/user/{id}</p>
+     * <p>URL: api/v1/users/{id}</p>
      * Update a user by id in the database.
      * @param id The id of the user.
      * @param user The user to be created.
@@ -99,7 +99,7 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/user/{id}</p>
+     * <p>URL: api/v1/users/{id}</p>
      * Delete a user by id in the database.
      * @param id The id of the user.
      * @return A response entity with a message, informing client
@@ -114,7 +114,7 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/user</p>
+     * <p>URL: api/v1/users</p>
      * Delete all users in the database.
      * @return A response entity with a message, informing client
      * with Http status 200.

@@ -79,13 +79,14 @@ public class UserController {
      * @param id The id of the user.
      * @param user The user to be created.
      * @return A response entity with user, informing client
-     * with Http status 200 if updated, 201 if created, 409 if not created.
+     * with Http status 200 if updated, 404 if not found.
      */
     @PutMapping("{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") String id, @RequestBody User user) {
-        if (!userService.hasUserById(id)) return createUser(user);
-        userService.updateUser(id, user);
-        return ResponseEntity.ok(user);
+        return userService.getUserById(id).map(usr -> {
+            userService.updateUser(id, user);
+            return ResponseEntity.ok(usr);
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     //TODO example of Patch, Patch is like update but less info sent
@@ -119,6 +120,7 @@ public class UserController {
      * @return A response entity with a message, informing client
      * with Http status 200.
      */
+    @Deprecated
     @DeleteMapping
     public ResponseEntity<String> deleteAll() {
         userService.deleteAll();

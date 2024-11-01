@@ -223,13 +223,13 @@ Content-Length: 66
 ### Delete User
 Delete a user with given id.
 
-`DEL /api/v1/users/{{id}}`
+`DELETE /api/v1/users/{{id}}`
 
 ### Examples
 Successful Response Example:
 > HTTP Request
 ```HTTP
-DEL /api/v1/users/validId HTTP/1.1
+DELETE /api/v1/users/validId HTTP/1.1
 Host: {{HOST}}
 ```
 > Response
@@ -248,7 +248,7 @@ ____
 Not Found Response Example:
 > HTTP Request
 ```HTTP
-DEL /api/v1/users/notValidId HTTP/1.1
+DELETE /api/v1/users/notValidId HTTP/1.1
 Host: {{HOST}}
 ```
 > 404 Response

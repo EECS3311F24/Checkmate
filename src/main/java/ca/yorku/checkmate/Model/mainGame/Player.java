@@ -1,19 +1,51 @@
-package ca.yorku.checkmate.Model.mainGame;
+package mainGame;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
 
 public class Player {
-    private ChessBoard cb;
     private char playerColor;
 
-    public Player(ChessBoard cb, char playerColor) {
-        this.cb = cb;
+    private static final String INVALID_INPUT_MESSAGE = "Invalid number, please enter 1-8";
+    private static final String IO_ERROR_MESSAGE = "I/O Error";
+    private static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+
+
+    public Player(char playerColor) {
         this.playerColor = playerColor;
     }
 
+    public Move getMove() {
 
-    public ChessBoard getCb() {
-        return cb;
+        int row = getMove("row: ");
+        int col = getMove("col: ");
+        return new Move(row, col);
     }
 
+    private int getMove(String message) {
+
+        int move, lower = 0, upper = 7;
+        while (true) {
+            try {
+                System.out.print(message);
+                String line = Player.stdin.readLine();
+                move = Integer.parseInt(line);
+                if (lower <= move && move <= upper) {
+                    return move;
+                } else {
+                    System.out.println(INVALID_INPUT_MESSAGE);
+                }
+            } catch (IOException e) {
+                System.out.println(INVALID_INPUT_MESSAGE);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println(INVALID_INPUT_MESSAGE);
+            }
+        }
+        return -1;
+    }
     public char getPlayerColor() {
         return playerColor;
     }

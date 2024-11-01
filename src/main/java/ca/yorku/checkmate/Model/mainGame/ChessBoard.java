@@ -151,9 +151,9 @@ public class ChessBoard {
             List<Move> path = cp.getPathWay(move);
             List<Move> pathMinusLast = path.subList(0, path.size()-1);
             if(this.checkForAllClearPath(pathMinusLast)) {
-                Placeholder last = board[path.get(path.size()-1).getRow()][path.get(path.size()-1).getColumn()];
+                Placeholder last = board[move.getRow()][move.getColumn()];
                 boolean moveable = true;
-                if(last.getChar() == this.getOtherPlayerColor(player)) {
+                if(last.getChar() != ' ' && last.getChessPiece().getColor() == this.getOtherPlayerColor(player)) {
                     if(cp instanceof King) {
                         moveable = this.canKingGoHere((King)cp, move); //at this point, move is valid, and captured piece
                     }
@@ -161,10 +161,10 @@ public class ChessBoard {
                         this.capturedPieces.add(last.getChessPiece());
                         if(this.getOtherPlayerColor(player) == ChessBoard.white) this.whitePieces.remove(last.getChessPiece());
                         else this.blackPieces.remove(last.getChessPiece());
-                        last.emptyPlaceholder();
+                        last = new Placeholder();
                     }
                 }
-                if(moveable) {
+                if(moveable && (last.getChar() == ' ' || (last.getChar()!=' ' && last.getChessPiece().getColor() != player.getPlayerColor()))) {
                     int oldRow = cp.movesHistory.get(cp.movesHistory.size() - 1).getRow();
                     int oldCol = cp.movesHistory.get(cp.movesHistory.size() - 1).getColumn();
                     this.board[move.getRow()][move.getColumn()] = this.board[oldRow][oldCol];
@@ -281,21 +281,86 @@ public class ChessBoard {
 
     @Override
     public String toString(){
-        String s = "______________________________" +'\n';
-        for(int i = 0; i < ChessBoard.dimensions; i++){
-            s+= "|";
-            for(int j = 0; j < ChessBoard.dimensions; j++){
-                Placeholder p = this.board[i][j];
-                s += p.getChar() + "|";
-            }
-            s += "\n";
+//        String s = "______________________________" +'\n';
+//        for(int i = 0; i < ChessBoard.dimensions; i++){
+//            s+= "|";
+//            for(int j = 0; j < ChessBoard.dimensions; j++){
+//                Placeholder p = this.board[i][j];
+//                s += p.getChar() + "|";
+//            }
+//            s += "\n";
+//        }
+//        return s + "______________________________"+'\n';
+        String s = "";
+        s += "  ";
+        for (int col = 0; col < 8; col++) {
+            s += col + " ";
         }
-        return s +'\n' + "______________________________";
+        s += '\n';
+
+        s += " +";
+        for (int col = 0; col < 8; col++) {
+            s += "-+";
+        }
+        s += '\n';
+
+        for (int row = 0; row < 8; row++) {
+            s += row + "|";
+            for (int col = 0; col < 8; col++) {
+                s += this.board[row][col].getChar() + "|";
+            }
+            s += row + "\n";
+
+            s += " +";
+            for (int col = 0; col < 8; col++) {
+                s += "-+";
+            }
+            s += '\n';
+        }
+        s += "  ";
+        for (int col = 0; col < 8; col++) {
+            s += col + " ";
+        }
+        s += '\n';
+        return s;
+
 
     }
     public static void main(String[] args){
-        ChessBoard cp =  new ChessBoard();
-        System.out.println(cp.toString());
-        System.out.println(cp.toString());
+        ChessBoard cb =  new ChessBoard();
+        System.out.println(cb.toString());
+        Player pW = new Player('W');
+        Player pB = new Player('B');
+        Move move = new Move(4, 0);
+        cb.move(cb.getBoard()[6][0].getChessPiece(), move, pW);
+        System.out.println(cb.toString());
+        Move move1 = new Move(3, 0);
+        cb.move(cb.getBoard()[4][0].getChessPiece(), move1, pW);
+        System.out.println(cb.toString());
+        Move move2 = new Move(2, 0);
+        cb.move(cb.getBoard()[3][0].getChessPiece(), move2, pW);
+        System.out.println(cb.toString());
+        Move move3 = new Move(1, 0);
+        cb.move(cb.getBoard()[2][0].getChessPiece(), move3, pW);
+        System.out.println(cb.toString());
+        Move rookMove = new Move(5, 0);
+        cb.move(cb.getBoard()[7][0].getChessPiece(), rookMove, pW);
+        System.out.println(cb.toString());
+        Move knightMove = new Move(5, 2);
+        cb.move(cb.getBoard()[7][1].getChessPiece(), knightMove, pW);
+        System.out.println(cb.toString());
+
+        Move pawnMove = new Move(5, 3);
+        cb.move(cb.getBoard()[6][3].getChessPiece(), pawnMove, pW);
+        System.out.println(cb.toString());
+
+        Move bishopMove = new Move(2, 7);
+        cb.move(cb.getBoard()[7][2].getChessPiece(), bishopMove, pW);
+        System.out.println(cb.toString());
+
+        Move first = new Move(2, 7);
+        cb.move(cb.getBoard()[1][7].getChessPiece(), first, pB);
+        System.out.println(cb.toString());
+
     }
 }

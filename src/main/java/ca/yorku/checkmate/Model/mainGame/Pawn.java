@@ -1,4 +1,4 @@
-package ca.yorku.checkmate.Model.mainGame;
+package mainGame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +39,14 @@ public class Pawn extends ChessPiece {
         //TODO: fix black white pawn
         List<Move> path = new ArrayList<Move>();
         int counter = this.getMovesHistory().get(this.getMovesHistory().size()-1).getRow() + 1;
-        while(move.getRow() >= counter) {
+        while(this.color==ChessBoard.black && move.getRow() >= counter) {
             path.add(new Move(counter, this.getMovesHistory().get(this.getMovesHistory().size()-1).getColumn()));
             counter++;
+        }
+        counter = this.getMovesHistory().get(this.getMovesHistory().size()-1).getRow() - 1;
+        while(this.color==ChessBoard.white && move.getRow() <= counter) {
+            path.add(new Move(counter, this.getMovesHistory().get(this.getMovesHistory().size()-1).getColumn()));
+            counter--;
         }
         return path;
     }

@@ -83,6 +83,28 @@ public class ChessBoardController {
     }
 
     /**
+     * URL: api/v1/boards/{id}/moves
+     * <br>
+     * Move a chess piece to a new position.
+     * @param id The id of the chess board.
+     * @return A response entity with chess board, informing client
+     * with Http status 200 if moved or 400 if not a valid move or 409 if not moved.
+     */
+    /*
+    // TODO add when chess game is more complete
+    @PatchMapping("{id}/moves")
+    public ResponseEntity<ChessBoard> move(@PathVariable("id") String id, @RequestBody Move move) {
+        if (move.isValid()) return ResponseEntity.badRequest().build();
+        //TODO check who's turn it is
+        //TODO check if move is valid, check who that move belongs too
+        return service.getBoardById(id).map(chessBoard -> {
+            //service.patchChessPiece(piece, move);
+            return ResponseEntity.ok(chessBoard);
+        }).orElse(new ResponseEntity<>(HttpStatus.CONFLICT));
+    }
+     */
+
+    /**
      * URL: api/v1/boards/{id}
      * <br>
      * Delete a chess board by id in the database.
@@ -97,6 +119,25 @@ public class ChessBoardController {
             return ResponseEntity.ok("Deleted chess board " + chessBoard + "!");
         }).orElse(ResponseEntity.notFound().build());
     }
+
+    /**
+     * URL: api/v1/boards/{id}/moves
+     * <br>
+     * Delete a chess piece from the chess board.
+     * @param id The id of the chess board.
+     * @return A response entity with chess board, informing client
+     * with Http status 200 if deleted or 404 if not found.
+     */
+    /*
+    // TODO add when chess game is more complete
+    @PatchMapping("{id}/moves")
+    public ResponseEntity<ChessBoard> deleteChessPiece(@PathVariable("id") String id, @RequestBody ChessPiece chessPiece) {
+        return service.getBoardById(id).map(chessBoard -> {
+            service.deleteChessBoard(chessBoard);
+            return ResponseEntity.ok(chessBoard);
+        }).orElse(ResponseEntity.notFound().build());
+    }
+     */
 
     /**
      * URL: api/v1/boards

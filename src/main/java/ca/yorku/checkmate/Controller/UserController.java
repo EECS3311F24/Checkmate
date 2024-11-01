@@ -103,14 +103,14 @@ public class UserController {
      * <p>URL: api/v1/users/{id}</p>
      * Delete a user by id in the database.
      * @param id The id of the user.
-     * @return A response entity with a message, informing client
+     * @return A response entity with user, informing client
      * with Http status 200 if deleted or 404 if not found.
      */
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") String id) {
+    public ResponseEntity<User> deleteUser(@PathVariable("id") String id) {
         return userService.getUserById(id).map(user -> {
             userService.deleteUser(user);
-            return ResponseEntity.ok("Deleted user " + user + "!");
+            return ResponseEntity.ok(user);
         }).orElse(ResponseEntity.notFound().build());
     }
 

@@ -4,7 +4,7 @@ import HeaderComponent from './components/HeaderComponent'
 import ListUserComponent from './components/ListUserComponent'
 import UserFormComponent from './components/UserFormComponent'
 import CheckmateHome from './components/CheckmateHome'
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <>

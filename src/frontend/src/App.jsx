@@ -4,7 +4,8 @@ import HeaderComponent from './components/HeaderComponent'
 import ListUserComponent from './components/ListUserComponent'
 import UserFormComponent from './components/UserFormComponent'
 import CheckmateHome from './components/CheckmateHome'
-import 'bootstrap/dist/css/bootstrap.min.css';
+import ChessGame from './components/ChessGameComponent'
+
 function App() {
   return (
     <>
@@ -15,6 +16,7 @@ function App() {
         <Route path='/users' element = {<ListUserComponent/>}></Route>
         <Route path='/signup' element = {<UserFormComponent/>}></Route>
         <Route path='/edit-user/:id' element = {<UserFormComponent/>}></Route>
+        <Route path="/play" element={<ChessGame />}></Route>
       </Routes>
     </BrowserRouter>
     </>

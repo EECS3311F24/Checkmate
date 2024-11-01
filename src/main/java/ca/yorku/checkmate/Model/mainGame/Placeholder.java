@@ -20,4 +20,8 @@ public class Placeholder {
     public ChessPiece getChessPiece(){
         return this.chessPiece;
     }
+    public void emptyPlaceholder(){
+        this.chessPiece = null;
+        this.piece = ' ';
+    }
 }

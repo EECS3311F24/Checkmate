@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Endpoint is api/v1/board
+ * Endpoint is api/v1/boards
  * <br>
  * Controller for chess boards, providing a rest endpoint
  * that allows getting, creating, updating, or deleting chess boards.
  */
 @CrossOrigin("*")
 @RestController
-@RequestMapping("api/v1/board")
+@RequestMapping("api/v1/boards")
 public class ChessBoardController {
     private final ChessBoardService service;
 
@@ -27,7 +27,7 @@ public class ChessBoardController {
     }
 
     /**
-     * URL: api/v1/board
+     * URL: api/v1/boards
      * <br>
      * Gets all chess boards in the database.
      * @return A list of chess boards.
@@ -38,7 +38,7 @@ public class ChessBoardController {
     }
 
     /**
-     * URL: api/v1/board/{id}
+     * URL: api/v1/boards/{id}
      * <br>
      * Gets chess board by id in the database.
      * @param id The id of the chess board.
@@ -53,7 +53,7 @@ public class ChessBoardController {
     }
 
     /**
-     * URL: api/v1/board
+     * URL: api/v1/boards
      * <br>
      * Create a new chess board in the database.
      * @param chessBoard The chess board to be created.
@@ -67,7 +67,7 @@ public class ChessBoardController {
     }
 
     /**
-     * URL: api/v1/board/{id}
+     * URL: api/v1/boards/{id}
      * <br>
      * Update a chess board by id in the database.
      * @param id The id of the chess board.
@@ -83,7 +83,7 @@ public class ChessBoardController {
     }
 
     /**
-     * URL: api/v1/board/{id}
+     * URL: api/v1/boards/{id}
      * <br>
      * Delete a chess board by id in the database.
      * @param id The id of the chess board.
@@ -99,7 +99,7 @@ public class ChessBoardController {
     }
 
     /**
-     * URL: api/v1/board
+     * URL: api/v1/boards
      * <br>
      * Delete all chess boards in the database.
      * @return A response entity with a message, informing client

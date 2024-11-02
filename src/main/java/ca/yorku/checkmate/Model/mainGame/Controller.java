@@ -1,4 +1,4 @@
-package mainGame;
+package ca.yorku.checkmate.Model.mainGame;
 
 public class Controller {
     private Chess chess;

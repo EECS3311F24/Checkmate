@@ -1,4 +1,4 @@
-package mainGame;
+package ca.yorku.checkmate.Model.mainGame;
 
 import java.util.ArrayList;
 import java.util.List;

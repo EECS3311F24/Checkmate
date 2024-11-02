@@ -1,4 +1,4 @@
-package mainGame;
+package ca.yorku.checkmate.Model.mainGame;
 
 public class Placeholder {
     private char piece;

@@ -1,4 +1,4 @@
-package mainGame;
+package ca.yorku.checkmate.Model.mainGame;
 
 import java.io.BufferedReader;
 import java.io.IOException;

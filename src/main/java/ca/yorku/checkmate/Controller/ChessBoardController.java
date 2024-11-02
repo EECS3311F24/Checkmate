@@ -20,6 +20,9 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/boards")
 public class ChessBoardController {
+    // TODO api/v1/boards/{id}/move/{playerId}?x0={x0}&y0={y0}&x1={x1}&y1={y1} and maybe responseBody of move?
+    // TODO api/v1/boards/{id}?x={x}&y={y} to get piece at x,y
+
     private final ChessBoardService service;
 
     @Autowired

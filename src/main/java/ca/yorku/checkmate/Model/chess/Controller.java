@@ -33,10 +33,10 @@ public class Controller {
             from = getMove();
             to = getMove();
             this.reportMove(whosTurn.playerColor(), from, to);
-            ChessPiece piece = this.chess.getChessPiece(from.getRow(), from.getColumn());
+            ChessPiece piece = this.chess.getChessPiece(from.row(), from.col());
             if(piece != null) {
                 if(piece.getColor() == whosTurn.playerColor()) {
-                    chess.move(to.getRow(), to.getColumn(), piece);
+                    chess.move(to.row(), to.col(), piece);
                 }
             }
         }
@@ -51,8 +51,8 @@ public class Controller {
     }
 
     private void reportMove(char whosTurn, Move from, Move to) {
-        System.out.println(whosTurn + " makes move from " + from.getRow() +
-                ":"+from.getColumn() + " to " + to.getRow() + ":"+to.getColumn()+"\n");
+        System.out.println(whosTurn + " makes move from " + from.row() +
+                ":"+from.col() + " to " + to.row() + ":"+to.col()+"\n");
     }
 
     private void reportFinal() {

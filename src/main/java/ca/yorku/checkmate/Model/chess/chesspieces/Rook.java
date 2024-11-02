@@ -13,42 +13,42 @@ public class Rook extends ChessPiece {
 
     @Override
     public boolean move(Move move) {
-        return this.movesHistory.get(this.movesHistory.size()-1).getRow() == move.getRow() ||
-                this.movesHistory.get(this.movesHistory.size() - 1).getColumn() == move.getColumn();
+        return this.movesHistory.get(this.movesHistory.size()-1).row() == move.row() ||
+                this.movesHistory.get(this.movesHistory.size() - 1).col() == move.col();
     }
 
     @Override
     public List<Move> getPathWay(Move move) {
         List<Move> path = new ArrayList<>();
         Move lastMove = this.movesHistory.get(this.movesHistory.size() - 1);
-        if(lastMove.getRow() != move.getRow()) {
-            if(lastMove.getRow() < move.getRow()) {
-                int counter = lastMove.getRow() + 1;
-                while(counter <= move.getRow()) {
-                    path.add(new Move(counter, move.getColumn()));
+        if(lastMove.row() != move.row()) {
+            if(lastMove.row() < move.row()) {
+                int counter = lastMove.row() + 1;
+                while(counter <= move.row()) {
+                    path.add(new Move(counter, move.col()));
                     counter++;
                 }
             }
             else {
-                int counter = lastMove.getRow() - 1;
-                while(counter >= move.getRow()) {
-                    path.add(new Move(counter, move.getColumn()));
+                int counter = lastMove.row() - 1;
+                while(counter >= move.row()) {
+                    path.add(new Move(counter, move.col()));
                     counter--;
                 }
             }
         }
-        else if(lastMove.getColumn() != move.getColumn()) {
-            if(lastMove.getColumn() < move.getColumn()) {
-                int counter = lastMove.getColumn() + 1;
-                while(counter <= move.getColumn()) {
-                    path.add(new Move(move.getRow(), counter));
+        else if(lastMove.col() != move.col()) {
+            if(lastMove.col() < move.col()) {
+                int counter = lastMove.col() + 1;
+                while(counter <= move.col()) {
+                    path.add(new Move(move.row(), counter));
                     counter++;
                 }
             }
             else {
-                int counter = lastMove.getColumn() - 1;
-                while(counter >= move.getColumn()) {
-                    path.add(new Move(move.getRow(), counter));
+                int counter = lastMove.col() - 1;
+                while(counter >= move.col()) {
+                    path.add(new Move(move.row(), counter));
                     counter--;
                 }
             }
@@ -60,10 +60,10 @@ public class Rook extends ChessPiece {
     public List<Move> canThisMove() {
         List<Move> list = new ArrayList<>();
         Move lastMove = this.movesHistory.get(this.movesHistory.size() - 1);
-        list.add(new Move(lastMove.getRow() - 1, lastMove.getColumn())); //up
-        list.add(new Move(lastMove.getRow() + 1, lastMove.getColumn())); //down
-        list.add(new Move(lastMove.getRow(), lastMove.getColumn()-1)); //left
-        list.add(new Move(lastMove.getRow(), lastMove.getColumn()+1)); //right
+        list.add(new Move(lastMove.row() - 1, lastMove.col())); //up
+        list.add(new Move(lastMove.row() + 1, lastMove.col())); //down
+        list.add(new Move(lastMove.row(), lastMove.col()-1)); //left
+        list.add(new Move(lastMove.row(), lastMove.col()+1)); //right
         return list;
     }
 }

@@ -10,6 +10,13 @@ public class Chess {
     private ChessBoard cb;
     //self note: add points system?
 
+    public Chess() {
+        this.cb = new ChessBoard();
+        this.playerWhite = new Player(ChessBoard.white);
+        this.playerBlack = new Player(ChessBoard.black);
+        this.whosTurn = this.playerWhite;
+    }
+
     public Chess(Player playerW, Player playerB) {
         this.cb = new ChessBoard();
         this.playerWhite = playerW;

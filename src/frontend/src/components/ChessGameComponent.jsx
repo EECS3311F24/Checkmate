@@ -154,6 +154,32 @@ const ChessGame = () => {
                 <div className="chess-current-player">
                   Current Player: {gameState.currentPlayer}
                 </div>
+                
+                {/*Captured pieces display*/}
+
+                <div className="chess-captured-pieces">
+                            <div className="captured-white">
+                                {gameState.capturedPieces.WHITE.map((piece, index) => (
+                                    <img
+                                        key={index}
+                                        src={pieceImages[piece.color][piece.type]}
+                                        alt={`Captured ${piece.color} ${piece.type}`}
+                                        className="captured-piece"
+                                    />
+                                ))}
+                            </div>
+                            <div className="captured-black">
+                                {gameState.capturedPieces.BLACK.map((piece, index) => (
+                                    <img
+                                        key={index}
+                                        src={pieceImages[piece.color][piece.type]}
+                                        alt={`Captured ${piece.color} ${piece.type}`}
+                                        className="captured-piece"
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
                 <div className="chess-board">
                   {gameState.board.map((row, rowIndex) => (
                     row.map((piece, colIndex) => (

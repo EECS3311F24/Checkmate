@@ -151,29 +151,29 @@ public class ChessBoard {
     public boolean move(ChessPiece cp, Move move, Player player) {
         //move + capture
         if(this.isValid(cp, move) && cp.move(move)) {
-            if(this.inCheck(player.getPlayerColor()) && cp instanceof King) {
-                if(player.getPlayerColor() == ChessBoard.white) {
+            if(this.inCheck(player.playerColor()) && cp instanceof King) {
+                if(player.playerColor() == ChessBoard.white) {
                     if(move.getRow() == this.whiteKingLocation.getRow() && move.getColumn() == this.whiteKingLocation.getColumn()) {return false;}
                 }
                 else {
                     if(move.getRow() == this.blackKingLocation.getRow() && move.getColumn() == this.blackKingLocation.getColumn()) {return false;}
                 }
             }
-            else if(this.inCheck(player.getPlayerColor())) {
+            else if(this.inCheck(player.playerColor())) {
                 //check if this moves stop in check and this cp is not king
                 //move a temp blocker to the new move - if still in check, return false, if not in check, remove temp blocker
-                Placeholder temp = new Placeholder(new Pawn(player.getPlayerColor()));
+                Placeholder temp = new Placeholder(new Pawn(player.playerColor()));
                 this.board[move.getRow()][move.getColumn()] = temp;
                 temp.getChessPiece().addMove(move);
-                if(player.getPlayerColor() == ChessBoard.white) {
+                if(player.playerColor() == ChessBoard.white) {
                     this.whitePieces.add(temp.getChessPiece());
                 }
                 else {
                     this.blackPieces.add(temp.getChessPiece());
                 }
                 boolean res = true;
-                if(inCheck(player.getPlayerColor())) res = false;
-                if(player.getPlayerColor() == ChessBoard.white) {
+                if(inCheck(player.playerColor())) res = false;
+                if(player.playerColor() == ChessBoard.white) {
                     this.whitePieces.remove(this.whitePieces.size()-1);
                 }
                 else {
@@ -198,7 +198,7 @@ public class ChessBoard {
                         last = new Placeholder();
                     }
                 }
-                if(moveable && (last.getChar() == ' ' || (last.getChar()!=' ' && last.getChessPiece().getColor() != player.getPlayerColor()))) {
+                if(moveable && (last.getChar() == ' ' || (last.getChar()!=' ' && last.getChessPiece().getColor() != player.playerColor()))) {
                     int oldRow = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1).getRow();
                     int oldCol = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1).getColumn();
                     this.board[move.getRow()][move.getColumn()] = this.board[oldRow][oldCol];
@@ -206,8 +206,8 @@ public class ChessBoard {
                     cp.addMove(move);
 
                     if(cp instanceof King) this.updateKingLocation(move, (King) cp);
-                    if(this.inCheck(player.getPlayerColor())) {
-                        char otherPlayer = player.getPlayerColor();
+                    if(this.inCheck(player.playerColor())) {
+                        char otherPlayer = player.playerColor();
                         if(otherPlayer == ChessBoard.white) {
                             if(this.board[this.whiteKingLocation.getRow()][this.whiteKingLocation.getColumn()].getChessPiece().canThisMove().isEmpty()) {this.checkMated = ChessBoard.white;}
                         }
@@ -241,7 +241,7 @@ public class ChessBoard {
     }
 
     private char getOtherPlayerColor(Player player) {
-        if(player.getPlayerColor() == ChessBoard.white) {
+        if(player.playerColor() == ChessBoard.white) {
             return ChessBoard.black;
         }
         else return ChessBoard.white;
@@ -258,7 +258,7 @@ public class ChessBoard {
 
     public boolean hasMove(Player player) {
         //checks for move for player, checks at start of turn
-        if (player.getPlayerColor() == ChessBoard.white) {
+        if (player.playerColor() == ChessBoard.white) {
             //have player return array of moves that needs to be checked for empty
             //create isEmpty method
             List<Move> possibleMoves = new ArrayList<>();

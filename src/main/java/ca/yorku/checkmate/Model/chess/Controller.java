@@ -32,10 +32,10 @@ public class Controller {
 
             from = getMove();
             to = getMove();
-            this.reportMove(whosTurn.getPlayerColor(), from, to);
+            this.reportMove(whosTurn.playerColor(), from, to);
             ChessPiece piece = this.chess.getChessPiece(from.getRow(), from.getColumn());
             if(piece != null) {
-                if(piece.getColor() == whosTurn.getPlayerColor()) {
+                if(piece.getColor() == whosTurn.playerColor()) {
                     chess.move(to.getRow(), to.getColumn(), piece);
                 }
             }
@@ -46,7 +46,7 @@ public class Controller {
     private void report() {
 
         String s = chess.getChessBoard().toString()
-                + " " + this.chess.getWhosTurn().getPlayerColor() + " moves next";
+                + " " + this.chess.getWhosTurn().playerColor() + " moves next";
         System.out.println(s);
     }
 

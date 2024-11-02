@@ -28,8 +28,13 @@ const ChessGame = () => {
         selectedPiece: null,
         possibleMoves: [],
         error: null,
-        currentPlayer: 'WHITE'
-      });
+        currentPlayer: 'WHITE',
+        capturedPieces: {
+            WHITE: [],
+            BLACK: []
+        },
+        status: null // New state for game status messages
+    });
     
       // Initialize the board with starting positions
       function initializeBoard() {
@@ -83,7 +88,23 @@ const ChessGame = () => {
         if (gameState.selectedPiece) {
           const newBoard = JSON.parse(JSON.stringify(gameState.board));
           const selectedPiece = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col];
+          const targetPiece = gameState.board[row][col];
           
+          // If there's a piece at the target location, add it to captured pieces
+          if (targetPiece) {
+            const newCapturedPieces = {
+                ...gameState.capturedPieces,
+                [selectedPiece.color]: [
+                    ...gameState.capturedPieces[selectedPiece.color],
+                    targetPiece
+                ]
+            };
+            setGameState(prev => ({
+                ...prev,
+                capturedPieces: newCapturedPieces,
+                status: `${selectedPiece.color} captured ${targetPiece.color} ${targetPiece.type}`
+            }));
+        }
           newBoard[gameState.selectedPiece.row][gameState.selectedPiece.col] = null;
           newBoard[row][col] = selectedPiece;
           

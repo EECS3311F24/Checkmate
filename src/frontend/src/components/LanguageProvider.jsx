@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
 import en from '../translations/en.json';
 import es from '../translations/es.json';
+import fn from '../translations/fn.json';
 
 const translations = {
   en,
@@ -8,25 +8,7 @@ const translations = {
   fn
 };
 
-const LanguageContext = createContext();
-
-export const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState('en');
-
-  const changeLanguage = (lang) => setLanguage(lang);
-
-  return (
-    <LanguageContext.Provider value={{ language, changeLanguage, translations }}>
-      {children}
-    </LanguageContext.Provider>
-  );
+// Function to get translated strings based on language
+export const getTranslation = (key, language = 'en') => {
+  return translations[language][key] || key;
 };
-
-export const useLanguage = () => useContext(LanguageContext);
-
-const Translate = ({ id }) => {
-    const { language, translations } = useLanguage();
-    return translations[language][id] || id;
-  };
-  
-  export default Translate;

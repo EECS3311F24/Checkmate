@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { createUser, getUser, updateUser } from '../services/UserService';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getTranslation } from './LanguageProvider';
 
 const UserFormComponent = () => {
     const [username, setUsername] = useState('')
@@ -54,14 +55,14 @@ const UserFormComponent = () => {
         if (username.trim()) {
             errorsCopy.username = '';
         } else {
-            errorsCopy.username = "Username is required!"
+            errorsCopy.username = getTranslation("UserFormComponmentUsernameError")
             valid = false;
         }
 
         if (email.trim()) {
             errorsCopy.email = '';
         } else {
-            errorsCopy.email = "Email is required!"
+            errorsCopy.email = getTranslation("UserFormComponmentEmailError")
             valid = false;
         }
 
@@ -87,7 +88,7 @@ const UserFormComponent = () => {
                             <label className='form-label'>Username</label>
                             <input
                                 type="text"
-                                placeholder="Username"
+                                placeholder= {getTranslation("UserFormComponmentUserPlaceholder")}
                                 name='username'
                                 value={username}
                                 className={`form-control ${errors.username ? 'is-invalid' : ''}`}
@@ -100,7 +101,7 @@ const UserFormComponent = () => {
                             <label className='form-label'>Email</label>
                             <input
                                 type="text"
-                                placeholder="Email"
+                                placeholder= {getTranslation("UserFormComponmentEmailPlaceholder")}
                                 name='email'
                                 value={email}
                                 className={`form-control ${errors.email ? 'is-invalid' : ''}`}

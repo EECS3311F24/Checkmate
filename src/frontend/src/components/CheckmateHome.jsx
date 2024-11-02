@@ -1,13 +1,14 @@
 import React from 'react'
+import { getTranslation } from './LanguageProvider';
 
 const CheckmateHome = () => {
     return (
         <div className='text-center'>
-            <h1><Translate id="CheckmateHomeH1" /></h1>
-            <p><Translate id="CheckmateHomeP1" /></p>
-            <p><Translate id="CheckmateHomeP2" /></p>
-            <p><Translate id="CheckmateHomeP3" /></p>
-            <p><Translate id="CheckmateHomeP4" /></p>
+            <h1>{getTranslation("CheckmateHomeH1")}</h1>
+            <p>{getTranslation("CheckmateHomeP1")}</p>
+            <p>{getTranslation("CheckmateHomeP2")}</p>
+            <p>{getTranslation("CheckmateHomeP3")}</p>
+            <p>{getTranslation("CheckmateHomeP4")}</p>
         </div>
     )
 }

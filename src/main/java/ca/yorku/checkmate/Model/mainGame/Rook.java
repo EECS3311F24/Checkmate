@@ -23,14 +23,14 @@ public class Rook extends ChessPiece {
             if(lastMove.getRow() < move.getRow()) {
                 int counter = lastMove.getRow() + 1;
                 while(counter <= move.getRow()) {
-                    path.add(new Move(move.getRow(), counter));
+                    path.add(new Move(counter, move.getColumn()));
                     counter++;
                 }
             }
             else {
                 int counter = lastMove.getRow() - 1;
                 while(counter >= move.getRow()) {
-                    path.add(new Move(move.getRow(), counter));
+                    path.add(new Move(counter, move.getColumn()));
                     counter--;
                 }
             }
@@ -39,14 +39,14 @@ public class Rook extends ChessPiece {
             if(lastMove.getColumn() < move.getColumn()) {
                 int counter = lastMove.getColumn() + 1;
                 while(counter <= move.getColumn()) {
-                    path.add(new Move(move.getColumn(), counter));
+                    path.add(new Move(move.getRow(), counter));
                     counter++;
                 }
             }
             else {
                 int counter = lastMove.getColumn() - 1;
-                while(counter <= move.getColumn()) {
-                    path.add(new Move(move.getColumn(), counter));
+                while(counter >= move.getColumn()) {
+                    path.add(new Move(move.getRow(), counter));
                     counter--;
                 }
             }

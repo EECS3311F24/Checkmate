@@ -25,7 +25,7 @@ public class Bishop extends ChessPiece {
         int currentRow = lastMove.getRow();
         int currentColumn = lastMove.getColumn();
         if(lastMove.getRow() < move.getRow() && lastMove.getColumn() < move.getColumn()) { //+1+1
-            while(currentRow <= move.getRow() && lastMove.getColumn() <= move.getColumn()) {
+            while(currentRow < move.getRow() && lastMove.getColumn() < move.getColumn()) {
                 currentRow++;
                 currentColumn++;
                 path.add(new Move(currentRow, currentColumn));
@@ -33,21 +33,21 @@ public class Bishop extends ChessPiece {
 
         }
         else if(lastMove.getRow() < move.getRow() && lastMove.getColumn() > move.getColumn()) { //+1-1
-            while(currentRow <= move.getRow() && lastMove.getColumn() >= move.getColumn()) {
+            while(currentRow < move.getRow() && lastMove.getColumn() > move.getColumn()) {
                 currentRow++;
                 currentColumn--;
                 path.add(new Move(currentRow, currentColumn));
             }
         }
         else if (lastMove.getRow() > move.getRow() && lastMove.getColumn() < move.getColumn()) { //-1+1
-            while(currentRow >= move.getRow() && lastMove.getColumn() <= move.getColumn()) {
+            while(currentRow > move.getRow() && lastMove.getColumn() < move.getColumn()) {
                 currentRow--;
                 currentColumn++;
                 path.add(new Move(currentRow, currentColumn));
             }
         }
         else if (lastMove.getRow() > move.getRow() && lastMove.getColumn() > move.getColumn()) { //-1-1
-            while(currentRow >= move.getRow() && lastMove.getColumn() >= move.getColumn()) {
+            while(currentRow > move.getRow() && lastMove.getColumn() > move.getColumn()) {
                 currentRow--;
                 currentColumn--;
                 path.add(new Move(currentRow, currentColumn));

@@ -16,7 +16,6 @@ public class Chess {
     }
 
     public boolean move(int row, int col, ChessPiece cp) {
-        //TODO
         boolean moved = false;
         if(this.cb.move(cp, new Move(row, col), this.whosTurn)) {
             moved = true;
@@ -31,13 +30,11 @@ public class Chess {
     }
 
     public boolean isGameOver(){
-        //TODO
-        return false;
+        return cb.checkMated!=' ';
     }
 
     public Player getWinner(){
-        //TODO:
-        return this.playerBlack;
+        return this.getOtherPlayer(new Player(cb.checkMated));
     }
 
     public Player getWhosTurn() {

@@ -31,6 +31,9 @@ public class Player {
             try {
                 System.out.print(message);
                 String line = Player.stdin.readLine();
+                line = line.trim();
+                line = line.strip();
+                System.out.println(line);
                 move = Integer.parseInt(line);
                 if (lower <= move && move <= upper) {
                     return move;

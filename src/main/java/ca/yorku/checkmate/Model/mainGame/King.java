@@ -15,7 +15,8 @@ public class King extends ChessPiece {
         //TODO: implement castle and checks later
         int rowDiff = Math.abs(this.movesHistory.get(this.movesHistory.size() - 1).getRow()-move.getRow());
         int colDiff = Math.abs(this.movesHistory.get(this.movesHistory.size() - 1).getColumn()-move.getColumn());
-        return rowDiff == 1 ^ colDiff == 1;
+
+        return ((rowDiff == 1&&colDiff==0) ^ (colDiff == 1&&rowDiff==0) || (rowDiff == 1 && colDiff == 1));
     }
 
     @Override

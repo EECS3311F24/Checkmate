@@ -1,8 +1,7 @@
 package ca.yorku.checkmate.Controller;
 
-import ca.yorku.checkmate.Model.chess.Chess;
-import ca.yorku.checkmate.Model.chess.ChessBoardDB;
-import ca.yorku.checkmate.Model.chess.ChessBoardService;
+import ca.yorku.checkmate.Model.chess.*;
+import ca.yorku.checkmate.Model.chess.chesspieces.ChessPiece;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/boards")
 public class ChessBoardController {
-    // TODO api/v1/boards/{id}/move/{playerId}?x0={x0}&y0={y0}&x1={x1}&y1={y1} and maybe responseBody of move?
-    // TODO api/v1/boards/{id}?x={x}&y={y} to get piece at x,y
-
     private final ChessBoardService service;
 
     @Autowired
@@ -57,6 +53,38 @@ public class ChessBoardController {
     }
 
     /**
+     * URL: api/v1/boards/{id}
+     * <br>
+     * Gets a chess piece at a row and col from chessboard with id.
+     * @param id The id of the chess board.
+     * @param move The row and col to get the chess piece.
+     * @return A response entity with chess board, informing client
+     * with Http status 200 if found or 404 if not found.
+     */
+    @GetMapping("{id}/moves")
+    public ResponseEntity<ChessPiece> getChessPiece(@PathVariable("id") String id, @RequestBody Move move) {
+        if (!move.isValid()) return ResponseEntity.notFound().build();
+        return service.getBoardById(id)
+                .map(chessBoard -> ResponseEntity.ok(chessBoard.chess.getChessPiece(move.row(), move.col())))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * URL: api/v1/boards/{id}/whosTurn
+     * <br>
+     * Gets whosTurn from chessboard with id.
+     * @param id The id of the chess board.
+     * @return A response entity with chess board, informing client
+     * with Http status 200 if found or 404 if not found.
+     */
+    @GetMapping("{id}/whosTurn")
+    public ResponseEntity<Player> getWhosTurn(@PathVariable("id") String id) {
+        return service.getBoardById(id)
+                .map(chessBoard -> ResponseEntity.ok(chessBoard.chess.getWhosTurn()))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
      * URL: api/v1/boards
      * <br>
      * Create a new chess board in the database.
@@ -75,18 +103,17 @@ public class ChessBoardController {
     /**
      * URL: api/v1/boards/{id}
      * <br>
-     * Update a chess board by id in the database.
+     * Reset a chess board by id in the database.
      * @param id The id of the chess board.
-     * @param chessBoard The chessBoard to be created.
      * @return A response entity with chess board, informing client
      * with Http status 200 if updated, 201 if created, 409 if not created.
      */
     @PutMapping("{id}")
-    public ResponseEntity<ChessBoardDB> updateChessBoard(@PathVariable("id") String id, @RequestBody ChessBoardDB chessBoard) {
-        //if (!service.hasBoardById(id)) return createChessBoard(chessBoard);
-        // TODO make like user
-        service.updateChessBoard(id, chessBoard);
-        return ResponseEntity.ok(chessBoard);
+    public ResponseEntity<ChessBoardDB> resetChessBoard(@PathVariable("id") String id) {
+        return service.getBoardById(id).map(chessBoard ->  {
+            service.resetChessBoard(chessBoard);
+            return ResponseEntity.ok(chessBoard);
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     /**
@@ -94,22 +121,23 @@ public class ChessBoardController {
      * <br>
      * Move a chess piece to a new position.
      * @param id The id of the chess board.
+     * @param moves The moves to be made with start and end.
      * @return A response entity with chess board, informing client
      * with Http status 200 if moved or 400 if not a valid move or 409 if not moved.
      */
-    /*
-    // TODO add when chess game is more complete
     @PatchMapping("{id}/moves")
-    public ResponseEntity<ChessBoard> move(@PathVariable("id") String id, @RequestBody Move move) {
-        if (move.isValid()) return ResponseEntity.badRequest().build();
-        //TODO check who's turn it is
-        //TODO check if move is valid, check who that move belongs too
+    public ResponseEntity<ChessBoardDB> move(@PathVariable("id") String id, @RequestBody Moves moves) {
+        // TODO need a cookie to store who sending request and use the player ids
+        if (!moves.isValid()) return ResponseEntity.badRequest().build();
         return service.getBoardById(id).map(chessBoard -> {
-            //service.patchChessPiece(piece, move);
+            if (!service.moveChessPiece(chessBoard, moves))
+                return new ResponseEntity<ChessBoardDB>(HttpStatus.CONFLICT);
+            // TODO testing stuff remove
+            System.out.println(chessBoard.chess.getChessBoard());
+            System.out.println(chessBoard.chess.getWhosTurn());
             return ResponseEntity.ok(chessBoard);
         }).orElse(new ResponseEntity<>(HttpStatus.CONFLICT));
     }
-     */
 
     /**
      * URL: api/v1/boards/{id}
@@ -120,31 +148,12 @@ public class ChessBoardController {
      * with Http status 200 if deleted or 404 if not found.
      */
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteChessBoard(@PathVariable("id") String id) {
-        return service.getBoardById(id).map(chessBoard -> {
-            service.deleteChessBoard(chessBoard);
-            return ResponseEntity.ok("Deleted chess board " + chessBoard + "!");
-        }).orElse(ResponseEntity.notFound().build());
-    }
-
-    /**
-     * URL: api/v1/boards/{id}/moves
-     * <br>
-     * Delete a chess piece from the chess board.
-     * @param id The id of the chess board.
-     * @return A response entity with chess board, informing client
-     * with Http status 200 if deleted or 404 if not found.
-     */
-    /*
-    // TODO add when chess game is more complete
-    @PatchMapping("{id}/moves")
-    public ResponseEntity<ChessBoard> deleteChessPiece(@PathVariable("id") String id, @RequestBody ChessPiece chessPiece) {
+    public ResponseEntity<ChessBoardDB> deleteChessBoard(@PathVariable("id") String id) {
         return service.getBoardById(id).map(chessBoard -> {
             service.deleteChessBoard(chessBoard);
             return ResponseEntity.ok(chessBoard);
         }).orElse(ResponseEntity.notFound().build());
     }
-     */
 
     /**
      * URL: api/v1/boards

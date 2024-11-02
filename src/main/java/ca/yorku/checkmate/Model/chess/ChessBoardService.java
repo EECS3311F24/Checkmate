@@ -1,5 +1,6 @@
 package ca.yorku.checkmate.Model.chess;
 
+import ca.yorku.checkmate.Model.chess.chesspieces.ChessPiece;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,17 +33,25 @@ public class ChessBoardService {
         return repository.existsById(id);
     }
 
+    public void resetChessBoard(ChessBoardDB chessBoard) {
+        chessBoard.chess = new Chess();
+        repository.save(chessBoard);
+    }
+
     public boolean createChessBoard(ChessBoardDB chessBoard) {
-        // TODO if important info not allowed to duplicate check here first
         repository.save(chessBoard);
         return true;
     }
 
-    public void updateChessBoard(String id, ChessBoardDB newChessBoard) {
-        getBoardById(id).ifPresent(chessBoard -> {
-            // TODO update information when chess board gets more info.
-            repository.save(chessBoard);
-        });
+    public boolean moveChessPiece(ChessBoardDB chessBoard, Moves moves) {
+        // TODO move should not report true if the wrong person piece is trying to get moved
+        Player whosTurn = chessBoard.chess.getWhosTurn();
+        ChessPiece piece = chessBoard.chess.getChessPiece(moves.start().row(), moves.start().col());
+        if (piece == null) return false;
+        if (whosTurn.playerColor() != piece.getColor()) return false;
+        boolean moved = chessBoard.chess.move(moves.end().row(), moves.end().col(), piece);
+        repository.save(chessBoard);
+        return moved;
     }
 
     public void deleteChessBoard(ChessBoardDB chessBoard) {

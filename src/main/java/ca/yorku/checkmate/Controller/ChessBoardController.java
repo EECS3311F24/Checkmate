@@ -85,7 +85,7 @@ public class ChessBoardController {
     }
 
     /**
-     * URL: api/v1/boards
+     * URL: api/v1/boards?id1={id1}&id2={id2}
      * <br>
      * Create a new chess board in the database.
      * @param player1Id player 1 id for user.
@@ -106,7 +106,7 @@ public class ChessBoardController {
      * Reset a chess board by id in the database.
      * @param id The id of the chess board.
      * @return A response entity with chess board, informing client
-     * with Http status 200 if updated, 201 if created, 409 if not created.
+     * with Http status 200 if updated, 404 if not found.
      */
     @PutMapping("{id}")
     public ResponseEntity<ChessBoardDB> resetChessBoard(@PathVariable("id") String id) {
@@ -123,7 +123,7 @@ public class ChessBoardController {
      * @param id The id of the chess board.
      * @param moves The moves to be made with start and end.
      * @return A response entity with chess board, informing client
-     * with Http status 200 if moved or 400 if not a valid move or 409 if not moved.
+     * with Http status 200 if moved or 400 if not a valid move or 409 if not moved or 404 if not found .
      */
     @PatchMapping("{id}/moves")
     public ResponseEntity<ChessBoardDB> move(@PathVariable("id") String id, @CookieValue(name = "userId") String userId, @RequestBody Moves moves) {
@@ -136,7 +136,7 @@ public class ChessBoardController {
             System.out.println(chessBoard.chess.getChessBoard());
             System.out.println(chessBoard.chess.getWhosTurn());
             return ResponseEntity.ok(chessBoard);
-        }).orElse(new ResponseEntity<>(HttpStatus.CONFLICT));
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     /**

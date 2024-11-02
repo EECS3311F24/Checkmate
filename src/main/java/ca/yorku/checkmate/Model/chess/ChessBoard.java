@@ -1,4 +1,6 @@
-package ca.yorku.checkmate.Model.mainGame;
+package ca.yorku.checkmate.Model.chess;
+
+import ca.yorku.checkmate.Model.chess.chesspieces.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +8,8 @@ import java.util.List;
 public class ChessBoard {
     static final int dimensions = 8;
     private Placeholder[][] board;
-    static final char black = 'B';
-    static final char white = 'W';
+    public static final char black = 'B';
+    public static final char white = 'W';
     private List<ChessPiece> blackPieces;
     private List<ChessPiece> whitePieces;
     private boolean whiteInCheck;
@@ -197,8 +199,8 @@ public class ChessBoard {
                     }
                 }
                 if(moveable && (last.getChar() == ' ' || (last.getChar()!=' ' && last.getChessPiece().getColor() != player.getPlayerColor()))) {
-                    int oldRow = cp.movesHistory.get(cp.movesHistory.size() - 1).getRow();
-                    int oldCol = cp.movesHistory.get(cp.movesHistory.size() - 1).getColumn();
+                    int oldRow = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1).getRow();
+                    int oldCol = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1).getColumn();
                     this.board[move.getRow()][move.getColumn()] = this.board[oldRow][oldCol];
                     this.board[oldRow][oldCol] = new Placeholder();
                     cp.addMove(move);

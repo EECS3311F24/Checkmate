@@ -1,4 +1,6 @@
-package ca.yorku.checkmate.Model.mainGame;
+package ca.yorku.checkmate.Model.chess;
+
+import ca.yorku.checkmate.Model.chess.chesspieces.ChessPiece;
 
 public class Chess {
     private Player whosTurn;

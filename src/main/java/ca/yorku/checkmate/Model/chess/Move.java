@@ -1,4 +1,4 @@
-package ca.yorku.checkmate.Model.mainGame;
+package ca.yorku.checkmate.Model.chess;
 
 public class Move {
     private final int x;

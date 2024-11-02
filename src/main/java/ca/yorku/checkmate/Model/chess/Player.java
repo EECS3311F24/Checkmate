@@ -1,9 +1,8 @@
-package ca.yorku.checkmate.Model.mainGame;
+package ca.yorku.checkmate.Model.chess;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
 public class Player {
     private char playerColor;

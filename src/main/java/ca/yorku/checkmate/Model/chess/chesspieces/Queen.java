@@ -1,4 +1,7 @@
-package ca.yorku.checkmate.Model.mainGame;
+package ca.yorku.checkmate.Model.chess.chesspieces;
+
+import ca.yorku.checkmate.Model.chess.ChessBoard;
+import ca.yorku.checkmate.Model.chess.Move;
 
 import java.util.ArrayList;
 import java.util.List;

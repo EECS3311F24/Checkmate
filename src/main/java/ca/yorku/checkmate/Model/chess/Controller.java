@@ -2,6 +2,7 @@ package ca.yorku.checkmate.Model.chess;
 
 import ca.yorku.checkmate.Model.chess.chesspieces.ChessPiece;
 
+// TODO remove only for testing/printing to console
 public class Controller {
     private Chess chess;
     private Player pW;

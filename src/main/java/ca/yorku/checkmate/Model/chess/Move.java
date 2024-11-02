@@ -1,5 +1,6 @@
 package ca.yorku.checkmate.Model.chess;
 
+// TODO record?
 public class Move {
     private final int x;
     private final int y;

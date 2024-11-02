@@ -34,7 +34,7 @@ public class Chess {
         return moved;
     }
     private Player getOtherPlayer(Player p) {
-        if(p == this.playerWhite) {return this.playerBlack;}
+        if(p.equals(this.playerWhite)) return this.playerBlack;
         else return this.playerWhite;
     }
 

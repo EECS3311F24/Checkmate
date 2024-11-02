@@ -1,6 +1,6 @@
 package ca.yorku.checkmate.Controller;
 
-import ca.yorku.checkmate.Model.chess.ChessBoard;
+import ca.yorku.checkmate.Model.chess.ChessBoardDB;
 import ca.yorku.checkmate.Model.chess.ChessBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,7 @@ public class ChessBoardController {
      * @return A list of chess boards.
      */
     @GetMapping
-    public List<ChessBoard> getBoards() {
+    public List<ChessBoardDB> getBoards() {
         return service.getBoards();
     }
 
@@ -46,7 +46,7 @@ public class ChessBoardController {
      * with Http status 200 if found or 404 if not found.
      */
     @GetMapping("{id}")
-    public ResponseEntity<ChessBoard> getChessBoardById(@PathVariable("id") String id) {
+    public ResponseEntity<ChessBoardDB> getChessBoardById(@PathVariable("id") String id) {
         return service.getBoardById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -61,7 +61,7 @@ public class ChessBoardController {
      * with Http status 201 if created or 409 if not created.
      */
     @PostMapping
-    public ResponseEntity<ChessBoard> createChessBoard(@RequestBody ChessBoard chessBoard) {
+    public ResponseEntity<ChessBoardDB> createChessBoard(@RequestBody ChessBoardDB chessBoard) {
         if (!service.createChessBoard(chessBoard)) return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(chessBoard, HttpStatus.CREATED);
     }
@@ -76,7 +76,7 @@ public class ChessBoardController {
      * with Http status 200 if updated, 201 if created, 409 if not created.
      */
     @PutMapping("{id}")
-    public ResponseEntity<ChessBoard> updateChessBoard(@PathVariable("id") String id, @RequestBody ChessBoard chessBoard) {
+    public ResponseEntity<ChessBoardDB> updateChessBoard(@PathVariable("id") String id, @RequestBody ChessBoardDB chessBoard) {
         if (!service.hasBoardById(id)) return createChessBoard(chessBoard);
         service.updateChessBoard(id, chessBoard);
         return ResponseEntity.ok(chessBoard);

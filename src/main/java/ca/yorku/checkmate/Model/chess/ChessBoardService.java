@@ -20,11 +20,11 @@ public class ChessBoardService {
         this.repository = repository;
     }
 
-    public List<ChessBoard> getBoards() {
+    public List<ChessBoardDB> getBoards() {
         return repository.findAll();
     }
 
-    public Optional<ChessBoard> getBoardById(String id) {
+    public Optional<ChessBoardDB> getBoardById(String id) {
         return repository.findById(id);
     }
 
@@ -32,20 +32,20 @@ public class ChessBoardService {
         return repository.existsById(id);
     }
 
-    public boolean createChessBoard(ChessBoard chessBoard) {
+    public boolean createChessBoard(ChessBoardDB chessBoard) {
         // TODO if important info not allowed to duplicate check here first
         repository.save(chessBoard);
         return true;
     }
 
-    public void updateChessBoard(String id, ChessBoard newChessBoard) {
+    public void updateChessBoard(String id, ChessBoardDB newChessBoard) {
         getBoardById(id).ifPresent(chessBoard -> {
             // TODO update information when chess board gets more info.
             repository.save(chessBoard);
         });
     }
 
-    public void deleteChessBoard(ChessBoard chessBoard) {
+    public void deleteChessBoard(ChessBoardDB chessBoard) {
         repository.delete(chessBoard);
     }
 

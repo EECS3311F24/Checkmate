@@ -43,9 +43,15 @@ public class ChessBoardService {
         return true;
     }
 
-    public boolean moveChessPiece(ChessBoardDB chessBoard, Moves moves) {
-        // TODO move should not report true if the wrong person piece is trying to get moved
+    public boolean moveChessPiece(ChessBoardDB chessBoard, String userId, Moves moves) {
         Player whosTurn = chessBoard.chess.getWhosTurn();
+        // TODO assumes player1 is always white
+        if (whosTurn.playerColor() == ChessBoard.white) {
+            if (!chessBoard.player1Id.equals(userId)) return false;
+        } else if (whosTurn.playerColor() == ChessBoard.black) {
+            if (!chessBoard.player2Id.equals(userId)) return false;
+        } else return false;
+
         ChessPiece piece = chessBoard.chess.getChessPiece(moves.start().row(), moves.start().col());
         if (piece == null) return false;
         if (whosTurn.playerColor() != piece.getColor()) return false;

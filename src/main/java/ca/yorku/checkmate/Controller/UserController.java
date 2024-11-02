@@ -2,6 +2,8 @@ package ca.yorku.checkmate.Controller;
 
 import ca.yorku.checkmate.Model.user.User;
 import ca.yorku.checkmate.Model.user.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,8 +70,10 @@ public class UserController {
      * with Http status 201 if created or 409 if not created.
      */
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(HttpServletResponse response, @RequestBody User user) {
         if (!userService.createUser(user)) return new ResponseEntity<>(HttpStatus.CONFLICT);
+        Cookie cookie = new Cookie("userId", user.id);
+        response.addCookie(cookie);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 

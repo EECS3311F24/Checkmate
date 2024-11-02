@@ -126,11 +126,11 @@ public class ChessBoardController {
      * with Http status 200 if moved or 400 if not a valid move or 409 if not moved.
      */
     @PatchMapping("{id}/moves")
-    public ResponseEntity<ChessBoardDB> move(@PathVariable("id") String id, @RequestBody Moves moves) {
-        // TODO need a cookie to store who sending request and use the player ids
+    public ResponseEntity<ChessBoardDB> move(@PathVariable("id") String id, @CookieValue(name = "userId") String userId, @RequestBody Moves moves) {
+        System.out.println(userId);
         if (!moves.isValid()) return ResponseEntity.badRequest().build();
         return service.getBoardById(id).map(chessBoard -> {
-            if (!service.moveChessPiece(chessBoard, moves))
+            if (!service.moveChessPiece(chessBoard, userId, moves))
                 return new ResponseEntity<ChessBoardDB>(HttpStatus.CONFLICT);
             // TODO testing stuff remove
             System.out.println(chessBoard.chess.getChessBoard());
@@ -162,6 +162,7 @@ public class ChessBoardController {
      * @return A response entity with a message, informing client
      * with Http status 200.
      */
+    @Deprecated
     @DeleteMapping
     public ResponseEntity<String> deleteAll() {
         service.deleteAll();

@@ -40,7 +40,7 @@ Host: {{HOST}}
 |HTTP Status Code |Meaning|
 |---|---|
 |200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
-### Get by username
+### Get by id
 Gets a user with given id.
 
 `GET /api/v1/users/{{id}}`
@@ -76,8 +76,8 @@ Host: {{HOST}}
 |---|---|
 |200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
 |404|[Not Found](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4)|
-### Get by id
-Gets a user by requested id.
+### Get by username
+Gets a user by username.
 
 `GET /api/v1/users?username={{username}}`
 
@@ -119,6 +119,7 @@ Host: {{HOST}}
 ## POST
 ### Create User
 Create a user with given id by giving body parameters for a user.
+This action will store a cookie on client storing the userId of this client.
 
 `POST /api/v1/users`
 > Body Parameters

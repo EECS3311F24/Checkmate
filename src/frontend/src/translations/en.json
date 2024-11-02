@@ -1,0 +1,13 @@
+
+{
+    "CheckmateHomeH1": "Hello",
+    "CheckmateHomeP1": "Checkmate is a website designed and focused on the beginner and casual players of chess.",
+    "CheckmateHomeP2": "Checkmate wants players to learn in a friendly environment and not feel frustrated or intimidated by the more competitive sides of chess.",
+    "CheckmateHomeP3": "Checkmate wants players to have fun playing the game of chess!",
+    "CheckmateHomeP4": "Feel free to signup or view the users of Checkmate!",
+
+    "UserFormComponmentUsernameError": "Username is required!",
+    "UserFormComponmentEmailError": "Email is required!",
+    "UserFormComponmentUsernamePlaceholder": "Username",
+    "UserFormComponmentEmailPlaceholder": "Email"
+  }

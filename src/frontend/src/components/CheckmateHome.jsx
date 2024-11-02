@@ -3,11 +3,11 @@ import React from 'react'
 const CheckmateHome = () => {
     return (
         <div className='text-center'>
-            <h1>Checkmate!</h1>
-            <p>Checkmate is a website designed and focused on the beginner and casual players of chess.</p>
-            <p>Checkmate wants players to learn in a friendly environment and not feel frustrated or intimidated by the more competitive sides of chess.</p>
-            <p>Checkmate wants players to have fun playing the game of chess!</p>
-            <p>Feel free to signup or view the users of Checkmate!</p>
+            <h1><Translate id="CheckmateHomeH1" /></h1>
+            <p><Translate id="CheckmateHomeP1" /></p>
+            <p><Translate id="CheckmateHomeP2" /></p>
+            <p><Translate id="CheckmateHomeP3" /></p>
+            <p><Translate id="CheckmateHomeP4" /></p>
         </div>
     )
 }

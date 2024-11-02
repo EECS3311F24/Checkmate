@@ -1,0 +1,13 @@
+
+{
+    "CheckmateHomeH1": "Checkmate",
+    "CheckmateHomeP1": "Checkmate es un sitio web diseñado y enfocado en los jugadores principiantes y casuales de ajedrez.",
+    "CheckmateHomeP2": "Checkmate quiere que los jugadores aprendan en un ambiente amigable y no se sientan frustrados o intimidados por los aspectos más competitivos del ajedrez.",
+    "CheckmateHomeP3": "¡Checkmate quiere que los jugadores se diviertan jugando ajedrez!",
+    "CheckmateHomeP4": "¡Siéntete libre de registrarte o ver a los usuarios de Checkmate!",
+
+    "UserFormComponmentUsernameError": "¡Se requiere un nombre de usuario!",
+    "UserFormComponmentEmailError": "¡Se requiere un correo electrónico!",
+    "UserFormComponmentUsernamePlaceholder": "Nombre de usuario",
+    "UserFormComponmentEmailPlaceholder": "Correo electrónico"
+}

@@ -15,9 +15,11 @@ public class ChessBoardDB {
     public String player1Id;
     public String player2Id;
 
-    public ChessBoardDB(Chess chess) {
-        chessBoard = chess.getChessBoard();
-        whosTurn = chess.getWhosTurn();
+    public ChessBoardDB(Chess chess, String player1Id, String player2Id) {
+        this.chessBoard = chess.getChessBoard();
+        this.whosTurn = chess.getWhosTurn();
+        this.player1Id = player1Id;
+        this.player2Id = player2Id;
     }
 
     @Override

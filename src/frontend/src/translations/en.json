@@ -6,6 +6,9 @@
     "CheckmateHomeP3": "Checkmate wants players to have fun playing the game of chess!",
     "CheckmateHomeP4": "Feel free to signup or view the users of Checkmate!",
 
+    "HeaderComponentUsers": "Users",
+    "HeaderComponentSignup": "Signup",
+
     "UserFormComponmentUsernameError": "Username is required!",
     "UserFormComponmentEmailError": "Email is required!",
     "UserFormComponmentUsernamePlaceholder": "Username",

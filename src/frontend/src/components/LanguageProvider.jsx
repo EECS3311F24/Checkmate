@@ -9,6 +9,6 @@ const translations = {
 };
 
 // Function to get translated strings based on language
-export const getTranslation = (key, language = 'en') => {
-  return translations[language][key] || key;
+export const getTranslation = (key, currentLanguage = 'en') => {
+  return translations[currentLanguage][key] || key;
 };

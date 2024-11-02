@@ -6,6 +6,9 @@
     "CheckmateHomeP3": "Checkmate veut que les joueurs s'amusent en jouant aux échecs!",
     "CheckmateHomeP4": "N'hésitez pas à vous inscrire ou à consulter les utilisateurs de Checkmate!",
 
+    "HeaderComponentUsers": "Utilisateurs",
+    "HeaderComponentSignup": "S'inscrire",
+
     "UserFormComponmentUsernameError": "Nom d'utilisateur requis!",
     "UserFormComponmentEmailError": "E-mail requis!",
     "UserFormComponmentUsernamePlaceholder": "Nom d'utilisateur",

@@ -1,5 +1,6 @@
 package ca.yorku.checkmate.Controller;
 
+import ca.yorku.checkmate.Model.chess.Chess;
 import ca.yorku.checkmate.Model.chess.ChessBoardDB;
 import ca.yorku.checkmate.Model.chess.ChessBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,12 +57,14 @@ public class ChessBoardController {
      * URL: api/v1/boards
      * <br>
      * Create a new chess board in the database.
-     * @param chessBoard The chess board to be created.
+     * @param player1Id player 1 id for user.
+     * @param player2Id player 2 id for user.
      * @return A response entity with chess board, informing client
      * with Http status 201 if created or 409 if not created.
      */
     @PostMapping
-    public ResponseEntity<ChessBoardDB> createChessBoard(@RequestBody ChessBoardDB chessBoard) {
+    public ResponseEntity<ChessBoardDB> createChessBoard(@RequestParam(name = "id1") String player1Id, @RequestParam(name = "id2") String player2Id) {
+        ChessBoardDB chessBoard = new ChessBoardDB(new Chess(), player1Id, player2Id);
         if (!service.createChessBoard(chessBoard)) return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(chessBoard, HttpStatus.CREATED);
     }
@@ -77,7 +80,8 @@ public class ChessBoardController {
      */
     @PutMapping("{id}")
     public ResponseEntity<ChessBoardDB> updateChessBoard(@PathVariable("id") String id, @RequestBody ChessBoardDB chessBoard) {
-        if (!service.hasBoardById(id)) return createChessBoard(chessBoard);
+        //if (!service.hasBoardById(id)) return createChessBoard(chessBoard);
+        // TODO make like user
         service.updateChessBoard(id, chessBoard);
         return ResponseEntity.ok(chessBoard);
     }

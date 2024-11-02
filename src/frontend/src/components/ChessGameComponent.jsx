@@ -4,6 +4,26 @@ import { useNavigate } from 'react-router-dom';
 import { startGuestGame, makeMove, getPossibleMoves } from '../services/ChessService';
 
 const ChessGame = () => {
+    // Piece image mapping
+    const pieceImages = {
+        'WHITE': {
+            'PAWN': 'static/images/chess/WHITE_PAWN.png',
+            'ROOK': 'static/images/chess/WHITE-ROOK.png',
+            'KNIGHT': 'static/images/chess/WHITE-KNIGHT.png',
+            'BISHOP': 'static/images/chess/WHITE-BISHOP.png',
+            'QUEEN': 'static/images/chess/WHITE-QUEEN.png',
+            'KING': 'static/images/chess/WHITE-KING.png'
+        },
+        'BLACK': {
+            'PAWN': 'static/images/chess/BLACK-PAWN.png',
+            'ROOK': 'static/images/chess/BLACK-ROOK.png',
+            'KNIGHT': 'static/images/chess/BLACK-KNIGHT.png',
+            'BISHOP': 'static/images/chess/BLACK-BISHOP.png',
+            'QUEEN': 'static/images/chess/BLACK-QUEEN.png',
+            'KING': 'static/images/chess/BLACK-KING.png'
+        }
+    };
+const ChessGame = () => {
     const [gameState, setGameState] = useState({
         board: initializeBoard(),
         isGameStarted: false,
@@ -189,5 +209,5 @@ const ChessGame = () => {
             </Container>
         );         
 };
-
+}
 export default ChessGame;

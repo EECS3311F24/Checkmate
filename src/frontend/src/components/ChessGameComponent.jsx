@@ -38,54 +38,39 @@ const ChessGame = () => {
     // Initialize the board with starting positions
     function initializeBoard() {
         const board = Array(8).fill(null).map(() => Array(8).fill(null));
+        
         // Set up initial pieces
         const setupPieces = () => {
-            // Black pieces (uppercase)
+            // Black pieces
             board[0] = [
-                { symbol: '♜', type: 'ROOK', color: 'BLACK' },
-                { symbol: '♞', type: 'KNIGHT', color: 'BLACK' },
-                { symbol: '♝', type: 'BISHOP', color: 'BLACK' },
-                { symbol: '♛', type: 'QUEEN', color: 'BLACK' },
-                { symbol: '♚', type: 'KING', color: 'BLACK' },
-                { symbol: '♝', type: 'BISHOP', color: 'BLACK' },
-                { symbol: '♞', type: 'KNIGHT', color: 'BLACK' },
-                { symbol: '♜', type: 'ROOK', color: 'BLACK' }
+                { type: 'ROOK', color: 'BLACK' },
+                { type: 'KNIGHT', color: 'BLACK' },
+                { type: 'BISHOP', color: 'BLACK' },
+                { type: 'QUEEN', color: 'BLACK' },
+                { type: 'KING', color: 'BLACK' },
+                { type: 'BISHOP', color: 'BLACK' },
+                { type: 'KNIGHT', color: 'BLACK' },
+                { type: 'ROOK', color: 'BLACK' }
             ];
-            board[1] = Array(8).fill({ symbol: '♟', type: 'PAWN', color: 'BLACK' });
+            board[1] = Array(8).fill({ type: 'PAWN', color: 'BLACK' });
 
-            // White pieces (lowercase)
-            board[6] = Array(8).fill({ symbol: '♙', type: 'PAWN', color: 'WHITE' });
+            // White pieces
+            board[6] = Array(8).fill({ type: 'PAWN', color: 'WHITE' });
             board[7] = [
-                { symbol: '♖', type: 'ROOK', color: 'WHITE' },
-                { symbol: '♘', type: 'KNIGHT', color: 'WHITE' },
-                { symbol: '♗', type: 'BISHOP', color: 'WHITE' },
-                { symbol: '♕', type: 'QUEEN', color: 'WHITE' },
-                { symbol: '♔', type: 'KING', color: 'WHITE' },
-                { symbol: '♗', type: 'BISHOP', color: 'WHITE' },
-                { symbol: '♘', type: 'KNIGHT', color: 'WHITE' },
-                { symbol: '♖', type: 'ROOK', color: 'WHITE' }
+                { type: 'ROOK', color: 'WHITE' },
+                { type: 'KNIGHT', color: 'WHITE' },
+                { type: 'BISHOP', color: 'WHITE' },
+                { type: 'QUEEN', color: 'WHITE' },
+                { type: 'KING', color: 'WHITE' },
+                { type: 'BISHOP', color: 'WHITE' },
+                { type: 'KNIGHT', color: 'WHITE' },
+                { type: 'ROOK', color: 'WHITE' }
             ];
         };
+        
         setupPieces();
         return board;
     }
-
-    const handleStartGame = async () => {
-        try {
-            const response = await startGuestGame();
-            setGameState(prev => ({
-                ...prev,
-                board: response.data.board || initializeBoard(),
-                isGameStarted: true,
-                error: null
-            }));
-        } catch (error) {
-            setGameState(prev => ({
-                ...prev,
-                error: "Failed to start game. Please try again."
-            }));
-        }
-    };
 
     const handleSquareClick = async (row, col) => {
         if (!gameState.isGameStarted) return;

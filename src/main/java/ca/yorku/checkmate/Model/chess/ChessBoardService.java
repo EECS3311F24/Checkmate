@@ -43,6 +43,11 @@ public class ChessBoardService {
         return true;
     }
 
+    public void setPlayer2Id(ChessBoardDB chessBoard, String id) {
+        chessBoard.player2Id = id;
+        repository.save(chessBoard);
+    }
+
     public boolean moveChessPiece(ChessBoardDB chessBoard, String userId, Moves moves) {
         Player whosTurn = chessBoard.chess.getWhosTurn();
         // TODO assumes player1 is always white

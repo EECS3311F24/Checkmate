@@ -2,6 +2,7 @@ package ca.yorku.checkmate.Controller;
 
 import ca.yorku.checkmate.Model.chess.*;
 import ca.yorku.checkmate.Model.chess.chesspieces.ChessPiece;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/boards")
 public class ChessBoardController {
+    // TODO need a joinGame that allows joining random games.
+    // TODO need a getMoves possible for a chess pieces ?
     private final ChessBoardService service;
 
     @Autowired
@@ -88,13 +91,14 @@ public class ChessBoardController {
      * URL: api/v1/boards?id1={id1}&id2={id2}
      * <br>
      * Create a new chess board in the database.
+     * Needs at least player 1's id in order to create.
      * @param player1Id player 1 id for user.
      * @param player2Id player 2 id for user.
      * @return A response entity with chess board, informing client
      * with Http status 201 if created or 409 if not created.
      */
     @PostMapping
-    public ResponseEntity<ChessBoardDB> createChessBoard(@RequestParam(name = "id1") String player1Id, @RequestParam(name = "id2") String player2Id) {
+    public ResponseEntity<ChessBoardDB> createChessBoard(@RequestParam(name = "id1") String player1Id, @RequestParam(name = "id2", required = false) String player2Id) {
         ChessBoardDB chessBoard = new ChessBoardDB(new Chess(), player1Id, player2Id);
         if (!service.createChessBoard(chessBoard)) return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(chessBoard, HttpStatus.CREATED);
@@ -119,22 +123,46 @@ public class ChessBoardController {
     /**
      * URL: api/v1/boards/{id}/moves
      * <br>
+     * Join a random game if not part of any game.
+     * Creates a new user and sets user who requested a userId, and joins them to a board if none are
+     * @param userId The user ID of the player that sent the request.
+     * @return A response entity with chess board, informing client
+     * with Http status 200 if moved or 400 if not a valid move or 409 if not moved or 404 if not found .
+     */
+    @PutMapping()
+    public ResponseEntity<ChessBoardDB> joinBoard(HttpServletResponse response, @CookieValue(name = "userId") String userId) {
+        if (userId == null) {
+            // TODO create a new board and set as player1, guest
+            // TODO need to get them to create a new user in database
+            // TODO need to somehow get to user controller create user method. may just do dirty autowire way
+           // User player1 = new User("Player 1", "Guest");
+        }
+        return service.getBoards().stream()
+                .filter(chessBoard -> chessBoard.player2Id == null)
+                .findFirst()
+                .map(chessBoard -> {
+                    service.setPlayer2Id(chessBoard, userId);
+                    return ResponseEntity.ok(chessBoard);
+                })
+                .orElse(ResponseEntity.notFound().build()); //TODO create a new chessBoard and set them as player1
+    }
+
+    /**
+     * URL: api/v1/boards/{id}/moves
+     * <br>
      * Move a chess piece to a new position.
      * @param id The id of the chess board.
+     * @param userId The user ID of the player that sent the request.
      * @param moves The moves to be made with start and end.
      * @return A response entity with chess board, informing client
      * with Http status 200 if moved or 400 if not a valid move or 409 if not moved or 404 if not found .
      */
     @PatchMapping("{id}/moves")
     public ResponseEntity<ChessBoardDB> move(@PathVariable("id") String id, @CookieValue(name = "userId") String userId, @RequestBody Moves moves) {
-        System.out.println(userId);
         if (!moves.isValid()) return ResponseEntity.badRequest().build();
         return service.getBoardById(id).map(chessBoard -> {
             if (!service.moveChessPiece(chessBoard, userId, moves))
                 return new ResponseEntity<ChessBoardDB>(HttpStatus.CONFLICT);
-            // TODO testing stuff remove
-            System.out.println(chessBoard.chess.getChessBoard());
-            System.out.println(chessBoard.chess.getWhosTurn());
             return ResponseEntity.ok(chessBoard);
         }).orElse(ResponseEntity.notFound().build());
     }

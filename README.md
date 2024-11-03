@@ -2,21 +2,21 @@
  
 Checkmate is a website designed and focused on the beginner and casual players of chess. Checkmate wants players to learn in a friendly environment and not feel frustrated or intimidated by the more competitive sides of chess. Checkmate wants players to have fun playing the game of chess!
 
- #Features
+ # Features
  
-  *Guest Play
+  * Guest Play
   
-  *Language Support
+  * Language Support
 
 
-Guest Play
+## Guest Play
 
 <p align="center"> 
  
 ![GuestPlay](https://github.com/user-attachments/assets/4cc8461d-0535-476c-8073-f52f72ae87bf)
 </p>
 
-Language Support
+## Language Support
 
 <p align="center"> 
  

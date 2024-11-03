@@ -5,11 +5,13 @@ import ListUserComponent from './components/ListUserComponent'
 import UserFormComponent from './components/UserFormComponent'
 import CheckmateHome from './components/CheckmateHome'
 import ChessGame from './components/ChessGameComponent'
+import { LanguageProvider } from './components/LanguageProvider'
 
 function App() {
   return (
     <>
     <BrowserRouter>
+    <LanguageProvider>
       <HeaderComponent/>
       <Routes>
         <Route path='/' element = {<CheckmateHome/>}></Route>
@@ -18,6 +20,7 @@ function App() {
         <Route path='/edit-user/:id' element = {<UserFormComponent/>}></Route>
         <Route path="/play" element={<ChessGame />}></Route>
       </Routes>
+      </LanguageProvider>
     </BrowserRouter>
     </>
   )

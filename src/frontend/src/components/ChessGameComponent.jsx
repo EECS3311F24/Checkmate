@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { getTranslation, useLanguage } from './LanguageProvider';
 import './chess.css';
 
 const ChessGame = () => {
+
+  const { language, setLanguage } = useLanguage();
     // Piece image mapping
     const pieceImages = {
         'WHITE': {
@@ -126,7 +129,7 @@ const ChessGame = () => {
       return (
         <div className="chess-container">
           <div className="chess-header">
-            <h2>Chess Game</h2>
+            <h2>{getTranslation("ChessGameComponentChessGame",language)}</h2>
           </div>
           <div className="chess-content">
             {gameState.error && (
@@ -142,14 +145,14 @@ const ChessGame = () => {
                   className="chess-button"
                   onClick={handleStartGame}
                 >
-                  Play as Guest
+                  {getTranslation("ChessGameComponentPlayAsGuest",language)}
                 </button>
                 
               </div>
             ) : (
               <div>
                 <div className="chess-current-player">
-                  Current Player: {gameState.currentPlayer}
+                {getTranslation("ChessGameComponentCurrentPlayer",language)} {gameState.currentPlayer}
                 </div>
                 
                 {/*Captured pieces display*/}

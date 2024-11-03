@@ -6,11 +6,32 @@
     "CheckmateHomeP3": "Checkmate wants players to have fun playing the game of chess!",
     "CheckmateHomeP4": "Feel free to signup or view the users of Checkmate!",
 
+    "ChessGameComponentChessGame": "Chess Game",
+    "ChessGameComponentPlayAsGuest": "Play as Guest",
+    "ChessGameComponentCurrentPlayer": "Play as Guest",
+
     "HeaderComponentUsers": "Users",
     "HeaderComponentSignup": "Signup",
+    "HeaderComponentPlayChess": "Play Chess",
+
+    "ListUserComponentUserList": "List of Users",
+    "ListUserComponentUserID": "User ID",
+    "ListUserComponentUserName": "User username",
+    "ListUserComponentUserEmail": "User email",
+    "ListUserComponentUserDateCreated": "User date created",
+    "ListUserComponentActions": "Actions",
+    "ListUserComponentEdit": "Edit",
+    "ListUserComponentDelete": "Delete",
 
     "UserFormComponmentUsernameError": "Username is required!",
     "UserFormComponmentEmailError": "Email is required!",
+    "UserFormComponmentEditUser": "Edit User",
+    "UserFormComponmentSignup": "Signup",
+    "UserFormComponmentUsername": "Username",
     "UserFormComponmentUsernamePlaceholder": "Username",
-    "UserFormComponmentEmailPlaceholder": "Email"
+    "UserFormComponmentEmail": "Email",
+    "UserFormComponmentEmailPlaceholder": "Email",
+    "UserFormComponmentSubmit": "Submit"
+
+    
   }

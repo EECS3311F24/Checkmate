@@ -21,7 +21,6 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/boards")
 public class ChessBoardController {
-    // TODO need a joinGame that allows joining random games.
     // TODO need a getMoves possible for a chess pieces ?
     private final ChessBoardService service;
 
@@ -129,18 +128,14 @@ public class ChessBoardController {
      * no empty games available
      * @param userId The user ID of the player that sent the request.
      * @return A response entity with chess board, informing client
-     * with Http status 200 if moved or 400 if not a valid move or 409 if not moved or 404 if not found .
+     * with Http status 200 if joined or 409 if not joined or 404 if no user found.
      */
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<ChessBoardDB> joinBoard(HttpServletResponse response, @CookieValue(name = "userId", required = false) String userId) {
         if (userId == null) {
-            // TODO create a new board and set as player1, guest
-            // TODO need to get them to create a new user in database
-            // TODO need to somehow get to user controller create user method. may just do dirty autowire way
             User user = service.getUserController().createUser(response, new User("Guest", "Guest")).getBody();
             if (user == null) return new ResponseEntity<>(HttpStatus.CONFLICT);
             userId = user.id;
-            System.out.println(userId);
         }
         String id = userId;
         return service.getBoards().stream()

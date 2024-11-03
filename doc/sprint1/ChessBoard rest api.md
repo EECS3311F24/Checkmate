@@ -187,7 +187,40 @@ ____
 Not Found Response Example:
 > HTTP Request
 ```HTTP
-PUT /api/v1/users/notValidId HTTP/1.1
+PUT /api/v1/boards/notValidId HTTP/1.1
+Host: {{HOST}}
+```
+> Response
+
+> 404 Response
+#### Responses
+|HTTP Status Code |Meaning|
+|---|---|
+|200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
+|404|[Not Found](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4)|
+### Join ChessBoard
+Join a random chess board, and get given a guest user if needed.
+This stores a cookie of the guest userId if no user is contained by
+reqester. If no chess boards are available adds to a new chess board.
+
+`PUT /api/v1/boards`
+#### Examples
+Successful Response Example:
+> HTTP Request
+```HTTP
+PUT /api/v1/boards HTTP/1.1
+Host: {{HOST}}
+```
+> Response
+
+Responds with a json chess board. Too long to display.
+
+> 200 Response
+____
+Not Found Response Example (When userId cookie has no user):
+> HTTP Request
+```HTTP
+PUT /api/v1/boards/notValidId HTTP/1.1
 Host: {{HOST}}
 ```
 > Response
@@ -233,7 +266,7 @@ ____
 Not Found Response Example:
 > HTTP Request
 ```HTTP
-PUT /api/v1/users/notValidId/moves HTTP/1.1
+PUT /api/v1/boards/notValidId/moves HTTP/1.1
 Host: {{HOST}}
 ```
 > Response

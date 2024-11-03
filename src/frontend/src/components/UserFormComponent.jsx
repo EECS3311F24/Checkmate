@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { createUser, getUser, updateUser } from '../services/UserService';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getTranslation, useLanguage } from './LanguageProvider';
 
 const UserFormComponent = () => {
+    const { language, setLanguage } = useLanguage();
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
 
@@ -54,14 +56,14 @@ const UserFormComponent = () => {
         if (username.trim()) {
             errorsCopy.username = '';
         } else {
-            errorsCopy.username = "Username is required!"
+            errorsCopy.username = getTranslation("UserFormComponmentUsernameError", language)
             valid = false;
         }
 
         if (email.trim()) {
             errorsCopy.email = '';
         } else {
-            errorsCopy.email = "Email is required!"
+            errorsCopy.email = getTranslation("UserFormComponmentEmailError", language)
             valid = false;
         }
 
@@ -71,9 +73,9 @@ const UserFormComponent = () => {
 
     function pageTitle() {
         if (id) {
-            return <h2 className='text-center'>Edit User</h2>
+            return <h2 className='text-center'>{getTranslation("UserFormComponmentEditUser", language)}</h2>
         } else {
-            return <h2 className='text-center'>Signup</h2>
+            return <h2 className='text-center'>{getTranslation("UserFormComponmentSignup", language)}</h2>
         }
     }
 
@@ -84,10 +86,10 @@ const UserFormComponent = () => {
                 <div className='card-body'>
                     <form>
                         <div className='form-group mb-2'>
-                            <label className='form-label'>Username</label>
+                            <label className='form-label'>{getTranslation("UserFormComponmentUsername")}</label>
                             <input
                                 type="text"
-                                placeholder="Username"
+                                placeholder= {getTranslation("UserFormComponmentUsernamePlaceholder")}
                                 name='username'
                                 value={username}
                                 className={`form-control ${errors.username ? 'is-invalid' : ''}`}
@@ -97,10 +99,10 @@ const UserFormComponent = () => {
                             {errors.username && <div className='invalid-feedback'> {errors.username} </div>}
                         </div>
                         <div className='form-group mb-2'>
-                            <label className='form-label'>Email</label>
+                            <label className='form-label'>{getTranslation("UserFormComponmentEmail")}</label>
                             <input
                                 type="text"
-                                placeholder="Email"
+                                placeholder= {getTranslation("UserFormComponmentEmailPlaceholder")}
                                 name='email'
                                 value={email}
                                 className={`form-control ${errors.email ? 'is-invalid' : ''}`}
@@ -109,7 +111,7 @@ const UserFormComponent = () => {
                             </input>
                             {errors.email && <div className='invalid-feedback'> {errors.email} </div>}
                         </div>
-                        <button className='btn btn-success' onClick={saveUser}>Submit</button>
+                        <button className='btn btn-success' onClick={saveUser}>{getTranslation("UserFormComponmentSubmit")}</button>
                     </form>
                 </div>
             </div>

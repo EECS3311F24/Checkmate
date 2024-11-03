@@ -1,0 +1,37 @@
+
+{
+    "CheckmateHomeH1": "Bonjour",
+    "CheckmateHomeP1": "Checkmate est un site web conçu et destiné aux joueurs débutants et occasionnels d'échecs.",
+    "CheckmateHomeP2": "Checkmate veut que les joueurs apprennent dans un environnement amical et ne se sentent pas frustrés ou intimidés par les aspects plus compétitifs des échecs.",
+    "CheckmateHomeP3": "Checkmate veut que les joueurs s'amusent en jouant aux échecs!",
+    "CheckmateHomeP4": "N'hésitez pas à vous inscrire ou à consulter les utilisateurs de Checkmate!",
+
+    "ChessGameComponentChessGame": "Jeu d'échecs",
+    "ChessGameComponentPlayAsGuest": "Jouer en tant qu'invité",
+    "ChessGameComponentCurrentPlayer": "Jouer en tant qu'invité",
+
+    "HeaderComponentUsers": "Utilisateurs",
+    "HeaderComponentSignup": "S'inscrire",
+    "HeaderComponentPlayChess": "Jouer aux échecs",
+
+    "ListUserComponentUserList": "Liste des utilisateurs",
+    "ListUserComponentUserID": "ID d'utilisateur",
+    "ListUserComponentUserName": "Nom d'utilisateur",
+    "ListUserComponentUserEmail": "Courriel de l'utilisateur",
+    "ListUserComponentUserDateCreated": "Date de création de l'utilisateur",
+    "ListUserComponentActions": "Actions",
+    "ListUserComponentEdit": "Éditer",
+    "ListUserComponentDelete": "Supprimer",
+
+    "UserFormComponmentUsernameError": "Le nom d'utilisateur est requis!",
+    "UserFormComponmentEmailError": "L'adresse e-mail est requise!",
+    "UserFormComponmentEditUser": "Modifier l'utilisateur",
+    "UserFormComponmentSignup": "S'inscrire",
+    "UserFormComponmentUsername": "Nom d'utilisateur",
+    "UserFormComponmentUsernamePlaceholder": "Nom d'utilisateur",
+    "UserFormComponmentEmail": "Adresse e-mail",
+    "UserFormComponmentEmailPlaceholder": "Adresse e-mail",
+    "UserFormComponmentSubmit": "Soumettre"
+
+    
+}

@@ -1,15 +1,14 @@
 import React from 'react'
-import { getTranslation, useLanguage } from './LanguageProvider';
 
 const CheckmateHome = () => {
-    const { language, setLanguage } = useLanguage();
+  
     return (
         <div className='text-center'>
-            <h1>{getTranslation("CheckmateHomeH1", language)}</h1>
-            <p>{getTranslation("CheckmateHomeP1", language)}</p>
-            <p>{getTranslation("CheckmateHomeP2", language)}</p>
-            <p>{getTranslation("CheckmateHomeP3", language)}</p>
-            <p>{getTranslation("CheckmateHomeP4", language)}</p>
+            <h1>Checkmate!</h1>
+            <p>Checkmate is a website designed and focused on the beginner and casual players of chess.</p>
+            <p>Checkmate wants players to learn in a friendly environment and not feel frustrated or intimidated by the more competitive sides of chess.</p>
+            <p>Checkmate wants players to have fun playing the game of chess!</p>
+            <p>Feel free to signup or view the users of Checkmate!</p>
         </div>
     )
 }

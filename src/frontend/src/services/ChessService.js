@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-axios.defaults.withCredentials = true
+// TODO skill issue, cors cant be set to * and allow credentials
+//axios.defaults.withCredentials = true
 
 const CHESS_API_BASE_URL = "http://localhost:8080/api/v1/boards";
 

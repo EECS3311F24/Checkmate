@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { startGuestGame } from '../services/ChessService';
 import './chess.css';
 
 const ChessGame = () => {
@@ -23,6 +24,10 @@ const ChessGame = () => {
     };
 
     const [gameState, setGameState] = useState({
+        id: null,
+        id1: null,
+        id2: null,
+        chess: null,
         board: initializeBoard(),
         isGameStarted: false,
         selectedPiece: null,
@@ -72,12 +77,67 @@ const ChessGame = () => {
         setupPieces();
         return board;
       }
+
+      function convertBoard(board) {
+        const b = Array(8).fill(null).map(() => Array(8).fill(null));
+        board.forEach((row, rowIndex) => (
+          row.forEach((piece, colIndex) => {
+            if (piece.chessPiece !== null) {
+              var p = convertPiece(piece)
+              console.log(p)
+              b[rowIndex][colIndex] = p;
+            }
+          }
+          )))
+      }
+
+      function convertPiece(piece) {
+        piece = piece.chessPiece;
+        piece.color = convertColor(piece.color)
+        piece.type = convertType(piece.char)
+        return {type:piece.type,color:piece.color};
+      }
+
+      function convertColor(color) {
+        if (color === null) return 'EMPTY'
+        if (color === 'B') return 'BLACK'
+        if (color === 'W') return 'WHITE'
+        return color;
+      }
+
+      function convertType(type) {
+        if (type === null || type === ' ') return 'EMPTY'
+        if (type === 'R') return 'ROOK'
+        if (type === 'N') return 'KNIGHT'
+        if (type === 'B') return 'BISHOP'
+        if (type === 'Q') return 'QUEEN'
+        if (type === 'K') return 'KING'
+        if (type === 'P') return 'PAWN'
+        return null;
+      }
     
-      const handleStartGame = () => {
-        setGameState(prev => ({
-          ...prev,
-          isGameStarted: true
-        }));
+    
+      const handleStartGame = async () => {
+        try {
+          const response = await startGuestGame();
+          console.log(response.data);
+          setGameState(prev => ({
+            // TODO insert proper names
+              ...prev,
+              id: response.data.id,
+              id1: response.data.id1,
+              id2: response.data.id2,
+              chess: response.data.chess,
+              board: convertBoard(response.data.chess.chessBoard.board) || initializeBoard(),
+              isGameStarted: true,
+              error: null
+          }));
+        } catch (error) {
+          setGameState(prev => ({
+              ...prev,
+              error: "Failed to start game. Please try again."
+          }));
+        }
       };
     
       const handleSquareClick = (row, col) => {

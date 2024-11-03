@@ -10,6 +10,13 @@ public class Chess {
     private ChessBoard cb;
     //self note: add points system?
 
+    public Chess() {
+        this.cb = new ChessBoard();
+        this.playerWhite = new Player(ChessBoard.white);
+        this.playerBlack = new Player(ChessBoard.black);
+        this.whosTurn = this.playerWhite;
+    }
+
     public Chess(Player playerW, Player playerB) {
         this.cb = new ChessBoard();
         this.playerWhite = playerW;
@@ -27,7 +34,7 @@ public class Chess {
         return moved;
     }
     private Player getOtherPlayer(Player p) {
-        if(p == this.playerWhite) {return this.playerBlack;}
+        if(p.equals(this.playerWhite)) return this.playerBlack;
         else return this.playerWhite;
     }
 

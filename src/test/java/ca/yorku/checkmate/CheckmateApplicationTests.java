@@ -1,7 +1,7 @@
 package ca.yorku.checkmate;
 
-import ca.yorku.checkmate.Model.User;
-import ca.yorku.checkmate.Model.UserRepository;
+import ca.yorku.checkmate.Model.user.User;
+import ca.yorku.checkmate.Model.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

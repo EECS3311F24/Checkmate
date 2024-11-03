@@ -16,8 +16,8 @@ public class Knight extends ChessPiece {
     //pass back array of coordinates to check if empty
     @Override
     public boolean move(Move move) {
-        int rowDiff = Math.abs(this.movesHistory.get(this.movesHistory.size() - 1).getRow()-move.getRow());
-        int colDiff = Math.abs(this.movesHistory.get(this.movesHistory.size() - 1).getColumn()-move.getColumn());
+        int rowDiff = Math.abs(this.movesHistory.get(this.movesHistory.size() - 1).row()-move.row());
+        int colDiff = Math.abs(this.movesHistory.get(this.movesHistory.size() - 1).col()-move.col());
         return ((rowDiff==2 && colDiff==1) || (rowDiff==1 && colDiff==2));
     }
 
@@ -36,10 +36,10 @@ public class Knight extends ChessPiece {
             for(int j = 2; j >= 1; j--) {
                 if(!((i==2 && j == 2) || (i==1 && j == 1))) {
                     //12,11,22,21
-                    list.add(new Move(lastMove.getRow()-i, lastMove.getColumn()-j)); //-1-2, -2-1
-                    list.add(new Move(lastMove.getRow()-i, lastMove.getColumn()+j)); //-1+2, -2+1
-                    list.add(new Move(lastMove.getRow()+i, lastMove.getColumn()-j)); //+1-2, +2-1
-                    list.add(new Move(lastMove.getRow()+i, lastMove.getColumn()+j)); //+1+2, +2+1
+                    list.add(new Move(lastMove.row()-i, lastMove.col()-j)); //-1-2, -2-1
+                    list.add(new Move(lastMove.row()-i, lastMove.col()+j)); //-1+2, -2+1
+                    list.add(new Move(lastMove.row()+i, lastMove.col()-j)); //+1-2, +2-1
+                    list.add(new Move(lastMove.row()+i, lastMove.col()+j)); //+1+2, +2+1
                 }
             }
         }

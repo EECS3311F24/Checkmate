@@ -16,8 +16,8 @@ public class King extends ChessPiece {
     @Override
     public boolean move(Move move) {
         //TODO: implement castle and checks later
-        int rowDiff = Math.abs(this.movesHistory.get(this.movesHistory.size() - 1).getRow()-move.getRow());
-        int colDiff = Math.abs(this.movesHistory.get(this.movesHistory.size() - 1).getColumn()-move.getColumn());
+        int rowDiff = Math.abs(this.movesHistory.get(this.movesHistory.size() - 1).row()-move.row());
+        int colDiff = Math.abs(this.movesHistory.get(this.movesHistory.size() - 1).col()-move.col());
 
         return ((rowDiff == 1&&colDiff==0) ^ (colDiff == 1&&rowDiff==0) || (rowDiff == 1 && colDiff == 1));
     }

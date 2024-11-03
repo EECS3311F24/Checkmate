@@ -1,9 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { startGuestGame, move, getBoard } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 import './chess.css';
 
 const ChessGame = () => {
-
+  // TODO decides just not to update
+  let [count, setCount] = useState(0)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount(count + 1)
+      updateBoard();
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  
   const { language, setLanguage } = useLanguage();
     // Piece image mapping
     const pieceImages = {
@@ -26,6 +36,10 @@ const ChessGame = () => {
     };
 
     const [gameState, setGameState] = useState({
+        id: null,
+        id1: null,
+        id2: null,
+        chess: null,
         board: initializeBoard(),
         isGameStarted: false,
         selectedPiece: null,
@@ -75,48 +89,137 @@ const ChessGame = () => {
         setupPieces();
         return board;
       }
-    
-      const handleStartGame = () => {
-        setGameState(prev => ({
-          ...prev,
-          isGameStarted: true
-        }));
-      };
-    
-      const handleSquareClick = (row, col) => {
-        if (!gameState.isGameStarted) return;
-    
-        const piece = gameState.board[row][col];
-        
-        if (gameState.selectedPiece) {
-          const newBoard = JSON.parse(JSON.stringify(gameState.board));
-          const selectedPiece = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col];
-          const targetPiece = gameState.board[row][col];
-          
-          // If there's a piece at the target location, add it to captured pieces
-          if (targetPiece) {
-            const newCapturedPieces = {
-                ...gameState.capturedPieces,
-                [selectedPiece.color]: [
-                    ...gameState.capturedPieces[selectedPiece.color],
-                    targetPiece
-                ]
-            };
-            setGameState(prev => ({
-                ...prev,
-                capturedPieces: newCapturedPieces,
-                status: `${selectedPiece.color} captured ${targetPiece.color} ${targetPiece.type}`
-            }));
-        }
-          newBoard[gameState.selectedPiece.row][gameState.selectedPiece.col] = null;
-          newBoard[row][col] = selectedPiece;
-          
+
+      function convertBoard(board) {
+        const b = Array(8).fill(null).map(() => Array(8).fill(null));
+        board.forEach((row, rowIndex) => (
+          row.forEach((piece, colIndex) => {
+            if (piece.chessPiece !== null) {
+              var p = convertPiece(piece)
+              b[rowIndex][colIndex] = p;
+            }
+          }
+          )))
+          return b;
+      }
+
+      function convertCapturedPieces(captured) {
+        var white = [];
+        var black = [];
+        // TODO piece is somehow null sometimes
+        captured.forEach(piece => {
+          console.log(piece);
+          if (piece !== null && piece.chessPiece !== null) {
+            var p = convertPiece(piece);
+            console.log(p);
+            if (p.color === 'BLACK') black.push(p);
+            if (p.color === 'WHITE') white.push(p);
+          }
+        })
+        return {WHITE:white,BLACK:black};
+      }
+
+      function convertPiece(piece) {
+        piece = piece.chessPiece;
+        piece.color = convertColor(piece.color)
+        piece.type = convertType(piece.char)
+        return {type:piece.type,color:piece.color};
+      }
+
+      function convertColor(color) {
+        if (color === null) return 'EMPTY'
+        if (color === 'B') return 'BLACK'
+        if (color === 'W') return 'WHITE'
+        return color;
+      }
+
+      function convertType(type) {
+        if (type === null || type === ' ') return 'EMPTY'
+        if (type === 'R') return 'ROOK'
+        if (type === 'N') return 'KNIGHT'
+        if (type === 'B') return 'BISHOP'
+        if (type === 'Q') return 'QUEEN'
+        if (type === 'K') return 'KING'
+        if (type === 'P') return 'PAWN'
+        return null;
+      }
+
+      async function updateBoard() {
+        // TODO update captured pieces.
+        if (gameState !== null && !gameState.isGameStarted) return;
+        await getBoard(gameState.id).then(response => {
           setGameState(prev => ({
             ...prev,
-            board: newBoard,
-            selectedPiece: null,
-            currentPlayer: prev.currentPlayer === 'WHITE' ? 'BLACK' : 'WHITE'
+            chess: response.data.chess,
+            board: convertBoard(response.data.chess.chessBoard.board),
+            currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
+            //capturedPieces: convertCapturedPieces(response.data.chess.chessBoard.capturedPieces)
           }));
+        });
+      }
+
+      const handleStartGame = async () => {
+        try {
+          const response = await startGuestGame();
+          setGameState(prev => ({
+              ...prev,
+              id: response.data.id,
+              id1: response.data.id1,
+              id2: response.data.id2,
+              chess: response.data.chess,
+              board: convertBoard(response.data.chess.chessBoard.board),
+              isGameStarted: true,
+              error: null,
+              currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
+          }));
+        } catch (error) {
+          setGameState(prev => ({
+              ...prev,
+              error: "Failed to start game. Please try again."
+          }));
+        }
+      };
+    
+      const handleSquareClick = async (row, col) => {
+        // TODO start game when there are two players, eg id1 and id2 are not null
+        if (!gameState.isGameStarted) return;
+        const piece = gameState.board[row][col];
+        if (gameState.selectedPiece) {
+          // TODO request list of possible moves, rather then calling move each time and seeing if it works
+          var moves = {start:{row:gameState.selectedPiece.row,col:gameState.selectedPiece.col},end:{row:row,col:col}};
+          await move(gameState.id, moves)
+          .then(response => {
+            const newBoard = convertBoard(response.data.chess.chessBoard.board);
+            const selectedPiece = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col];
+            const targetPiece = gameState.board[row][col];
+            
+            // If there's a piece at the target location, add it to captured pieces
+            if (targetPiece) {
+              const newCapturedPieces = {
+                  ...gameState.capturedPieces,
+                  [selectedPiece.color]: [
+                      ...gameState.capturedPieces[selectedPiece.color],
+                      targetPiece
+                  ]
+              };
+              setGameState(prev => ({
+                  ...prev,
+                  capturedPieces: newCapturedPieces,
+                  status: `${selectedPiece.color} captured ${targetPiece.color} ${targetPiece.type}`
+              }));
+          }
+            newBoard[gameState.selectedPiece.row][gameState.selectedPiece.col] = null;
+            newBoard[row][col] = selectedPiece;
+            
+            setGameState(prev => ({
+              ...prev,
+              chess: response.data.chess,
+              board: newBoard,
+              selectedPiece: null,
+              currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
+            }));
+          })
+          .catch(e => gameState.selectedPiece = null) 
         } 
         else if (piece && piece.color === gameState.currentPlayer) {
           setGameState(prev => ({

@@ -23,6 +23,13 @@ Checkmate is a website designed and focused on the beginner and casual players o
 ![Language](https://github.com/user-attachments/assets/1e59b5bf-c0c7-45ff-b211-7bc2452065d0)
 </p>
 
+
+# Software Architecture 
+
+<p align="center"> 
+
+</p>
+
 ## Installation
 No installation required to use Checkmate. Users may create an account or play as a guest. Players can use any browser to join and play! 
 If you would like to contribute see [#Building](#building).

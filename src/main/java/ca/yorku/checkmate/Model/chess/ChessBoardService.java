@@ -59,9 +59,9 @@ public class ChessBoardService {
         Player whosTurn = chessBoard.chess.getWhosTurn();
         // TODO assumes player1 is always white
         if (whosTurn.playerColor() == ChessBoard.white) {
-            if (!chessBoard.player1Id.equals(userId)) return false;
+           // if (!chessBoard.player1Id.equals(userId)) return false;
         } else if (whosTurn.playerColor() == ChessBoard.black) {
-            if (!chessBoard.player2Id.equals(userId)) return false;
+           // if (!chessBoard.player2Id.equals(userId)) return false;
         } else return false;
 
         ChessPiece piece = chessBoard.chess.getChessPiece(moves.start().row(), moves.start().col());

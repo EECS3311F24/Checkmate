@@ -158,7 +158,7 @@ public class ChessBoardController {
      * with Http status 200 if moved or 400 if not a valid move or 409 if not moved or 404 if not found .
      */
     @PatchMapping("{id}/moves")
-    public ResponseEntity<ChessBoardDB> move(@PathVariable("id") String id, @CookieValue(name = "userId") String userId, @RequestBody Moves moves) {
+    public ResponseEntity<ChessBoardDB> move(@PathVariable("id") String id, @CookieValue(name = "userId", required = false) String userId, @RequestBody Moves moves) {
         if (!moves.isValid()) return ResponseEntity.badRequest().build();
         return service.getBoardById(id).map(chessBoard -> {
             if (!service.moveChessPiece(chessBoard, userId, moves))

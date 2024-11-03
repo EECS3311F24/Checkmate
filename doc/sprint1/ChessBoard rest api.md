@@ -220,7 +220,7 @@ ____
 Not Found Response Example (When userId cookie has no user):
 > HTTP Request
 ```HTTP
-PUT /api/v1/boards/notValidId HTTP/1.1
+PUT /api/v1/boards HTTP/1.1
 Host: {{HOST}}
 ```
 > Response
@@ -231,6 +231,7 @@ Host: {{HOST}}
 |---|---|
 |200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
 |404|[Not Found](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4)|
+|409|[Conflict](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8)|
 ## PATCH
 ### Move a chess piece
 Move a chess piece with give response body on given chess board with id.

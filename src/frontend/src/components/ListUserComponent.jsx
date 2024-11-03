@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { deleteUser, listUsers } from '../services/UserService'
+import { getTranslation, useLanguage } from './LanguageProvider';
 
 const ListUserComponent = () => {
     const [users, setUsers] = useState([])

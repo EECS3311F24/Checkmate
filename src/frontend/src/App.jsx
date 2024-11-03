@@ -4,11 +4,13 @@ import HeaderComponent from './components/HeaderComponent'
 import ListUserComponent from './components/ListUserComponent'
 import UserFormComponent from './components/UserFormComponent'
 import CheckmateHome from './components/CheckmateHome'
+import { LanguageProvider } from './components/LanguageProvider';
 
 function App() {
   return (
     <>
     <BrowserRouter>
+      <LanguageProvider>
       <HeaderComponent/>
       <Routes>
         <Route path='/' element = {<CheckmateHome/>}></Route>
@@ -16,6 +18,7 @@ function App() {
         <Route path='/signup' element = {<UserFormComponent/>}></Route>
         <Route path='/edit-user/:id' element = {<UserFormComponent/>}></Route>
       </Routes>
+      </LanguageProvider>
     </BrowserRouter>
     </>
   )

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { createUser, getUser, updateUser } from '../services/UserService';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getTranslation } from './LanguageProvider';
+import { getTranslation, useLanguage } from './LanguageProvider';
 
 const UserFormComponent = () => {
     const [username, setUsername] = useState('')

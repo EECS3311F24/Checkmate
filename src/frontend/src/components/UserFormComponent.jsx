@@ -89,7 +89,7 @@ const UserFormComponent = () => {
                             <label className='form-label'>{getTranslation("UserFormComponmentUsername")}</label>
                             <input
                                 type="text"
-                                placeholder= {getTranslation("UserFormComponmentUserPlaceholder")}
+                                placeholder= {getTranslation("UserFormComponmentUsernamePlaceholder")}
                                 name='username'
                                 value={username}
                                 className={`form-control ${errors.username ? 'is-invalid' : ''}`}

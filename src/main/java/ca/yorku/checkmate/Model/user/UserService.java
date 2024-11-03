@@ -41,7 +41,7 @@ public class UserService {
     }
 
     public boolean createUser(User user) {
-        if (hasUserByUsername(user.username)) return false;
+        //if (hasUserByUsername(user.username)) return false;
         repository.save(user);
         return true;
     }

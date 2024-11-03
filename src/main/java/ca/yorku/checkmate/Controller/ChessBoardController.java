@@ -2,6 +2,7 @@ package ca.yorku.checkmate.Controller;
 
 import ca.yorku.checkmate.Model.chess.*;
 import ca.yorku.checkmate.Model.chess.chesspieces.ChessPiece;
+import ca.yorku.checkmate.Model.user.User;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -121,30 +122,34 @@ public class ChessBoardController {
     }
 
     /**
-     * URL: api/v1/boards/{id}/moves
+     * URL: api/v1/boards
      * <br>
      * Join a random game if not part of any game.
-     * Creates a new user and sets user who requested a userId, and joins them to a board if none are
+     * Joins any empty games, adding a new guest user to that game, only creating a new empty game if
+     * no empty games available
      * @param userId The user ID of the player that sent the request.
      * @return A response entity with chess board, informing client
      * with Http status 200 if moved or 400 if not a valid move or 409 if not moved or 404 if not found .
      */
     @PutMapping()
-    public ResponseEntity<ChessBoardDB> joinBoard(HttpServletResponse response, @CookieValue(name = "userId") String userId) {
+    public ResponseEntity<ChessBoardDB> joinBoard(HttpServletResponse response, @CookieValue(name = "userId", required = false) String userId) {
         if (userId == null) {
             // TODO create a new board and set as player1, guest
             // TODO need to get them to create a new user in database
             // TODO need to somehow get to user controller create user method. may just do dirty autowire way
-           // User player1 = new User("Player 1", "Guest");
+            User user = service.getUserController().createUser(response, new User("Guest", "Guest")).getBody();
+            if (user == null) return new ResponseEntity<>(HttpStatus.CONFLICT);
+            userId = user.id;
+            System.out.println(userId);
         }
+        String id = userId;
         return service.getBoards().stream()
                 .filter(chessBoard -> chessBoard.player2Id == null)
                 .findFirst()
                 .map(chessBoard -> {
-                    service.setPlayer2Id(chessBoard, userId);
+                    service.setPlayer2Id(chessBoard, id);
                     return ResponseEntity.ok(chessBoard);
-                })
-                .orElse(ResponseEntity.notFound().build()); //TODO create a new chessBoard and set them as player1
+                }).orElse(createChessBoard(id, null));
     }
 
     /**

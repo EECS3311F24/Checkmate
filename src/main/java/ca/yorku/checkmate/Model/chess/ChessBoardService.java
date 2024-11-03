@@ -1,5 +1,6 @@
 package ca.yorku.checkmate.Model.chess;
 
+import ca.yorku.checkmate.Controller.UserController;
 import ca.yorku.checkmate.Model.chess.chesspieces.ChessPiece;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,12 @@ import java.util.Optional;
 @Service
 public class ChessBoardService {
     private final ChessBoardRepository repository;
+    private final UserController userController;
 
     @Autowired
-    public ChessBoardService(ChessBoardRepository repository) {
+    public ChessBoardService(ChessBoardRepository repository, UserController userController) {
         this.repository = repository;
+        this.userController = userController;
     }
 
     public List<ChessBoardDB> getBoards() {
@@ -27,6 +30,10 @@ public class ChessBoardService {
 
     public Optional<ChessBoardDB> getBoardById(String id) {
         return repository.findById(id);
+    }
+
+    public UserController getUserController() {
+        return this.userController;
     }
 
     public boolean hasBoardById(String id) {

@@ -55,8 +55,8 @@ Next: Begin testing guest sessions and integrate with Werner’s backend code.
 Completion Estimate: Should be done by Standup #4.
 Blockers: No blockers; ready for integration.
 Jaimin (Visuals of Chess Game)
-Worked on: Integrated animations and tested responsiveness of visuals.
-Next: Add finishing touches and test across different devices.
+Worked on: Integrated visual feedback for piece selected and placed on the board.
+Next: Add a piece captured display for both players and improve UI.
 Completion Estimate: Standup #4.
 Blockers: None; visuals are progressing well.
 Werner (Backend and Code Documentation)
@@ -77,8 +77,8 @@ Next: Perform usability testing and fix any bugs.
 Completion Estimate: Likely complete by next standup.
 Blockers: No blockers, just bug fixes.
 Jaimin (Visuals of Chess Game)
-Worked on: Completed animations and visual tests on various devices.
-Next: Work on minor adjustments based on feedback.
+Worked on: Captured pieces display, turn-based enforcement, and finishing up additional UI.
+Next: Clear up remaining trello workplace tracking logs.
 Completion Estimate: Will finish with final adjustments by next standup.
 Blockers: None at this time.
 Werner (Backend and Code Documentation)

@@ -10,6 +10,7 @@ const HeaderComponent = () => {
                 <Nav className="me-auto">
                     <Nav.Link href="/users">Users</Nav.Link>
                     <Nav.Link href="/signup">Signup</Nav.Link>
+                    <Nav.Link href="/play">Play Chess</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

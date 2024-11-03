@@ -1,15 +1,13 @@
 import axios from 'axios';
 
+axios.defaults.withCredentials = true
+
 const CHESS_API_BASE_URL = "http://localhost:8080/api/v1/boards";
 
 export const startGuestGame = () => axios.put(CHESS_API_BASE_URL);
 
-export const makeMove = (id, from, to) => axios.post(CHESS_API_BASE_URL + '/' + id, { from, to });
+export const move = (id, moves) => axios.patch(CHESS_API_BASE_URL + '/' + id + '/moves', moves);
 
-export const getPossibleMoves = (row, col) => {
-    return axios.get(`${CHESS_API_BASE_URL}/moves?row=${row}&col=${col}`);
-}
+export const getBoard = (id) => axios.get(CHESS_API_BASE_URL + '/' + id);
 
-export const getCurrentGameState = () => {
-    return axios.get(`${CHESS_API_BASE_URL}/state`);
-}
+export const getChessPiece = (row, col) => axios.get(CHESS_API_BASE_URL + '/' + id + '/moves');

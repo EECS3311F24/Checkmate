@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
-import { startGuestGame } from '../services/ChessService';
+import React, { useState, useEffect } from 'react';
+import { startGuestGame, move, getBoard } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 import './chess.css';
 
 const ChessGame = () => {
+
+  useEffect(() => {
+    updateBoard();
+    const interval = setInterval(() => updateBoard(), 500);
+    return () => clearInterval(interval);
+  }, []);
+
 
   const { language, setLanguage } = useLanguage();
     // Piece image mapping
@@ -87,11 +94,11 @@ const ChessGame = () => {
           row.forEach((piece, colIndex) => {
             if (piece.chessPiece !== null) {
               var p = convertPiece(piece)
-              console.log(p)
               b[rowIndex][colIndex] = p;
             }
           }
           )))
+          return b;
       }
 
       function convertPiece(piece) {
@@ -119,21 +126,33 @@ const ChessGame = () => {
         return null;
       }
 
+      async function updateBoard() {
+        // TODO update captured pieces.
+        if (!gameState.isGameStarted) return;
+        await getBoard(gameState.id).then(response => {
+          setGameState(prev => ({
+            ...prev,
+            chess: response.data.chess,
+            board: convertBoard(response.data.chess.chessBoard.board),
+            currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
+          }));
+        });
+      }
+
 
       const handleStartGame = async () => {
         try {
           const response = await startGuestGame();
-          console.log(response.data);
           setGameState(prev => ({
-            // TODO insert proper names
               ...prev,
               id: response.data.id,
               id1: response.data.id1,
               id2: response.data.id2,
               chess: response.data.chess,
-              board: convertBoard(response.data.chess.chessBoard.board) || initializeBoard(),
+              board: convertBoard(response.data.chess.chessBoard.board),
               isGameStarted: true,
-              error: null
+              error: null,
+              currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
           }));
         } catch (error) {
           setGameState(prev => ({
@@ -143,40 +162,46 @@ const ChessGame = () => {
         }
       };
     
-      const handleSquareClick = (row, col) => {
+      const handleSquareClick = async (row, col) => {
+        // TODO start game when there are two players, eg id1 and id2 are not null
         if (!gameState.isGameStarted) return;
-    
         const piece = gameState.board[row][col];
-        
         if (gameState.selectedPiece) {
-          const newBoard = JSON.parse(JSON.stringify(gameState.board));
-          const selectedPiece = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col];
-          const targetPiece = gameState.board[row][col];
-          
-          // If there's a piece at the target location, add it to captured pieces
-          if (targetPiece) {
-            const newCapturedPieces = {
-                ...gameState.capturedPieces,
-                [selectedPiece.color]: [
-                    ...gameState.capturedPieces[selectedPiece.color],
-                    targetPiece
-                ]
-            };
+          // TODO request list of possible moves, rather then calling move each time and seeing if it works
+          var moves = {start:{row:gameState.selectedPiece.row,col:gameState.selectedPiece.col},end:{row:row,col:col}};
+          await move(gameState.id, moves)
+          .then(response => {
+            const newBoard = convertBoard(response.data.chess.chessBoard.board);
+            const selectedPiece = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col];
+            const targetPiece = gameState.board[row][col];
+            
+            // If there's a piece at the target location, add it to captured pieces
+            if (targetPiece) {
+              const newCapturedPieces = {
+                  ...gameState.capturedPieces,
+                  [selectedPiece.color]: [
+                      ...gameState.capturedPieces[selectedPiece.color],
+                      targetPiece
+                  ]
+              };
+              setGameState(prev => ({
+                  ...prev,
+                  capturedPieces: newCapturedPieces,
+                  status: `${selectedPiece.color} captured ${targetPiece.color} ${targetPiece.type}`
+              }));
+          }
+            newBoard[gameState.selectedPiece.row][gameState.selectedPiece.col] = null;
+            newBoard[row][col] = selectedPiece;
+            
             setGameState(prev => ({
-                ...prev,
-                capturedPieces: newCapturedPieces,
-                status: `${selectedPiece.color} captured ${targetPiece.color} ${targetPiece.type}`
+              ...prev,
+              chess: response.data.chess,
+              board: newBoard,
+              selectedPiece: null,
+              currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
             }));
-        }
-          newBoard[gameState.selectedPiece.row][gameState.selectedPiece.col] = null;
-          newBoard[row][col] = selectedPiece;
-          
-          setGameState(prev => ({
-            ...prev,
-            board: newBoard,
-            selectedPiece: null,
-            currentPlayer: prev.currentPlayer === 'WHITE' ? 'BLACK' : 'WHITE'
-          }));
+          })
+          .catch(e => gameState.selectedPiece = null) 
         } 
         else if (piece && piece.color === gameState.currentPlayer) {
           setGameState(prev => ({

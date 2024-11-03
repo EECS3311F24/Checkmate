@@ -12,11 +12,11 @@ public class ChessBoard {
     public static final char white = 'W';
     private List<ChessPiece> blackPieces;
     private List<ChessPiece> whitePieces;
+    public List<ChessPiece> capturedPieces;
     private boolean whiteInCheck;
     private boolean blackInCheck;
     private Move whiteKingLocation;
     private Move blackKingLocation;
-    private List<ChessPiece> capturedPieces;
     public char checkMated = ' ';
 
     //setup standard chess board

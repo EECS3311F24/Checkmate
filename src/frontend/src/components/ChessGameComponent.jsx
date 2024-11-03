@@ -4,14 +4,16 @@ import { getTranslation, useLanguage } from './LanguageProvider';
 import './chess.css';
 
 const ChessGame = () => {
-
+  // TODO decides just not to update
+  let [count, setCount] = useState(0)
   useEffect(() => {
-    updateBoard();
-    const interval = setInterval(() => updateBoard(), 500);
+    const interval = setInterval(() => {
+      setCount(count + 1)
+      updateBoard();
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
-
-
+  
   const { language, setLanguage } = useLanguage();
     // Piece image mapping
     const pieceImages = {
@@ -101,6 +103,22 @@ const ChessGame = () => {
           return b;
       }
 
+      function convertCapturedPieces(captured) {
+        var white = [];
+        var black = [];
+        // TODO piece is somehow null sometimes
+        captured.forEach(piece => {
+          console.log(piece);
+          if (piece !== null && piece.chessPiece !== null) {
+            var p = convertPiece(piece);
+            console.log(p);
+            if (p.color === 'BLACK') black.push(p);
+            if (p.color === 'WHITE') white.push(p);
+          }
+        })
+        return {WHITE:white,BLACK:black};
+      }
+
       function convertPiece(piece) {
         piece = piece.chessPiece;
         piece.color = convertColor(piece.color)
@@ -128,17 +146,17 @@ const ChessGame = () => {
 
       async function updateBoard() {
         // TODO update captured pieces.
-        if (!gameState.isGameStarted) return;
+        if (gameState !== null && !gameState.isGameStarted) return;
         await getBoard(gameState.id).then(response => {
           setGameState(prev => ({
             ...prev,
             chess: response.data.chess,
             board: convertBoard(response.data.chess.chessBoard.board),
             currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
+            //capturedPieces: convertCapturedPieces(response.data.chess.chessBoard.capturedPieces)
           }));
         });
       }
-
 
       const handleStartGame = async () => {
         try {

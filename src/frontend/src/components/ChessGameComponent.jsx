@@ -183,6 +183,7 @@ const ChessGame = () => {
       const handleSquareClick = async (row, col) => {
         // TODO start game when there are two players, eg id1 and id2 are not null
         if (!gameState.isGameStarted) return;
+        updateBoard();
         const piece = gameState.board[row][col];
         if (gameState.selectedPiece) {
           // TODO request list of possible moves, rather then calling move each time and seeing if it works

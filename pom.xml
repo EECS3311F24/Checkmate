@@ -57,7 +57,13 @@
 			<artifactId>reactor-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+	
+   <dependency>
+     <groupId>io.scalajs</groupId>
+     <artifactId>phaser_sjs0.6_2.11</artifactId>
+     <version>0.3.0.0-RC3</version>
+   </dependency>
+ </dependencies>
 
 	<build>
 		<plugins>

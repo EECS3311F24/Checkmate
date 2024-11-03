@@ -1,6 +1,7 @@
 import React from 'react'
 
 const CheckmateHome = () => {
+  
     return (
         <div className='text-center'>
             <h1>Checkmate!</h1>

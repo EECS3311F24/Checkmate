@@ -136,18 +136,15 @@ const ChessGame = () => {
             )}
             
             {!gameState.isGameStarted ? (
-              <div className="chess-controls">
+              <div className="chess-controls welcome-screen">
+               
                 <button 
                   className="chess-button"
                   onClick={handleStartGame}
                 >
                   Play as Guest
                 </button>
-                <button 
-                  className="chess-button-outline"
-                >
-                  Sign Up to Play
-                </button>
+                
               </div>
             ) : (
               <div>

@@ -27,7 +27,8 @@ Checkmate is a website designed and focused on the beginner and casual players o
 # Software Architecture 
 
 <p align="center"> 
-
+ 
+![Software Architecture](https://github.com/user-attachments/assets/798ea7d6-c0c4-4bb4-ac47-dd8eb0cefe85)
 </p>
 
 ## Installation

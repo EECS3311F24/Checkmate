@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { deleteUser, listUsers } from '../services/UserService'
+import { getTranslation, useLanguage } from './LanguageProvider';
 
 const ListUserComponent = () => {
+    const { language, setLanguage } = useLanguage();
     const [users, setUsers] = useState([])
     useEffect(() => {
         getAllUsers();
@@ -28,15 +30,15 @@ const ListUserComponent = () => {
 
     return (
         <div className="container text-center">
-            <h2>List of Users</h2>
+            <h2>{getTranslation("ListUserComponentUserList", language)}</h2>
             <table className='table table-striped table-bordered'>
                 <thead>
                     <tr>
-                        <th>User id</th>
-                        <th>User username</th>
-                        <th>User email</th>
-                        <th>User date created</th>
-                        <th>Actions</th>
+                        <th>{getTranslation("ListUserComponentUserID", language)}</th>
+                        <th>{getTranslation("ListUserComponentUserName", language)}</th>
+                        <th>{getTranslation("ListUserComponentUserEmail", language)}</th>
+                        <th>{getTranslation("ListUserComponentUserDateCreated", language)}</th>
+                        <th>{getTranslation("ListUserComponentActions", language)}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,8 +50,8 @@ const ListUserComponent = () => {
                                 <td>{user.email}</td>
                                 <td>{user.createdOn}</td>
                                 <td>
-                                    <button className='btn btn-info' onClick={() => editUser(user.id)}>Edit</button>
-                                    <button className='btn btn-danger' onClick={() => removeUser(user.id)}style={{marginLeft: '10px'}}>Delete</button>
+                                    <button className='btn btn-info' onClick={() => editUser(user.id)}>{getTranslation("ListUserComponentEdit", language)}</button>
+                                    <button className='btn btn-danger' onClick={() => removeUser(user.id)}style={{marginLeft: '10px'}}>{getTranslation("ListUserComponentDelete", language)}</button>
                                 </td>
                             </tr>
                         )

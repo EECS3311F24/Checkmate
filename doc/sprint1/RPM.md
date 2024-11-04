@@ -4,6 +4,8 @@ Date: 2024-10-22
 
 Participants: Werner, Jaimin, Monica, Flavio
 
+Notewriter: Flavio
+
 Meeting Agenda
 
 Review Sprint 1 Goals

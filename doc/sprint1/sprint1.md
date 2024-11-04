@@ -2,6 +2,8 @@ sprint1.md:
 
 Participants: Werner, Jaimin, Monica, Flavio
 
+Notetaker: Flavio
+
 As detailed in the PRM.md, for sprint 1 we have planed to work on the following user stories for the duration of sprint 1:
 
 Guest Play

@@ -4,7 +4,7 @@ Date: 2024-10-22
 
 Participants: Werner, Jaimin, Monica, Flavio
 
-Notewriter: Flavio
+Notetaker: Flavio
 
 Meeting Agenda
 

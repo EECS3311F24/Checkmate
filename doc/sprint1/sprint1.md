@@ -2,7 +2,7 @@ sprint1.md:
 
 Participants: Werner, Jaimin, Monica, Flavio
 
-As detailed in the PRM.md, for sprint 1 we have planed to work on the following user stories:
+As detailed in the PRM.md, for sprint 1 we have planed to work on the following user stories for the duration of sprint 1:
 
 Guest Play
   Allows users to play a match of chess without creating an account, ensuring accessibility for casual users.

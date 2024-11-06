@@ -16,7 +16,7 @@ import java.util.List;
  * Controller for users, providing a rest endpoint
  * that allows getting, creating, updating, or deleting users.
  */
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RestController
 @RequestMapping("api/v1/users")
 public class UserController {
@@ -74,6 +74,8 @@ public class UserController {
     public ResponseEntity<User> createUser(HttpServletResponse response, @RequestBody User user) {
         if (!userService.createUser(user)) return new ResponseEntity<>(HttpStatus.CONFLICT);
         Cookie cookie = new Cookie("userId", user.id);
+        cookie.setSecure(false);
+        cookie.setAttribute("SameSite", "Lax");
         response.addCookie(cookie);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }

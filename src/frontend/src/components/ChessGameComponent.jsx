@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { startGuestGame, move, getBoard } from '../services/ChessService';
+import { useNavigate } from 'react-router-dom';
+import { startGuestGame, move, getBoard, deleteBoard } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 import './chess.css';
 
@@ -144,10 +145,11 @@ const ChessGame = () => {
         return null;
       }
 
-      async function updateBoard() {
+      const updateBoard = async () => {
         // TODO update captured pieces.
         if (gameState !== null && !gameState.isGameStarted) return;
-        await getBoard(gameState.id).then(response => {
+        try {
+          const response = await getBoard(gameState.id);
           setGameState(prev => ({
             ...prev,
             chess: response.data.chess,
@@ -155,8 +157,19 @@ const ChessGame = () => {
             currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
             //capturedPieces: convertCapturedPieces(response.data.chess.chessBoard.capturedPieces)
           }));
-        });
+        } catch(error) {
+          console.error(error)
+        }
       }
+
+      async function quitGame(id) {
+        const response = await deleteBoard(id);
+        setGameState(prev => ({
+          ...prev,
+          isGameStarted: false
+        }));
+        useNavigate(`/play/`);
+    }
 
       const handleStartGame = async () => {
         try {
@@ -255,6 +268,9 @@ const ChessGame = () => {
               </div>
             ) : (
               <div>
+                <div className="container text-center">
+                  {<button className='btn btn-danger' onClick={() => quitGame(gameState.id)}>{getTranslation("ChessGameComponentQuit", language)}</button>}
+                </div>
                 <div className="chess-current-player">
                 {getTranslation("ChessGameComponentCurrentPlayer",language)} {gameState.currentPlayer}
                 </div>

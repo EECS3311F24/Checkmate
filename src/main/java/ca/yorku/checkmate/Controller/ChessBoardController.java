@@ -137,14 +137,20 @@ public class ChessBoardController {
             if (user == null) return new ResponseEntity<>(HttpStatus.CONFLICT);
             userId = user.id;
         }
-        String id = userId;
+        final String id = userId;
+        // TODO search if userId assigned to a game
         return service.getBoards().stream()
-                .filter(chessBoard -> chessBoard.player2Id == null)
+                .filter(chessBoard -> id.equals(chessBoard.player1Id))
+                .filter(chessBoard -> id.equals(chessBoard.player2Id))
                 .findFirst()
-                .map(chessBoard -> {
-                    service.setPlayer2Id(chessBoard, id);
-                    return ResponseEntity.ok(chessBoard);
-                }).orElse(createChessBoard(id, null));
+                .map(ResponseEntity::ok)
+                .orElse(service.getBoards().stream()
+                        .filter(chessBoard -> chessBoard.player2Id == null)
+                        .findFirst()
+                        .map(chessBoard -> {
+                            service.setPlayer2Id(chessBoard, id);
+                            return ResponseEntity.ok(chessBoard);
+                        }).orElse(createChessBoard(id, null)));
     }
 
     /**

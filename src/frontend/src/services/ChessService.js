@@ -10,4 +10,6 @@ export const move = (id, moves) => axios.patch(CHESS_API_BASE_URL + '/' + id + '
 
 export const getBoard = (id) => axios.get(CHESS_API_BASE_URL + '/' + id);
 
+export const deleteBoard = (id) => axios.delete(CHESS_API_BASE_URL + '/' + id);
+
 export const getChessPiece = (row, col) => axios.get(CHESS_API_BASE_URL + '/' + id + '/moves');

@@ -162,13 +162,30 @@ const ChessGame = () => {
         }
       }
 
+      const navigator = useNavigate();
       async function quitGame(id) {
-        const response = await deleteBoard(id);
+        try {
+          const response = await deleteBoard(id);
+        } catch(error) { console.error(error) }
         setGameState(prev => ({
           ...prev,
-          isGameStarted: false
+          id: null,
+          id1: null,
+          id2: null,
+          chess: null,
+          board: initializeBoard(),
+          isGameStarted: false,
+          selectedPiece: null,
+          possibleMoves: [],
+          error: null,
+          currentPlayer: 'WHITE',
+          capturedPieces: {
+            WHITE: [],
+            BLACK: []
+          },
+        status: null
         }));
-        useNavigate(`/play/`);
+        navigator(`/play/`);
     }
 
       const handleStartGame = async () => {

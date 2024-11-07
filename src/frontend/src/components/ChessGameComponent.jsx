@@ -145,7 +145,7 @@ const ChessGame = () => {
         return null;
       }
 
-      const updateBoard = async () => {
+      async function updateBoard() {
         // TODO update captured pieces.
         if (gameState !== null && !gameState.isGameStarted) return;
         try {
@@ -188,7 +188,7 @@ const ChessGame = () => {
         navigator(`/play/`);
     }
 
-      const handleStartGame = async () => {
+      async function handleStartGame() {
         try {
           const response = await startGuestGame();
           setGameState(prev => ({
@@ -210,7 +210,7 @@ const ChessGame = () => {
         }
       };
     
-      const handleSquareClick = async (row, col) => {
+      async function handleSquareClick(row, col) {
         // TODO start game when there are two players, eg id1 and id2 are not null
         if (!gameState.isGameStarted) return;
         updateBoard();

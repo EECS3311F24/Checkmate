@@ -59,7 +59,7 @@ public class Bishop extends ChessPiece {
     }
 
     @Override
-    public List<Move> getUnverifiedMovesList() {
+    public List<Move> listOfShortestMoves() {
         List<Move> list = new ArrayList<>();
         Move lastMove = this.movesHistory.get(this.movesHistory.size() - 1);
         list.add(new Move(lastMove.row() - 1, lastMove.col()-1));
@@ -67,5 +67,10 @@ public class Bishop extends ChessPiece {
         list.add(new Move(lastMove.row() + 1, lastMove.col()-1));
         list.add(new Move(lastMove.row() + 1, lastMove.col()+1));
         return list;
+    }
+
+    @Override
+    public List<Move> listOfAllMoves() {
+        return List.of();
     }
 }

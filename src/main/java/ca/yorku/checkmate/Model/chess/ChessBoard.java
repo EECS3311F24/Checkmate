@@ -191,7 +191,7 @@ public class ChessBoard {
     private void checkCheckMate(char playerColor) { //TODO: DO NOT USE GETUNVERIFIEDMOVESLIST, IT DOESN'T GIVE FULL LIST OF POSSIBLE MOVES
         List<ChessPiece> pieces = playerColor == ChessBoard.white ? this.whitePieces : this.blackPieces;
         for(ChessPiece cp : pieces) {
-            for(Move move : cp.getUnverifiedMovesList()) { //todo: THIS IS WRONG!!! NEED TO GET FULL LIST OF POSSIBLE MOVES
+            for(Move move : cp.listOfShortestMoves()) { //todo: THIS IS WRONG!!! NEED TO GET FULL LIST OF POSSIBLE MOVES
                 if(this.move(cp, move,  playerColor, true)) {
                     return;
                 }
@@ -215,19 +215,19 @@ public class ChessBoard {
                         move.col() != cp.getMovesHistory().get(cp.getMovesHistory().size() - 1).col());
     }
 
-    public boolean hasMove(Player player) { //TODO: REVIEW THIS, HASmOVE WORK IF DOESN'T CHECK FOR INCHECKS?
-        //checks for move for player, checks at start of turn
+    public boolean hasMove(Player player) { //TODO: REVIEW THIS, HASmOVE WORK IF DOESN'T CHECK FOR INCHECKS? // fine to use getUnverifiedMovesList , but needs to pass through this.move
+        //checks for move for player, checks at start of turn//used to check for draws//check later
         if (player.playerColor() == ChessBoard.white) {
             //have player return array of moves that needs to be checked for empty
             //create isEmpty method
             List<Move> possibleMoves = new ArrayList<>();
             for (ChessPiece cp : this.whitePieces) {
-                if (this.checkForFirstEmpty(cp.getUnverifiedMovesList())) return true;
+                if (this.checkForFirstEmpty(cp.listOfShortestMoves())) return true;
             }
         } else {
             List<Move> possibleMoves = new ArrayList<>();
             for (ChessPiece cp : this.blackPieces) {
-                if (this.checkForFirstEmpty(cp.getUnverifiedMovesList())) return true;
+                if (this.checkForFirstEmpty(cp.listOfShortestMoves())) return true;
             }
         }
         //needs to run beginning of every turn to check for draws

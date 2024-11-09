@@ -55,12 +55,27 @@ public class Pawn extends ChessPiece {
     }
 
     @Override
-    public List<Move> getUnverifiedMovesList() {
+    public List<Move> listOfShortestMoves() {
         //returns shortest moves in all directions
         List<Move> list = new ArrayList<>();
         Move lastMove = this.getMovesHistory().get(this.getMovesHistory().size()-1);
         if(this.color == ChessBoard.white) list.add(new Move(lastMove.row()-1, lastMove.col()));
         else list.add(new Move(lastMove.row()+1, lastMove.col()));
+        return list;
+    }
+
+    @Override
+    public List<Move> listOfAllMoves() {
+        List<Move> list = new ArrayList<>();
+        Move lastMove = this.getMovesHistory().get(this.getMovesHistory().size()-1);
+        if(this.color == ChessBoard.white) {
+            list.add(new Move(lastMove.row()-1, lastMove.col()));
+            if(this.getMovesHistory().size()==1) list.add(new Move(lastMove.row()-2, lastMove.col()));
+        }
+        else {
+            list.add(new Move(lastMove.row()+1, lastMove.col()));
+            if(this.getMovesHistory().size()==1) list.add(new Move(lastMove.row()+2, lastMove.col()));
+        }
         return list;
     }
 }

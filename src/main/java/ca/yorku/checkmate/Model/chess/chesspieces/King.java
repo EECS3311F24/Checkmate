@@ -30,9 +30,14 @@ public class King extends ChessPiece {
     }
 
     @Override
-    public List<Move> getUnverifiedMovesList() {
-        Rook fakeRook = new Rook(ChessBoard.black);
-        fakeRook.addMove(this.movesHistory.get(this.movesHistory.size() - 1));
-        return fakeRook.getUnverifiedMovesList();
+    public List<Move> listOfShortestMoves() {
+        Queen fakeQueen = new Queen(ChessBoard.black);
+        fakeQueen.addMove(this.movesHistory.get(this.movesHistory.size() - 1));
+        return fakeQueen.listOfShortestMoves();
+    }
+
+    @Override
+    public List<Move> listOfAllMoves() {
+        return this.listOfShortestMoves();
     }
 }

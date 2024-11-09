@@ -29,5 +29,7 @@ public abstract class ChessPiece {
 
     public abstract List<Move> getPathWay(Move move);
 
-    public abstract List<Move> getUnverifiedMovesList();
+    public abstract List<Move> listOfShortestMoves();
+
+    public abstract List<Move> listOfAllMoves();
 }

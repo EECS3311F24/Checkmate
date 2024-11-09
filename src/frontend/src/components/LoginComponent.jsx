@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { sha3_256 } from 'js-sha3';
-import { setUserPassword } from '../services/UserService';
+import { authenticate } from '../services/UserService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 
 const LoginComponent = () => {
     const { language, setLanguage } = useLanguage();
     const [userLogin, setUserLogin] = useState('')
     const [password, setPassword] = useState('')
-    const { id } = useParams();
 
     const [errors, setErrors] = useState({
         userLogin: '',
@@ -20,21 +19,15 @@ const LoginComponent = () => {
     function login(e) {
         e.preventDefault();
         if (validateForm()) {
-            if (id) {
-                const email = null;
-                const passwordHash = sha3_256(password);
-                const user = { userLogin, email, passwordHash }
-                // TODO authenticate
-                /*
-                setUserPassword(id, oldPasswordHash, passwordHash).then((response) => {
-                    console.log(response.data);
-                    navigator("/users")
-                }).catch(error => {
-                    // TODO show error for wrong password
-                    console.error(error);
-                })
-                */
-            }
+            const passwordHash = sha3_256(password);
+            const user = { username:userLogin, email:null, passwordHash }
+            authenticate(user).then((response) => {
+                console.log(response.data);
+                navigator("/users")
+            }).catch(error => {
+                // TODO show error for wrong password
+                console.error(error);
+            })
         }
     }
 

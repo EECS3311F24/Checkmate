@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,26 +68,6 @@ public class UserController {
     }
 
     /**
-     * URL: api/v1/users/{id}/authenticate?password={password}
-     * <br>
-     * Authenticates user.
-     * @param id The id of the user.
-     * @param password The plain text password.
-     * @return A response entity with user, informing client
-     * with Http status 200 if authenticated, 401 if not authenticated, 404 if not found.
-     */
-    @GetMapping("{id}/authenticate")
-    public ResponseEntity<User> authenticate(@PathVariable("id") String id, @RequestParam(name = "password") String password) {
-        // TODO return sessionID with cookie.
-        return userService.getUserById(id).map(user -> {
-            if (userService.authenticatePassword(user, password)) {
-                return ResponseEntity.ok(user);
-            }
-            return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
-        }).orElse(ResponseEntity.notFound().build());
-    }
-
-    /**
      * URL: api/v1/users
      * <br>
      * Create a new user in the database.
@@ -120,6 +101,29 @@ public class UserController {
                 return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
             return ResponseEntity.ok(usr);
         }).orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * URL: api/v1/users/authenticate
+     * <br>
+     * Authenticates user.
+     * @param user The user to authenticate.
+     * @return A response entity with user, informing client
+     * with Http status 200 if authenticated, 401 if not authenticated, 404 if not found.
+     */
+    @PutMapping("/authenticate")
+    public ResponseEntity<User> authenticate(@RequestBody User user) {
+        // TODO return sessionID with cookie.
+        if (user == null || user.username == null) return ResponseEntity.badRequest().build();
+        final List<User> users = new ArrayList<>();
+        users.addAll(userService.getUsersByUsername(user.username));
+        users.addAll(userService.getUsersByEmail(user.username));
+        if (users.isEmpty()) return ResponseEntity.notFound().build();
+        for (final User u : users) {
+            if (!userService.authenticate(u, user)) continue;
+            return ResponseEntity.ok(u);
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     /**

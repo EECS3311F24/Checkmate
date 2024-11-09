@@ -31,8 +31,18 @@ public class UserService {
                 .toList();
     }
 
+    public List<User> getUsersByEmail(String email) {
+        return repository.findAll().stream()
+                .filter(user -> user.email.equals(email))
+                .toList();
+    }
+
     public Optional<User> getUserById(String id) {
         return repository.findById(id);
+    }
+
+    public boolean authenticate(User user, User placeholder) {
+        return user.getPasswordHash().equals(hashPasswordWithId(user.id, placeholder.getPasswordHash()));
     }
 
     public boolean authenticatePassword(User user, String password) {

@@ -1,5 +1,6 @@
 package ca.yorku.checkmate.Model.user;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,9 +56,22 @@ public class UserService {
         });
     }
 
-    public void patchUserUsername(User user, String username) {
-        user.setUsername(username);
+    public boolean setUserPassword(User user, String oldPassword, String password) {
+        if (user.getPasswordHash() != null) {
+            if (oldPassword == null) return false;
+            String oldPasswordHash = hashPassword(oldPassword);
+            if (!user.getPasswordHash().equals(oldPasswordHash))
+                return false;
+        }
+        String passwordHash = hashPassword(password);
+        if (passwordHash == null) return false;
+        user.setPasswordHash(passwordHash);
         repository.save(user);
+        return true;
+    }
+
+    private String hashPassword(String password) {
+        return new DigestUtils("SHA3-256").digestAsHex(password);
     }
 
     public void deleteUser(User user) {

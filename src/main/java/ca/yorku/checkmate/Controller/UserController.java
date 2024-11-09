@@ -95,14 +95,23 @@ public class UserController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    //TODO example of Patch, Patch is like update but less info sent
+    /**
+     * <p>URL: api/v1/users/{id}</p>
+     * Set a user password.
+     * @param id The id of the user.
+     * @param oldPassword The plaintext old password.
+     * @param password The plaintext password
+     * @return A response entity with user, informing client
+     * with Http status 200 if updated, 409 if not update, 404 if not found.
+     */
     @PatchMapping("{id}")
-    public ResponseEntity<User> patchUsername(@PathVariable("id") String id, @RequestBody String username) {
-        if (username == null || username.isEmpty()) return ResponseEntity.badRequest().build();
+    public ResponseEntity<User> setPassword(@PathVariable("id") String id, @RequestParam(name = "oldPassword", required = false) String oldPassword, @RequestParam(name = "password") String password) {
+        if (password == null || password.isEmpty()) return ResponseEntity.badRequest().build();
         return userService.getUserById(id).map(user -> {
-            userService.patchUserUsername(user, username);
-            return ResponseEntity.ok(user);
-        }).orElse(new ResponseEntity<>(HttpStatus.CONFLICT));
+            if (userService.setUserPassword(user, oldPassword, password)) {
+                return ResponseEntity.ok(user);
+            } return new ResponseEntity<User>(HttpStatus.CONFLICT);
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     /**

@@ -152,7 +152,7 @@ public class ChessBoard {
             Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size()-1);
             if (cp instanceof Pawn) {
                 if(this.checkPawnCaptureMove((Pawn)cp, move, playerColor)==-1)return false;
-                else if(Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row()) - move.row() == 1) pawnCapture = true;
+                else if(Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row() - move.row()) == 1) pawnCapture = true;
             }
             List<ChessPiece> opponentPieces = null;
             Placeholder last = board[move.row()][move.col()];
@@ -284,7 +284,7 @@ public class ChessBoard {
 
     private int checkPawnCaptureMove(Pawn cp, Move move, char playerColor) {
         Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);
-        if (Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row()) - move.row() == 1) {
+        if (Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row() - move.row()) == 1) {
             if (this.board[move.row()][move.col()].getChar() == ' ' ||
                     this.board[move.row()][move.col()].getChessPiece().getColor() == playerColor) {
                 return -1;

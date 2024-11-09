@@ -40,7 +40,7 @@ public class Pawn extends ChessPiece {
     public List<Move> getPathWay(Move move) {
         List<Move> path = new ArrayList<Move>();
         Move lastMove = this.getMovesHistory().get(this.movesHistory.size() - 1);
-        if(Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row())-move.row()==1) path.add(move);
+        if(Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row()-move.row())==1) path.add(move);
         else {
             int counter = lastMove.row() + 1;
             while (this.color == ChessBoard.black && move.row() >= counter) {

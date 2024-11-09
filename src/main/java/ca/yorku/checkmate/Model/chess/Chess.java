@@ -26,7 +26,7 @@ public class Chess {
 
     public boolean move(int row, int col, ChessPiece cp) {
         boolean moved = false;
-        if(this.cb.move(cp, new Move(row, col), this.whosTurn)) {
+        if(this.cb.move(cp, new Move(row, col), this.whosTurn.playerColor(), false)) {
             moved = true;
             this.numMoves++;
             this.whosTurn = this.getOtherPlayer(this.whosTurn);

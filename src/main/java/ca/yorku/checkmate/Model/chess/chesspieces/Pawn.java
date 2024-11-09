@@ -56,8 +56,11 @@ public class Pawn extends ChessPiece {
 
     @Override
     public List<Move> getUnverifiedMovesList() {
+        //returns shortest moves in all directions
         List<Move> list = new ArrayList<>();
-        list.add(new Move(this.getMovesHistory().get(this.getMovesHistory().size()-1).row(), this.getMovesHistory().get(this.getMovesHistory().size()-1).col()));
+        Move lastMove = this.getMovesHistory().get(this.getMovesHistory().size()-1);
+        if(this.color == ChessBoard.white) list.add(new Move(lastMove.row()-1, lastMove.col()));
+        else list.add(new Move(lastMove.row()+1, lastMove.col()));
         return list;
     }
 }

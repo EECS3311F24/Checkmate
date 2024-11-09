@@ -179,7 +179,7 @@ public class ChessBoard {
             else board[newSpot.row()][newSpot.col()] = new Placeholder();
             cp.getMovesHistory().remove(cp.getMovesHistory().size()-1);
             this.board[old.row()][old.col()] = new Placeholder(cp);
-            result = false;
+            if(!fakeMove) result = false;
         }
         if(!fakeMove) {
             checkCheckMate(this.getOtherPlayerColor(playerColor));
@@ -188,10 +188,10 @@ public class ChessBoard {
         return result;
     }
 
-    private void checkCheckMate(char playerColor) {
+    private void checkCheckMate(char playerColor) { //TODO: DO NOT USE GETUNVERIFIEDMOVESLIST, IT DOESN'T GIVE FULL LIST OF POSSIBLE MOVES
         List<ChessPiece> pieces = playerColor == ChessBoard.white ? this.whitePieces : this.blackPieces;
         for(ChessPiece cp : pieces) {
-            for(Move move : cp.getUnverifiedMovesList()) {
+            for(Move move : cp.getUnverifiedMovesList()) { //todo: THIS IS WRONG!!! NEED TO GET FULL LIST OF POSSIBLE MOVES
                 if(this.move(cp, move,  playerColor, true)) {
                     return;
                 }
@@ -215,7 +215,7 @@ public class ChessBoard {
                         move.col() != cp.getMovesHistory().get(cp.getMovesHistory().size() - 1).col());
     }
 
-    public boolean hasMove(Player player) {
+    public boolean hasMove(Player player) { //TODO: REVIEW THIS, HASmOVE WORK IF DOESN'T CHECK FOR INCHECKS?
         //checks for move for player, checks at start of turn
         if (player.playerColor() == ChessBoard.white) {
             //have player return array of moves that needs to be checked for empty
@@ -251,11 +251,11 @@ public class ChessBoard {
     }
 
     public boolean inCheck(char player) {
-        List<ChessPiece> listToLoop = player == ChessBoard.white ? this.whitePieces : this.blackPieces;
+        List<ChessPiece> listToLoop = player == ChessBoard.white ? this.blackPieces : this.whitePieces;
         Move kingLoc = player == ChessBoard.white ? this.whiteKingLocation : this.blackKingLocation;
         for(ChessPiece cp : listToLoop) {
             List<Move> pathToKing = cp.getPathWay(kingLoc);
-            if (cp.move(kingLoc) && (pathToKing.size() == 1 || this.checkForAllClearPath(pathToKing.subList(0, pathToKing.size() - 1))))
+            if (cp.move(kingLoc) && (pathToKing.size() == 1 || this.checkForAllClearPath(pathToKing.subList(0, pathToKing.size() - 1)))) //TODO: THROWN EXCEPTION KING MOVE
                 return true;
         }
         return false;
@@ -323,117 +323,9 @@ public class ChessBoard {
 
     public static void main(String[] args) {
         ChessBoard cb = new ChessBoard();
-//        System.out.println(cb.toString());
-//        char pW = ChessBoard.white;
-//        char pB = ChessBoard.black;
-//        Move from0 = new Move(6, 0);
-//        Move to0 = new Move(4, 0);
-//        ChessPiece cp = cb.getBoard()[from0.row()][from0.col()].getChessPiece();
-//        cb.move(cp, to0, pW);
-//
-//        Move from1 = new Move(1, 1);
-//        Move to1 = new Move(3, 1);
-//        cp = cb.getBoard()[from1.row()][from1.col()].getChessPiece();
-//        cb.move(cp, to1, pB);
-//
-//        Move from02 = new Move(4, 0);
-//        Move to02 = new Move(3, 0);
-//        cp = cb.getBoard()[from02.row()][from02.col()].getChessPiece();
-//        cb.move(cp, to02, pW);
-//
-//        Move from2 = new Move(0, 1);
-//        Move to2 = new Move(2, 0);
-//        cp = cb.getBoard()[from2.row()][from2.col()].getChessPiece();
-//        cb.move(cp, to2, pB);
-//
-//        Move from3 = new Move(3, 0);
-//        Move to3 = new Move(2, 0);
-//        cp = cb.getBoard()[from3.row()][from3.col()].getChessPiece();
-//        cb.move(cp, to3, pW);
-//
-//        Move from4 = new Move(1, 0);
-//        Move to4 = new Move(2, 0);
-//        cp = cb.getBoard()[from4.row()][from4.col()].getChessPiece();
-//        cb.move(cp, to4, pB);
-//
-//        Move from5 = new Move(7, 0);
-//        Move to5 = new Move(2, 0);
-//        cp = cb.getBoard()[from5.row()][from5.col()].getChessPiece();
-//        cb.move(cp, to5, pW);
-//
-//        Move from06 = new Move(0, 2);
-//        Move to06 = new Move(1, 1);
-//        cp = cb.getBoard()[from06.row()][from06.col()].getChessPiece();
-//        cb.move(cp, to06, pB);
-//
-//        Move from6 = new Move(2, 0);
-//        Move to6 = new Move(0, 0);
-//        cp = cb.getBoard()[from6.row()][from6.col()].getChessPiece();
-//        cb.move(cp, to6, pW);
-//
-//        Move from7 = new Move(1, 1);
-//        Move to7 = new Move(5, 5);
-//        cp = cb.getBoard()[from7.row()][from7.col()].getChessPiece();
-//        cb.move(cp, to7, pB);
-//
-//        //error start here
-//        Move from8 = new Move(0, 0);
-//        Move to8 = new Move(0, 3);
-//        cp = cb.getBoard()[from8.row()][from8.col()].getChessPiece();
-//        cb.move(cp, to8, pB);
-//        //above move didn't go through try again White
-//
-//        Move from9 = new Move(0, 0);
-//        Move to9 = new Move(0, 2);
-//        cp = cb.getBoard()[from9.row()][from9.col()].getChessPiece();
-//        cb.move(cp, to9, pW);
-//
-//        Move from10 = new Move(5, 5);
-//        Move to10 = new Move(4, 4);
-//        cp = cb.getBoard()[from10.row()][from10.col()].getChessPiece();
-//        cb.move(cp, to10, pW);
-//
-//        //throw exception below
-//        Move from11 = new Move(0, 2);
-//        Move to11 = new Move(0, 0);
-//        cp = cb.getBoard()[from11.row()][from11.col()].getChessPiece();
-//        cb.move(cp, to11, pB);
-//
-//        Move from12 = new Move(6, 4);
-//        Move to12 = new Move(5, 4);
-//        cp = cb.getBoard()[from12.row()][from12.col()].getChessPiece();
-//        cb.move(cp, to12, pW);
-//
-//        Move from13 = new Move(4, 4);
-//        Move to13 = new Move(6, 2);
-//        cp = cb.getBoard()[from13.row()][from13.col()].getChessPiece();
-//        cb.move(cp, to13, pB);
-//
-//        Move from14 = new Move(7, 3);
-//        Move to14 = new Move(3, 7);
-//        cp = cb.getBoard()[from14.row()][from14.col()].getChessPiece();
-//        cb.move(cp, to14, pW);
-//
-//        Move from15 = new Move(1, 5);
-//        Move to15 = new Move(2, 5);
-//        cp = cb.getBoard()[from15.row()][from15.col()].getChessPiece();
-//        cb.move(cp, to15, pB);
-//        System.out.println(cb.toString());
-//
-//
-//        Move from16 = new Move(7, 1);
-//        Move to16 = new Move(5, 2);
-//        cp = cb.getBoard()[from16.row()][from16.col()].getChessPiece();
-//        cb.move(cp, to16, pW);
-//        System.out.println(cb.toString());
-//
-//
-//        Move from17 = new Move(1, 4);
-//        Move to17 = new Move(3, 4);
-//        cp = cb.getBoard()[from17.row()][from17.col()].getChessPiece();
-//        cb.move(cp, to17, pB);
-
-
         System.out.println(cb.toString());
+        ChessPiece p = cb.board[6][4].getChessPiece();
+        Move to0 = new Move(4, 4);
+        cb.move(p, to0, 'W', false);
     }
 }

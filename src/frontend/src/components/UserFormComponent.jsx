@@ -60,21 +60,21 @@ const UserFormComponent = () => {
         if (username.trim()) {
             errorsCopy.username = '';
         } else {
-            errorsCopy.username = getTranslation("UserFormComponmentUsernameError", language)
+            errorsCopy.username = getTranslation("UserFormComponentUsernameError", language)
             valid = false;
         }
 
         if (email.trim()) {
             errorsCopy.email = '';
         } else {
-            errorsCopy.email = getTranslation("UserFormComponmentEmailError", language)
+            errorsCopy.email = getTranslation("UserFormComponentEmailError", language)
             valid = false;
         }
 
         if (password.trim()) {
             errorsCopy.password = '';
         } else {
-            errorsCopy.password = getTranslation("UserFormComponmentPasswordError", language)
+            errorsCopy.password = getTranslation("UserFormComponentPasswordError", language)
             valid = false;
         }
 
@@ -84,9 +84,9 @@ const UserFormComponent = () => {
 
     function pageTitle() {
         if (id) {
-            return <h2 className='text-center'>{getTranslation("UserFormComponmentEditUser", language)}</h2>
+            return <h2 className='text-center'>{getTranslation("UserFormComponentEditUser", language)}</h2>
         } else {
-            return <h2 className='text-center'>{getTranslation("UserFormComponmentSignup", language)}</h2>
+            return <h2 className='text-center'>{getTranslation("UserFormComponentSignup", language)}</h2>
         }
     }
 
@@ -97,10 +97,10 @@ const UserFormComponent = () => {
                 <div className='card-body'>
                     <form>
                         <div className='form-group mb-2'>
-                            <label className='form-label'>{getTranslation("UserFormComponmentUsername")}</label>
+                            <label className='form-label'>{getTranslation("UserFormComponentUsername", language)}</label>
                             <input
                                 type="text"
-                                placeholder= {getTranslation("UserFormComponmentUsernamePlaceholder")}
+                                placeholder= {getTranslation("UserFormComponentUsernamePlaceholder", language)}
                                 name='username'
                                 value={username}
                                 className={`form-control ${errors.username ? 'is-invalid' : ''}`}
@@ -110,10 +110,10 @@ const UserFormComponent = () => {
                             {errors.username && <div className='invalid-feedback'> {errors.username} </div>}
                         </div>
                         <div className='form-group mb-2'>
-                            <label className='form-label'>{getTranslation("UserFormComponmentEmail")}</label>
+                            <label className='form-label'>{getTranslation("UserFormComponentEmail", language)}</label>
                             <input
                                 type="text"
-                                placeholder= {getTranslation("UserFormComponmentEmailPlaceholder")}
+                                placeholder= {getTranslation("UserFormComponentEmailPlaceholder", language)}
                                 name='email'
                                 value={email}
                                 className={`form-control ${errors.email ? 'is-invalid' : ''}`}
@@ -123,10 +123,10 @@ const UserFormComponent = () => {
                             {errors.email && <div className='invalid-feedback'> {errors.email} </div>}
                         </div>
                         <div className='form-group mb-2'>
-                            <label className='form-label'>{getTranslation("UserFormComponmentPassword")}</label>
+                            <label className='form-label'>{getTranslation("UserFormComponentPassword", language)}</label>
                             <input
                                 type="text"
-                                placeholder= {getTranslation("UserFormComponmentPasswordPlaceholder")}
+                                placeholder= {getTranslation("UserFormComponentPasswordPlaceholder", language)}
                                 name='password'
                                 value={password}
                                 className={`form-control ${errors.password ? 'is-invalid' : ''}`}
@@ -135,7 +135,7 @@ const UserFormComponent = () => {
                             </input>
                             {errors.password && <div className='invalid-feedback'> {errors.password} </div>}
                         </div>
-                        <button className='btn btn-success' onClick={saveUser}>{getTranslation("UserFormComponmentSubmit")}</button>
+                        <button className='btn btn-success' onClick={saveUser}>{getTranslation("UserFormComponentSubmit", language)}</button>
                     </form>
                 </div>
             </div>

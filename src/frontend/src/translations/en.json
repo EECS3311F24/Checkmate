@@ -24,18 +24,18 @@
     "ListUserComponentEdit": "Edit",
     "ListUserComponentDelete": "Delete",
 
-    "UserFormComponmentUsernameError": "Username is required!",
-    "UserFormComponmentEmailError": "Email is required!",
-    "UserFormComponmentPasswordError": "Password is required!",
-    "UserFormComponmentEditUser": "Edit User",
-    "UserFormComponmentSignup": "Signup",
-    "UserFormComponmentUsername": "Username",
-    "UserFormComponmentUsernamePlaceholder": "Username",
-    "UserFormComponmentEmail": "Email",
-    "UserFormComponmentEmailPlaceholder": "Email",
-    "UserFormComponmentPassword": "Password",
-    "UserFormComponmentPasswordPlaceholder": "Password",
-    "UserFormComponmentSubmit": "Submit"
+    "UserFormComponentUsernameError": "Username is required!",
+    "UserFormComponentEmailError": "Email is required!",
+    "UserFormComponentPasswordError": "Password is required!",
+    "UserFormComponentEditUser": "Edit User",
+    "UserFormComponentSignup": "Signup",
+    "UserFormComponentUsername": "Username",
+    "UserFormComponentUsernamePlaceholder": "Username",
+    "UserFormComponentEmail": "Email",
+    "UserFormComponentEmailPlaceholder": "Email",
+    "UserFormComponentPassword": "Password",
+    "UserFormComponentPasswordPlaceholder": "Password",
+    "UserFormComponentSubmit": "Submit"
 
     
   }

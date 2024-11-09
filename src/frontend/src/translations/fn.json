@@ -24,18 +24,18 @@
     "ListUserComponentEdit": "Éditer",
     "ListUserComponentDelete": "Supprimer",
 
-    "UserFormComponmentUsernameError": "Le nom d'utilisateur est requis!",
-    "UserFormComponmentEmailError": "L'adresse e-mail est requise!",
-    "UserFormComponmentPasswordError": "Un mot de passe est requis!",
-    "UserFormComponmentEditUser": "Modifier l'utilisateur",
-    "UserFormComponmentSignup": "S'inscrire",
-    "UserFormComponmentUsername": "Nom d'utilisateur",
-    "UserFormComponmentUsernamePlaceholder": "Nom d'utilisateur",
-    "UserFormComponmentEmail": "Adresse e-mail",
-    "UserFormComponmentEmailPlaceholder": "Adresse e-mail",
-    "UserFormComponmentPassword": "Mot de passe",
-    "UserFormComponmentPasswordPlaceholder": "Mot de passe",
-    "UserFormComponmentSubmit": "Soumettre"
+    "UserFormComponentUsernameError": "Le nom d'utilisateur est requis!",
+    "UserFormComponentEmailError": "L'adresse e-mail est requise!",
+    "UserFormComponentPasswordError": "Un mot de passe est requis!",
+    "UserFormComponentEditUser": "Modifier l'utilisateur",
+    "UserFormComponentSignup": "S'inscrire",
+    "UserFormComponentUsername": "Nom d'utilisateur",
+    "UserFormComponentUsernamePlaceholder": "Nom d'utilisateur",
+    "UserFormComponentEmail": "Adresse e-mail",
+    "UserFormComponentEmailPlaceholder": "Adresse e-mail",
+    "UserFormComponentPassword": "Mot de passe",
+    "UserFormComponentPasswordPlaceholder": "Mot de passe",
+    "UserFormComponentSubmit": "Soumettre"
 
     
 }

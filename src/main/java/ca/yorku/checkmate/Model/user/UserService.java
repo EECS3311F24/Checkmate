@@ -36,6 +36,7 @@ public class UserService {
     }
 
     public boolean authenticatePassword(User user, String password) {
+        // TODO password is hashed of (hashed text + id)
         return user.getPasswordHash().equals(hashPassword(password));
     }
 
@@ -49,10 +50,19 @@ public class UserService {
 
     public boolean createUser(User user) {
         repository.save(user);
-        return true;
+        return repository.findAll().stream()
+                .filter(u -> u.samePassword(user))
+                .findFirst()
+                .map(u -> {
+                    u.setPasswordHash(hashPasswordWithId(user.id, user.getPasswordHash()));
+                    repository.save(u);
+                    return true;
+                })
+                .orElse(false);
     }
 
     public boolean updateUser(User user, User placeholder) {
+        placeholder.setPasswordHash(hashPasswordWithId(user.id, placeholder.getPasswordHash()));
         if (!user.samePassword(placeholder))
             return false;
         user.setUsername(placeholder.getUsername());
@@ -63,16 +73,20 @@ public class UserService {
 
     public boolean setUserPassword(User user, String oldPassword, String password) {
         if (user.getPasswordHash() != null) {
-            if (!user.getPasswordHash().equals(oldPassword))
+            if (!user.getPasswordHash().equals(hashPasswordWithId(user.id, oldPassword)))
                 return false;
         }
-        user.setPasswordHash(password);
+        user.setPasswordHash(hashPasswordWithId(user.id, password));
         repository.save(user);
         return true;
     }
 
     private String hashPassword(String password) {
         return new DigestUtils("SHA3-256").digestAsHex(password);
+    }
+
+    private String hashPasswordWithId(String id, String password) {
+        return new DigestUtils("SHA3-256").digestAsHex(password + id);
     }
 
     public void deleteUser(User user) {

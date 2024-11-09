@@ -7,12 +7,14 @@ const UserFormComponent = () => {
     const { language, setLanguage } = useLanguage();
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
     const { id } = useParams();
 
     const [errors, setErrors] = useState({
         username: '',
-        email: ''
+        email: '',
+        password: ''
     })
 
     useEffect(() => {
@@ -20,6 +22,8 @@ const UserFormComponent = () => {
             getUser(id).then((response) => {
                 setUsername(response.data.username);
                 setEmail(response.data.email);
+                //setPassword(null);
+                // TODO password
             })
         }
     }, [id])
@@ -67,6 +71,13 @@ const UserFormComponent = () => {
             valid = false;
         }
 
+        if (password.trim()) {
+            errorsCopy.password = '';
+        } else {
+            errorsCopy.password = getTranslation("UserFormComponmentPasswordError", language)
+            valid = false;
+        }
+
         setErrors(errorsCopy);
         return valid;
     }
@@ -110,6 +121,19 @@ const UserFormComponent = () => {
                             >
                             </input>
                             {errors.email && <div className='invalid-feedback'> {errors.email} </div>}
+                        </div>
+                        <div className='form-group mb-2'>
+                            <label className='form-label'>{getTranslation("UserFormComponmentPassword")}</label>
+                            <input
+                                type="text"
+                                placeholder= {getTranslation("UserFormComponmentPasswordPlaceholder")}
+                                name='password'
+                                value={password}
+                                className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                                onChange={(e) => setPassword(e.target.value)}
+                            >
+                            </input>
+                            {errors.password && <div className='invalid-feedback'> {errors.password} </div>}
                         </div>
                         <button className='btn btn-success' onClick={saveUser}>{getTranslation("UserFormComponmentSubmit")}</button>
                     </form>

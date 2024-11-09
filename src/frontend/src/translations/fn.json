@@ -35,7 +35,14 @@
     "UserFormComponentEmailPlaceholder": "Adresse e-mail",
     "UserFormComponentPassword": "Mot de passe",
     "UserFormComponentPasswordPlaceholder": "Mot de passe",
-    "UserFormComponentSubmit": "Soumettre"
+    "UserFormComponentSubmit": "Soumettre",
+    "UserFormComponentChangePassword": "Changer le mot de passe",
 
-    
+    "ChangePasswordComponentChangePassword": "Changer le mot de passe",
+    "ChangePasswordComponentOldPasswordError": "L'ancien mot de passe est requis!",
+    "ChangePasswordComponentPasswordError": "Un nouveau mot de passe est requis!",
+    "ChangePasswordComponentOldPassword": "Ancien mot de passe",
+    "ChangePasswordComponentOldPasswordPlaceholder": "Ancien mot de passe",
+    "ChangePasswordComponentPassword": "Mot de passe",
+    "ChangePasswordComponentPasswordPlaceholder": "Mot de passe"
 }

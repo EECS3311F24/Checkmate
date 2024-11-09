@@ -35,6 +35,10 @@ public class UserService {
         return repository.findById(id);
     }
 
+    public boolean authenticatePassword(User user, String password) {
+        return user.getPasswordHash().equals(hashPassword(password));
+    }
+
     public boolean hasUserById(String id) {
         return repository.existsById(id);
     }
@@ -59,8 +63,7 @@ public class UserService {
     public boolean setUserPassword(User user, String oldPassword, String password) {
         if (user.getPasswordHash() != null) {
             if (oldPassword == null) return false;
-            String oldPasswordHash = hashPassword(oldPassword);
-            if (!user.getPasswordHash().equals(oldPasswordHash))
+            if (!authenticatePassword(user, oldPassword))
                 return false;
         }
         String passwordHash = hashPassword(password);

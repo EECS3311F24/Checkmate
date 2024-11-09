@@ -63,6 +63,25 @@ public class UserController {
     }
 
     /**
+     * <p>URL: api/v1/users/{id}/authenticate?password={password}</p>
+     * Gets user by username in the database.
+     * @param id The id of the user.
+     * @param password The plain text password.
+     * @return A response entity with user, informing client
+     * with Http status 200 if authenticated, 401 if not authenticated, 404 if not found.
+     */
+    @GetMapping("{id}/authenticate")
+    public ResponseEntity<User> authenticate(@PathVariable("id") String id, @RequestParam(name = "password") String password) {
+        // TODO return sessionID with cookie.
+        return userService.getUserById(id).map(user -> {
+            if (userService.authenticatePassword(user, password)) {
+                return ResponseEntity.ok(user);
+            }
+            return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
      * <p>URL: api/v1/users</p>
      * Create a new user in the database.
      * @param user The user to be created.
@@ -96,7 +115,7 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/users/{id}</p>
+     * <p>URL: api/v1/users/{id}?oldPassword={oldPassword}&password={password}</p>
      * Set a user password.
      * @param id The id of the user.
      * @param oldPassword The plaintext old password.

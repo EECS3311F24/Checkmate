@@ -148,7 +148,12 @@ public class ChessBoard {
 
     public boolean move(ChessPiece cp, Move move, char playerColor, boolean fakeMove) {
         if (this.isValid(cp, move) && cp.move(move)) {
-            if (cp instanceof Pawn && this.checkPawnCaptureMove((Pawn)cp, move, playerColor)==-1) return false;
+            boolean pawnCapture = false;
+            Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size()-1);
+            if (cp instanceof Pawn) {
+                if(this.checkPawnCaptureMove((Pawn)cp, move, playerColor)==-1)return false;
+                else if(Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row()) - move.row() == 1) pawnCapture = true;
+            }
             List<ChessPiece> opponentPieces = null;
             Placeholder last = board[move.row()][move.col()];
             List<Move> path = cp.getPathWay(move); //tiles to move, except knight
@@ -156,17 +161,16 @@ public class ChessBoard {
             if (last.getChar() != ' ' && last.getChessPiece().getColor() == playerColor) return false;
             if (!this.checkForAllClearPath(pathMinusLast)) return false;
             if (last.getChar() != ' ') { //capture here//TODO: what is this captured list. 1) need to add to captured list, and remove from pieces
+                if(cp instanceof Pawn && !pawnCapture) return false; //when there is captureable piece with non diagonal
                 opponentPieces = last.getChessPiece().getColor() == ChessBoard.white ? this.whitePieces : this.blackPieces;
                 opponentPieces.remove(last.getChessPiece()); //remove from existing pieces
                 this.capturedPieces.add(last.getChessPiece());
             }
-            int oldRow = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1).row();
-            int oldCol = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1).col();
             this.board[move.row()][move.col()] = new Placeholder(cp);
             if (cp instanceof King) this.updateKingLocation(move, (King) cp);
-            this.board[oldRow][oldCol] = new Placeholder();
+            this.board[lastMove.row()][lastMove.col()] = new Placeholder();
             cp.addMove(move);
-            return passesChecks(playerColor, opponentPieces, cp, new Move(oldRow, oldCol), move, fakeMove);
+            return passesChecks(playerColor, opponentPieces, cp, lastMove, move, fakeMove);
         }
         return false;
     }

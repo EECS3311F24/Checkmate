@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { createUser, getUser, updateUser } from '../services/UserService';
 import { useNavigate, useParams } from 'react-router-dom';
+import { sha3_256 } from 'js-sha3';
+import { createUser, getUser, authenticate, updateUser } from '../services/UserService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 
 const UserFormComponent = () => {
@@ -22,8 +23,6 @@ const UserFormComponent = () => {
             getUser(id).then((response) => {
                 setUsername(response.data.username);
                 setEmail(response.data.email);
-                //setPassword(null);
-                // TODO password
             })
         }
     }, [id])
@@ -34,7 +33,8 @@ const UserFormComponent = () => {
     function saveUser(e) {
         e.preventDefault();
         if (validateForm()) {
-            const user = { username, email }
+            const passwordHash = sha3_256(password);
+            const user = { username, email, passwordHash }
             if (id) {
                 updateUser(id, user).then((response) => {
                     console.log(response.data);

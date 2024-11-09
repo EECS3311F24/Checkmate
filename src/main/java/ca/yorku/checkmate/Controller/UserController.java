@@ -104,12 +104,13 @@ public class UserController {
      * @param id The id of the user.
      * @param user The user to be created.
      * @return A response entity with user, informing client
-     * with Http status 200 if updated, 404 if not found.
+     * with Http status 200 if updated, 401 if not authenticated, 404 if not found.
      */
     @PutMapping("{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") String id, @RequestBody User user) {
         return userService.getUserById(id).map(usr -> {
-            userService.updateUser(id, user);
+            if (!userService.updateUser(usr, user))
+                return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
             return ResponseEntity.ok(usr);
         }).orElse(ResponseEntity.notFound().build());
     }

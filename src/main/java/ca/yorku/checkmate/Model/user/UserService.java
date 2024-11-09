@@ -52,12 +52,13 @@ public class UserService {
         return true;
     }
 
-    public void updateUser(String id, User newUser) {
-        getUserById(id).ifPresent(user -> {
-            user.setUsername(newUser.getUsername());
-            user.setEmail(newUser.getEmail());
-            repository.save(user);
-        });
+    public boolean updateUser(User user, User placeholder) {
+        if (!user.samePassword(placeholder))
+            return false;
+        user.setUsername(placeholder.getUsername());
+        user.setEmail(placeholder.getEmail());
+        repository.save(user);
+        return true;
     }
 
     public boolean setUserPassword(User user, String oldPassword, String password) {

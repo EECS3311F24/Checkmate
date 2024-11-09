@@ -63,13 +63,10 @@ public class UserService {
 
     public boolean setUserPassword(User user, String oldPassword, String password) {
         if (user.getPasswordHash() != null) {
-            if (oldPassword == null) return false;
-            if (!authenticatePassword(user, oldPassword))
+            if (!user.getPasswordHash().equals(oldPassword))
                 return false;
         }
-        String passwordHash = hashPassword(password);
-        if (passwordHash == null) return false;
-        user.setPasswordHash(passwordHash);
+        user.setPasswordHash(password);
         repository.save(user);
         return true;
     }

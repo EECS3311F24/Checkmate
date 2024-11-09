@@ -21,11 +21,10 @@ const ChangePasswordComponent = () => {
     function changePassword(e) {
         e.preventDefault();
         if (validateForm()) {
-            // TODO frontend does hashing
-            //const oldPasswordHash = sha3_256(oldPassword);
-            //const passwordHash = sha3_256(password);
             if (id) {
-                setUserPassword(id, oldPassword, password).then((response) => {
+                const oldPasswordHash = sha3_256(oldPassword);
+                const passwordHash = sha3_256(password);
+                setUserPassword(id, oldPasswordHash, passwordHash).then((response) => {
                     console.log(response.data);
                     navigator("/users")
                 }).catch(error => {

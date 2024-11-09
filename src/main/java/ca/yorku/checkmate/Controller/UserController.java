@@ -127,8 +127,8 @@ public class UserController {
      * <br>
      * Set a user password.
      * @param id The id of the user.
-     * @param oldPassword The plaintext old password.
-     * @param password The plaintext password
+     * @param oldPassword The old hashed password
+     * @param password The new hashed password
      * @return A response entity with user, informing client
      * with Http status 200 if updated, 409 if not updated, 404 if not found.
      */

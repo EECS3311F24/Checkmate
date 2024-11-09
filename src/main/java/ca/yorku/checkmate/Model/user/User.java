@@ -1,6 +1,5 @@
 package ca.yorku.checkmate.Model.user;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;

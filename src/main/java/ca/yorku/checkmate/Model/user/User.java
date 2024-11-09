@@ -1,5 +1,6 @@
 package ca.yorku.checkmate.Model.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
@@ -18,12 +19,14 @@ public class User {
     public String email;
     private String passwordHash;
 
+    public User() {}
+
     public User(String username, String email) {
         new User(username, email);
     }
 
     @PersistenceCreator
-    public User(String username, String email, String passwordHash) {
+    public User(String username, String email, @JsonProperty("password") String passwordHash) {
         this.username = username;
         this.email = email;
         this.passwordHash = passwordHash;

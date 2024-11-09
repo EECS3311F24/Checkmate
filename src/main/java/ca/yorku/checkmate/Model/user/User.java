@@ -2,6 +2,7 @@ package ca.yorku.checkmate.Model.user;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceCreator;
 
 import java.util.Date;
 
@@ -13,13 +14,19 @@ public class User {
     public String id;
     @CreatedDate
     public Date createdOn;
-
     public String username;
     public String email;
+    private String passwordHash;
 
     public User(String username, String email) {
+        new User(username, email);
+    }
+
+    @PersistenceCreator
+    public User(String username, String email, String passwordHash) {
         this.username = username;
         this.email = email;
+        this.passwordHash = passwordHash;
     }
 
     public String getUsername() {
@@ -30,12 +37,20 @@ public class User {
         return email;
     }
 
+    protected String getPasswordHash() {
+        return passwordHash;
+    }
+
     protected void setUsername(String username) {
         this.username = username;
     }
 
     protected void setEmail(String email) {
         this.email = email;
+    }
+
+    protected void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     @Override

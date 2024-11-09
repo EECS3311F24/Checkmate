@@ -13,6 +13,7 @@
 
     "HeaderComponentUsers": "Utilisateurs",
     "HeaderComponentSignup": "S'inscrire",
+    "HeaderComponentLogin": "Se connecter",
     "HeaderComponentPlayChess": "Jouer aux échecs",
 
     "ListUserComponentUserList": "Liste des utilisateurs",
@@ -37,6 +38,14 @@
     "UserFormComponentPasswordPlaceholder": "Mot de passe",
     "UserFormComponentSubmit": "Soumettre",
     "UserFormComponentChangePassword": "Changer le mot de passe",
+
+    "LoginComponentLogin": "Se connecter",
+    "LoginComponentUserLoginError": "Nom d'utilisateur ou e-mail requis!",
+    "LoginComponentPasswordError": "Un mot de passe est requis!",
+    "LoginComponentUserLogin": "Connexion utilisateur",
+    "LoginComponentUserLoginPlaceholder": "Nom d'utilisateur ou e-mail",
+    "LoginComponentPassword": "Mot de passe",
+    "LoginComponentPasswordPlaceholder": "Mot de passe",
 
     "ChangePasswordComponentChangePassword": "Changer le mot de passe",
     "ChangePasswordComponentOldPasswordError": "L'ancien mot de passe est requis!",

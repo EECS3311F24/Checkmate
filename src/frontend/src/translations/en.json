@@ -13,6 +13,7 @@
 
     "HeaderComponentUsers": "Users",
     "HeaderComponentSignup": "Signup",
+    "HeaderComponentLogin": "Login",
     "HeaderComponentPlayChess": "Play Chess",
 
     "ListUserComponentUserList": "List of Users",
@@ -37,6 +38,14 @@
     "UserFormComponentPasswordPlaceholder": "Password",
     "UserFormComponentSubmit": "Submit",
     "UserFormComponentChangePassword": "Change Password",
+
+    "LoginComponentLogin": "Login",
+    "LoginComponentUserLoginError": "Username or Email required!",
+    "LoginComponentPasswordError": "Password is required!",
+    "LoginComponentUserLogin": "User Login",
+    "LoginComponentUserLoginPlaceholder": "Username or Email",
+    "LoginComponentPassword": "Password",
+    "LoginComponentPasswordPlaceholder": "Password",
 
     "ChangePasswordComponentChangePassword": "Change Password",
     "ChangePasswordComponentOldPasswordError": "Old Password is required!",

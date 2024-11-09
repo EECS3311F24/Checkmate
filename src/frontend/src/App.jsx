@@ -6,6 +6,7 @@ import UserFormComponent from './components/UserFormComponent'
 import CheckmateHome from './components/CheckmateHome'
 import ChessGame from './components/ChessGameComponent'
 import { LanguageProvider } from './components/LanguageProvider'
+import ChangePasswordComponent from './components/ChangePasswordComponent'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path='/users' element = {<ListUserComponent/>}></Route>
         <Route path='/signup' element = {<UserFormComponent/>}></Route>
         <Route path='/edit-user/:id' element = {<UserFormComponent/>}></Route>
+        <Route path='/change-password/:id' element = {<ChangePasswordComponent/>}></Route>
         <Route path="/play" element={<ChessGame />}></Route>
       </Routes>
       </LanguageProvider>

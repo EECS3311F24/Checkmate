@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { sha3_256 } from 'js-sha3';
-import { createUser, getUser, authenticate, updateUser } from '../services/UserService';
+import { createUser, getUser, updateUser } from '../services/UserService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 
 const UserFormComponent = () => {

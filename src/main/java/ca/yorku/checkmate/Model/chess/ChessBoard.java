@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChessBoard {
-    static final int dimensions = 8;
+    public static final int dimensions = 8;
     private final Placeholder[][] board;
     public static final char black = 'B';
     public static final char white = 'W';

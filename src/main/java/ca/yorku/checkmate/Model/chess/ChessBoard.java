@@ -148,50 +148,56 @@ public class ChessBoard {
 
     public boolean move(ChessPiece cp, Move move, char playerColor, boolean fakeMove) {
         if (this.isValid(cp, move) && cp.move(move)) {
-            List<ChessPiece> capturedList = null;
+            if(move.row()==0 && move.col()==2 && playerColor=='B'){
+                System.out.println("hi");
+            }
+            List<ChessPiece> opponentPieces = null;
             Placeholder last = board[move.row()][move.col()];
             List<Move> path = cp.getPathWay(move); //tiles to move, except knight
             List<Move> pathMinusLast = path.subList(0, path.size() - 1);
             if(last.getChar() != ' ' && last.getChessPiece().getColor() == playerColor) return false;
             if (!this.checkForAllClearPath(pathMinusLast)) return false;
-            if (last.getChar() != ' ') { //capture here
-                capturedList = last.getChessPiece().getColor()==ChessBoard.white ? this.whitePieces : this.blackPieces;
-                capturedList.add(last.getChessPiece());
+            if (last.getChar() != ' ') { //capture here//TODO: what is this captured list. 1) need to add to captured list, and remove from pieces
+                opponentPieces = last.getChessPiece().getColor()==ChessBoard.white ? this.whitePieces : this.blackPieces;
+                opponentPieces.remove(last.getChessPiece()); //remove from existing pieces
+                this.capturedPieces.add(last.getChessPiece());
             }
             int oldRow = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1).row();
             int oldCol = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1).col();
             this.board[move.row()][move.col()] = new Placeholder(cp);
+            if(cp instanceof King) this.updateKingLocation(move, (King)cp);
             this.board[oldRow][oldCol] = new Placeholder();
             cp.addMove(move);
-            return passesChecks(playerColor, capturedList, cp, new Move(oldRow, oldCol), move, fakeMove);
+            return passesChecks(playerColor, opponentPieces, cp, new Move(oldRow, oldCol), move, fakeMove);
         }
         return false;
     }
 
-    private boolean passesChecks(char playerColor, List<ChessPiece> capturedList, ChessPiece cp, Move old, Move newSpot, boolean fakeMove){
+    private boolean passesChecks(char playerColor, List<ChessPiece> opponentPieces, ChessPiece cp, Move old, Move newSpot, boolean fakeMove){
         boolean result = true;
         if(inCheck(playerColor) || fakeMove) {
-            if(capturedList != null) {
-                ChessPiece revive = capturedList.get(capturedList.size()-1);
-                capturedList.remove(revive);
+            if(opponentPieces != null) {
+                ChessPiece revive = this.capturedPieces.get(this.capturedPieces.size()-1);
+                this.capturedPieces.remove(revive);
+                opponentPieces.add(revive);
                 board[newSpot.row()][newSpot.col()] = new Placeholder(revive);
             }
             else board[newSpot.row()][newSpot.col()] = new Placeholder();
             cp.getMovesHistory().remove(cp.getMovesHistory().size()-1);
             this.board[old.row()][old.col()] = new Placeholder(cp);
+            if(cp instanceof King) this.updateKingLocation(cp.getMovesHistory().get(cp.getMovesHistory().size()-1), (King)cp);
             if(!fakeMove) result = false;
         }
         if(!fakeMove) {
             checkCheckMate(this.getOtherPlayerColor(playerColor));
-            if(cp instanceof King) this.updateKingLocation(newSpot, (King)cp);
         }
         return result;
     }
 
-    private void checkCheckMate(char playerColor) { //TODO: DO NOT USE GETUNVERIFIEDMOVESLIST, IT DOESN'T GIVE FULL LIST OF POSSIBLE MOVES
+    private void checkCheckMate(char playerColor) {
         List<ChessPiece> pieces = playerColor == ChessBoard.white ? this.whitePieces : this.blackPieces;
         for(ChessPiece cp : pieces) {
-            for(Move move : cp.listOfShortestMoves()) { //todo: THIS IS WRONG!!! NEED TO GET FULL LIST OF POSSIBLE MOVES
+            for(Move move : cp.listOfAllMoves()) {
                 if(this.move(cp, move,  playerColor, true)) {
                     return;
                 }
@@ -255,7 +261,7 @@ public class ChessBoard {
         Move kingLoc = player == ChessBoard.white ? this.whiteKingLocation : this.blackKingLocation;
         for(ChessPiece cp : listToLoop) {
             List<Move> pathToKing = cp.getPathWay(kingLoc);
-            if (cp.move(kingLoc) && (pathToKing.size() == 1 || this.checkForAllClearPath(pathToKing.subList(0, pathToKing.size() - 1)))) //TODO: THROWN EXCEPTION KING MOVE
+            if (cp.move(kingLoc) && (pathToKing.size() == 1 || this.checkForAllClearPath(pathToKing.subList(0, pathToKing.size() - 1)))) //TODO: THROWN EXCEPTION KING MOVE CAPTURE
                 return true;
         }
         return false;

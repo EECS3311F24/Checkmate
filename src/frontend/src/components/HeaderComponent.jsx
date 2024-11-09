@@ -13,6 +13,7 @@ const HeaderComponent = () => {
         <Nav className="me-auto">
           <Nav.Link href="/users">{getTranslation("HeaderComponentUsers", language)}</Nav.Link>
           <Nav.Link href="/signup">{getTranslation("HeaderComponentSignup", language)}</Nav.Link>
+          <Nav.Link href="/login">{getTranslation("HeaderComponentLogin", language)}</Nav.Link>
           <Nav.Link href="/play">{getTranslation("HeaderComponentPlayChess", language)}</Nav.Link>
         </Nav>
         <Form.Select

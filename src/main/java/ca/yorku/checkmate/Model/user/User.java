@@ -26,7 +26,7 @@ public class User {
     }
 
     @PersistenceCreator
-    public User(String username, String email, @JsonProperty("password") String passwordHash) {
+    public User(String username, String email, String passwordHash) {
         this.username = username;
         this.email = email;
         this.passwordHash = passwordHash;
@@ -54,6 +54,10 @@ public class User {
 
     protected void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public boolean samePassword(User user) {
+        return passwordHash != null && passwordHash.equals(user.passwordHash);
     }
 
     @Override

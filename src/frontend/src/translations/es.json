@@ -26,12 +26,15 @@
 
     "UserFormComponmentUsernameError": "¡El nombre de usuario es obligatorio!",
     "UserFormComponmentEmailError": "¡El correo electrónico es obligatorio!",
+    "UserFormComponmentPasswordError": "¡Se requiere contraseña!",
     "UserFormComponmentEditUser": "Editar usuario",
     "UserFormComponmentSignup": "Registrarse",
     "UserFormComponmentUsername": "Nombre de usuario",
     "UserFormComponmentUsernamePlaceholder": "Nombre de usuario",
     "UserFormComponmentEmail": "Correo electrónico",
     "UserFormComponmentEmailPlaceholder": "Correo electrónico",
+    "UserFormComponmentPassword": "Contraseña",
+    "UserFormComponmentPasswordPlaceholder": "Contraseña",
     "UserFormComponmentSubmit": "Enviar"
 
     

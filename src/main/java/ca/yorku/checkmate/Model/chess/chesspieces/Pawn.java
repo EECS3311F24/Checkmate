@@ -55,7 +55,7 @@ public class Pawn extends ChessPiece {
     }
 
     @Override
-    public List<Move> canThisMove() {
+    public List<Move> getUnverifiedMovesList() {
         List<Move> list = new ArrayList<>();
         list.add(new Move(this.getMovesHistory().get(this.getMovesHistory().size()-1).row(), this.getMovesHistory().get(this.getMovesHistory().size()-1).col()));
         return list;

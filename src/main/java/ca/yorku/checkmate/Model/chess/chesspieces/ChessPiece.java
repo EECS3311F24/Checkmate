@@ -29,5 +29,5 @@ public abstract class ChessPiece {
 
     public abstract List<Move> getPathWay(Move move);
 
-    public abstract List<Move> canThisMove();
+    public abstract List<Move> getUnverifiedMovesList();
 }

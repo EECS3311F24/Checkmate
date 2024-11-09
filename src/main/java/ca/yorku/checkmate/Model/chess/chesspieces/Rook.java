@@ -57,7 +57,7 @@ public class Rook extends ChessPiece {
     }
 
     @Override
-    public List<Move> canThisMove() {
+    public List<Move> getUnverifiedMovesList() {
         List<Move> list = new ArrayList<>();
         Move lastMove = this.movesHistory.get(this.movesHistory.size() - 1);
         list.add(new Move(lastMove.row() - 1, lastMove.col())); //up

@@ -29,7 +29,7 @@ public class Knight extends ChessPiece {
     }
 
     @Override
-    public List<Move> canThisMove() {
+    public List<Move> getUnverifiedMovesList() {
         List<Move> list = new ArrayList<>();
         Move lastMove = this.movesHistory.get(this.movesHistory.size() - 1);
         for(int i = 1; i <=2; i++) {

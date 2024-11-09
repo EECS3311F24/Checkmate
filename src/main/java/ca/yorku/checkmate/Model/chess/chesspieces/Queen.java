@@ -39,13 +39,13 @@ public class Queen extends ChessPiece {
     }
 
     @Override
-    public List<Move> canThisMove() {
+    public List<Move> getUnverifiedMovesList() {
         Rook fakeRook = new Rook(ChessBoard.black);
         fakeRook.addMove(this.movesHistory.get(this.movesHistory.size() - 1));
         Bishop fakeBishop = new Bishop(ChessBoard.black);
         fakeBishop.addMove(this.movesHistory.get(this.movesHistory.size() - 1));
-        List<Move> list = new ArrayList<>(fakeRook.canThisMove());
-        list.addAll(fakeBishop.canThisMove());
+        List<Move> list = new ArrayList<>(fakeRook.getUnverifiedMovesList());
+        list.addAll(fakeBishop.getUnverifiedMovesList());
         return list;
     }
 }

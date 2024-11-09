@@ -14,7 +14,20 @@ const ChessGame = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-  
+
+  /*
+    // TODO user useQuery to update every second
+  const userData = useQuery(
+    ['users'],
+    () => {
+      updateBoard()
+    },
+    {
+      enabled: false,
+    }
+  );
+  */
+
   const { language, setLanguage } = useLanguage();
     // Piece image mapping
     const pieceImages = {
@@ -209,13 +222,18 @@ const ChessGame = () => {
           }));
         }
       };
-    
+
       async function handleSquareClick(row, col) {
         // TODO start game when there are two players, eg id1 and id2 are not null
         if (!gameState.isGameStarted) return;
         updateBoard();
         const piece = gameState.board[row][col];
-        if (gameState.selectedPiece) {
+        if (piece && gameState.currentPlayer === piece.color) {
+              setGameState(prev => ({
+                ...prev,
+                selectedPiece: { row, col }
+              }));
+          } else if (gameState.selectedPiece) {
           // TODO request list of possible moves, rather then calling move each time and seeing if it works
           var moves = {start:{row:gameState.selectedPiece.row,col:gameState.selectedPiece.col},end:{row:row,col:col}};
           await move(gameState.id, moves)
@@ -223,7 +241,7 @@ const ChessGame = () => {
             const newBoard = convertBoard(response.data.chess.chessBoard.board);
             const selectedPiece = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col];
             const targetPiece = gameState.board[row][col];
-            
+
             // If there's a piece at the target location, add it to captured pieces
             if (targetPiece) {
               const newCapturedPieces = {
@@ -250,7 +268,13 @@ const ChessGame = () => {
               currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
             }));
           })
-          .catch(e => gameState.selectedPiece = null) 
+          .catch(e => {
+                    setGameState(prev => ({
+                      ...prev,
+                      selectedPiece: null,
+                      status: null
+                    }));
+                  })
         } 
         else if (piece && piece.color === gameState.currentPlayer) {
           setGameState(prev => ({

@@ -56,11 +56,10 @@ public class UserController {
      * @param username The username of the user.
      * @return The user associated with the username if it exists.
      */
-    // TODO this should return a list of users
     @GetMapping(params = "username")
-    public ResponseEntity<User> getUserByUsername(String username) {
+    public ResponseEntity<List<User>> getUsersByUsername(String username) {
         if (!userService.hasUserByUsername(username)) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(userService.getUserByUsername(username));
+        return ResponseEntity.ok(userService.getUsersByUsername(username));
     }
 
     /**

@@ -24,8 +24,10 @@ public class UserService {
         return repository.findAll();
     }
 
-    public User getUserByUsername(String username) {
-        return repository.findByUsername(username);
+    public List<User> getUsersByUsername(String username) {
+        return repository.findAll().stream()
+                .filter(user -> user.username.equals(username))
+                .toList();
     }
 
     public Optional<User> getUserById(String id) {
@@ -37,11 +39,10 @@ public class UserService {
     }
 
     public boolean hasUserByUsername(String username) {
-        return getUserByUsername(username) != null;
+        return !getUsersByUsername(username).isEmpty();
     }
 
     public boolean createUser(User user) {
-        //if (hasUserByUsername(user.username)) return false;
         repository.save(user);
         return true;
     }

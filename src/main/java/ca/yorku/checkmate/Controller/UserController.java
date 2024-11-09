@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * <p>Endpoint is api/v1/users</p>
+ * Endpoint is api/v1/users
+ * <br>
  * Controller for users, providing a rest endpoint
  * that allows getting, creating, updating, or deleting users.
  */
@@ -28,7 +29,8 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/users</p>
+     * URL: api/v1/users
+     * <br>
      * Gets all users in the database.
      * @return A list of users.
      */
@@ -38,7 +40,8 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/users/{id}<p>
+     * URL: api/v1/users/{id}
+     * <br>
      * Gets user by id in the database.
      * @param id The id of the user.
      * @return The user associated with the id if it exists.
@@ -51,7 +54,8 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/users?username={username}</p>
+     * URL: api/v1/users?username={username}
+     * <br>
      * Gets user by username in the database.
      * @param username The username of the user.
      * @return The user associated with the username if it exists.
@@ -63,8 +67,9 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/users/{id}/authenticate?password={password}</p>
-     * Gets user by username in the database.
+     * URL: api/v1/users/{id}/authenticate?password={password}
+     * <br>
+     * Authenticates user.
      * @param id The id of the user.
      * @param password The plain text password.
      * @return A response entity with user, informing client
@@ -82,7 +87,8 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/users</p>
+     * URL: api/v1/users
+     * <br>
      * Create a new user in the database.
      * @param user The user to be created.
      * @return A response entity with user, informing client
@@ -99,7 +105,8 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/users/{id}</p>
+     * URL: api/v1/users/{id}
+     * <br>
      * Update a user by id in the database.
      * @param id The id of the user.
      * @param user The user to be created.
@@ -116,26 +123,28 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/users/{id}?oldPassword={oldPassword}&password={password}</p>
+     * URL: api/v1/users/{id}?oldPassword={oldPassword}&password={password}
+     * <br>
      * Set a user password.
      * @param id The id of the user.
      * @param oldPassword The plaintext old password.
      * @param password The plaintext password
      * @return A response entity with user, informing client
-     * with Http status 200 if updated, 409 if not update, 404 if not found.
+     * with Http status 200 if updated, 409 if not updated, 404 if not found.
      */
     @PatchMapping("{id}")
     public ResponseEntity<User> setPassword(@PathVariable("id") String id, @RequestParam(name = "oldPassword", required = false) String oldPassword, @RequestParam(name = "password") String password) {
         if (password == null || password.isEmpty()) return ResponseEntity.badRequest().build();
         return userService.getUserById(id).map(user -> {
-            if (userService.setUserPassword(user, oldPassword, password)) {
+            if (userService.setUserPassword(user, oldPassword, password))
                 return ResponseEntity.ok(user);
-            } return new ResponseEntity<User>(HttpStatus.CONFLICT);
+            return new ResponseEntity<User>(HttpStatus.CONFLICT);
         }).orElse(ResponseEntity.notFound().build());
     }
 
     /**
-     * <p>URL: api/v1/users/{id}</p>
+     * URL: api/v1/users/{id}
+     * <br>
      * Delete a user by id in the database.
      * @param id The id of the user.
      * @return A response entity with user, informing client
@@ -150,7 +159,8 @@ public class UserController {
     }
 
     /**
-     * <p>URL: api/v1/users</p>
+     * URL: api/v1/users
+     * <br>
      * Delete all users in the database.
      * @return A response entity with a message, informing client
      * with Http status 200.

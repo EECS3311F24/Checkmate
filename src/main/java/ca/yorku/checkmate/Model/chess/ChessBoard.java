@@ -148,24 +148,22 @@ public class ChessBoard {
 
     public boolean move(ChessPiece cp, Move move, char playerColor, boolean fakeMove) {
         if (this.isValid(cp, move) && cp.move(move)) {
-            if(move.row()==0 && move.col()==2 && playerColor=='B'){
-                System.out.println("hi");
-            }
+            if (cp instanceof Pawn && this.checkPawnCaptureMove((Pawn)cp, move, playerColor)==-1) return false;
             List<ChessPiece> opponentPieces = null;
             Placeholder last = board[move.row()][move.col()];
             List<Move> path = cp.getPathWay(move); //tiles to move, except knight
             List<Move> pathMinusLast = path.subList(0, path.size() - 1);
-            if(last.getChar() != ' ' && last.getChessPiece().getColor() == playerColor) return false;
+            if (last.getChar() != ' ' && last.getChessPiece().getColor() == playerColor) return false;
             if (!this.checkForAllClearPath(pathMinusLast)) return false;
             if (last.getChar() != ' ') { //capture here//TODO: what is this captured list. 1) need to add to captured list, and remove from pieces
-                opponentPieces = last.getChessPiece().getColor()==ChessBoard.white ? this.whitePieces : this.blackPieces;
+                opponentPieces = last.getChessPiece().getColor() == ChessBoard.white ? this.whitePieces : this.blackPieces;
                 opponentPieces.remove(last.getChessPiece()); //remove from existing pieces
                 this.capturedPieces.add(last.getChessPiece());
             }
             int oldRow = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1).row();
             int oldCol = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1).col();
             this.board[move.row()][move.col()] = new Placeholder(cp);
-            if(cp instanceof King) this.updateKingLocation(move, (King)cp);
+            if (cp instanceof King) this.updateKingLocation(move, (King) cp);
             this.board[oldRow][oldCol] = new Placeholder();
             cp.addMove(move);
             return passesChecks(playerColor, opponentPieces, cp, new Move(oldRow, oldCol), move, fakeMove);
@@ -173,22 +171,23 @@ public class ChessBoard {
         return false;
     }
 
-    private boolean passesChecks(char playerColor, List<ChessPiece> opponentPieces, ChessPiece cp, Move old, Move newSpot, boolean fakeMove){
+    private boolean passesChecks(char playerColor, List<ChessPiece> opponentPieces, ChessPiece cp, Move old, Move
+            newSpot, boolean fakeMove) {
         boolean result = true;
-        if(inCheck(playerColor) || fakeMove) {
-            if(opponentPieces != null) {
-                ChessPiece revive = this.capturedPieces.get(this.capturedPieces.size()-1);
+        if (inCheck(playerColor) || fakeMove) {
+            if (opponentPieces != null) {
+                ChessPiece revive = this.capturedPieces.get(this.capturedPieces.size() - 1);
                 this.capturedPieces.remove(revive);
                 opponentPieces.add(revive);
                 board[newSpot.row()][newSpot.col()] = new Placeholder(revive);
-            }
-            else board[newSpot.row()][newSpot.col()] = new Placeholder();
-            cp.getMovesHistory().remove(cp.getMovesHistory().size()-1);
+            } else board[newSpot.row()][newSpot.col()] = new Placeholder();
+            cp.getMovesHistory().remove(cp.getMovesHistory().size() - 1);
             this.board[old.row()][old.col()] = new Placeholder(cp);
-            if(cp instanceof King) this.updateKingLocation(cp.getMovesHistory().get(cp.getMovesHistory().size()-1), (King)cp);
-            if(!fakeMove) result = false;
+            if (cp instanceof King)
+                this.updateKingLocation(cp.getMovesHistory().get(cp.getMovesHistory().size() - 1), (King) cp);
+            if (!fakeMove) result = false;
         }
-        if(!fakeMove) {
+        if (!fakeMove) {
             checkCheckMate(this.getOtherPlayerColor(playerColor));
         }
         return result;
@@ -196,14 +195,14 @@ public class ChessBoard {
 
     private void checkCheckMate(char playerColor) {
         List<ChessPiece> pieces = playerColor == ChessBoard.white ? this.whitePieces : this.blackPieces;
-        for(ChessPiece cp : pieces) {
-            for(Move move : cp.listOfAllMoves()) {
-                if(this.move(cp, move,  playerColor, true)) {
+        for (ChessPiece cp : pieces) {
+            for (Move move : cp.listOfAllMoves()) {
+                if (this.move(cp, move, playerColor, true)) {
                     return;
                 }
             }
         }
-        this.checkMated = playerColor==ChessBoard.white ? ChessBoard.white : ChessBoard.black;
+        this.checkMated = playerColor == ChessBoard.white ? ChessBoard.white : ChessBoard.black;
     }
 
     private char getOtherPlayerColor(char playerColor) {
@@ -259,7 +258,7 @@ public class ChessBoard {
     public boolean inCheck(char player) {
         List<ChessPiece> listToLoop = player == ChessBoard.white ? this.blackPieces : this.whitePieces;
         Move kingLoc = player == ChessBoard.white ? this.whiteKingLocation : this.blackKingLocation;
-        for(ChessPiece cp : listToLoop) {
+        for (ChessPiece cp : listToLoop) {
             List<Move> pathToKing = cp.getPathWay(kingLoc);
             if (cp.move(kingLoc) && (pathToKing.size() == 1 || this.checkForAllClearPath(pathToKing.subList(0, pathToKing.size() - 1)))) //TODO: THROWN EXCEPTION KING MOVE CAPTURE
                 return true;
@@ -278,6 +277,17 @@ public class ChessBoard {
 
     //TODO: add methods: getAllValidMoves for checksForChecks and/or castling
     //TODO: en passant
+
+    private int checkPawnCaptureMove(Pawn cp, Move move, char playerColor) {
+        Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);
+        if (Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row()) - move.row() == 1) {
+            if (this.board[move.row()][move.col()].getChar() == ' ' ||
+                    this.board[move.row()][move.col()].getChessPiece().getColor() == playerColor) {
+                return -1;
+            }
+        }
+        return 0;
+    }
 
     @Override
     public String toString() {

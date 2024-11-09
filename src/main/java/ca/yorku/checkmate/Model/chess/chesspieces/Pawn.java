@@ -16,65 +16,70 @@ public class Pawn extends ChessPiece {
     //checks validity of move based on squares moved (board stuff dealt with in ChessBoard)
     @Override
     public boolean move(Move move) {
-        if(this.movesHistory.get(this.movesHistory.size() - 1).col() != move.col()) return false; //en passant not currently supported
-        if(this.movesHistory.size() > 1) { //if not first move, only +1 row moves
-            if(this.color == ChessBoard.black) {
-                return move.row() == 1 + this.movesHistory.get(this.movesHistory.size() - 1).row();
-            }
-            else {
-                return move.row() == this.movesHistory.get(this.movesHistory.size() - 1).row() - 1;
-            }
+        Move lastMove = this.getMovesHistory().get(this.movesHistory.size() - 1);
+        if(this.color==ChessBoard.white && move.row() == lastMove.row()-1) {//-1-1, -1+1
+            if (move.col() == lastMove.col() - 1 || move.col() == lastMove.col() + 1) return true;
+        }
+        else if(this.color==ChessBoard.black && move.row()==lastMove.row()+1) {//+1-1,+1+1
+            if (move.col() == lastMove.col() - 1 || move.col() == lastMove.col() + 1) return true;
+        }
+        if(lastMove.col() != move.col()) return false;
+        if(this.movesHistory.size() > 1) {
+            if(this.color == ChessBoard.black) return move.row() == lastMove.row() + 1;
+            else return move.row() == lastMove.row() - 1;
         }
         else {
             int rowsMoved = -1;
-            if(this.color == ChessBoard.black) {
-                rowsMoved = move.row()-this.movesHistory.get(this.movesHistory.size() - 1).row();
-            }
-            else {
-                rowsMoved = this.movesHistory.get(this.movesHistory.size() - 1).row() - move.row();
-            }
+            if(this.color == ChessBoard.black) rowsMoved = move.row()-lastMove.row();
+            else rowsMoved = lastMove.row() - move.row();
             return rowsMoved > 0 && rowsMoved < 3;
         }
     }
 
     @Override
     public List<Move> getPathWay(Move move) {
-        //TODO: fix black white pawn
         List<Move> path = new ArrayList<Move>();
-        int counter = this.getMovesHistory().get(this.getMovesHistory().size()-1).row() + 1;
-        while(this.color==ChessBoard.black && move.row() >= counter) {
-            path.add(new Move(counter, this.getMovesHistory().get(this.getMovesHistory().size()-1).col()));
-            counter++;
-        }
-        counter = this.getMovesHistory().get(this.getMovesHistory().size()-1).row() - 1;
-        while(this.color==ChessBoard.white && move.row() <= counter) {
-            path.add(new Move(counter, this.getMovesHistory().get(this.getMovesHistory().size()-1).col()));
-            counter--;
+        Move lastMove = this.getMovesHistory().get(this.movesHistory.size() - 1);
+        if(Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row())-move.row()==1) path.add(move);
+        else {
+            int counter = lastMove.row() + 1;
+            while (this.color == ChessBoard.black && move.row() >= counter) {
+                path.add(new Move(counter, this.getMovesHistory().get(this.getMovesHistory().size() - 1).col()));
+                counter++;
+            }
+            counter = this.getMovesHistory().get(this.getMovesHistory().size() - 1).row() - 1;
+            while (this.color == ChessBoard.white && move.row() <= counter) {
+                path.add(new Move(counter, this.getMovesHistory().get(this.getMovesHistory().size() - 1).col()));
+                counter--;
+            }
         }
         return path;
     }
 
     @Override
-    public List<Move> listOfShortestMoves() {
-        //returns shortest moves in all directions
-        List<Move> list = new ArrayList<>();
-        Move lastMove = this.getMovesHistory().get(this.getMovesHistory().size()-1);
-        if(this.color == ChessBoard.white) list.add(new Move(lastMove.row()-1, lastMove.col()));
-        else list.add(new Move(lastMove.row()+1, lastMove.col()));
-        return list;
-    }
-
-    @Override
-    public List<Move> listOfAllMoves() {
+    public List<Move> listOfShortestMoves() { //returns shortest moves in all directions
         List<Move> list = new ArrayList<>();
         Move lastMove = this.getMovesHistory().get(this.getMovesHistory().size()-1);
         if(this.color == ChessBoard.white) {
             list.add(new Move(lastMove.row()-1, lastMove.col()));
-            if(this.getMovesHistory().size()==1) list.add(new Move(lastMove.row()-2, lastMove.col()));
+            list.add(new Move(lastMove.row()-1,lastMove.col()-1));
+            list.add(new Move(lastMove.row()-1,lastMove.col()+1));
         }
         else {
             list.add(new Move(lastMove.row()+1, lastMove.col()));
-            if(this.getMovesHistory().size()==1) list.add(new Move(lastMove.row()+2, lastMove.col()));
+            list.add(new Move(lastMove.row()+1,lastMove.col()-1));
+            list.add(new Move(lastMove.row()+1,lastMove.col()+1));
+        }
+        return list;
+    }
+
+    @Override
+    public List<Move> listOfAllMoves() { //fix: use listOfShortestmoves + 2square first move
+        Move lastMove = this.getMovesHistory().get(this.getMovesHistory().size()-1);
+        List<Move> list = new ArrayList<>(this.listOfShortestMoves());
+        if(this.movesHistory.size() == 1) {
+            list.add(this.color==ChessBoard.white ? new Move(lastMove.row()-2, lastMove.col()):
+                    new Move(lastMove.row()+2, lastMove.col()));
         }
         return list;
     }

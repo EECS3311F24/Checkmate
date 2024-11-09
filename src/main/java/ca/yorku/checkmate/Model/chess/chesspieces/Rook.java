@@ -1,5 +1,6 @@
 package ca.yorku.checkmate.Model.chess.chesspieces;
 
+import ca.yorku.checkmate.Model.chess.ChessBoard;
 import ca.yorku.checkmate.Model.chess.Move;
 
 import java.util.ArrayList;
@@ -64,6 +65,37 @@ public class Rook extends ChessPiece {
         list.add(new Move(lastMove.row() + 1, lastMove.col())); //down
         list.add(new Move(lastMove.row(), lastMove.col()-1)); //left
         list.add(new Move(lastMove.row(), lastMove.col()+1)); //right
+        return list;
+    }
+
+    @Override
+    public List<Move> listOfAllMoves() { //(-1,0)(0,+1)(+1,0)(0,-1)
+        List<Move> list = new ArrayList<>();
+        Move lastMove = this.movesHistory.get(this.movesHistory.size() - 1);
+        int row0 = lastMove.row()-1;
+        int col0 = lastMove.col();
+        while (row0>=0) { //(-1,0)
+            list.add(new Move(row0, col0));
+            row0--;
+        }
+        row0 = lastMove.row();
+        col0 = lastMove.col()+1;
+        while (col0 < ChessBoard.dimensions) { //(0,+1)
+            list.add(new Move(row0, col0));
+            col0++;
+        }
+        row0 = lastMove.row()+1;
+        col0 = lastMove.col();
+        while (row0<ChessBoard.dimensions) { //(+1,0)
+            list.add(new Move(row0, col0));
+            row0++;
+        }
+        row0 = lastMove.row();
+        col0 = lastMove.col()-1;
+        while (col0 >= 0) {   //(0,-1)
+            list.add(new Move(row0, col0));
+            col0--;
+        }
         return list;
     }
 }

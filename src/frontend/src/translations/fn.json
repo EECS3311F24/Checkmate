@@ -28,6 +28,7 @@
     "UserFormComponentUsernameError": "Le nom d'utilisateur est requis!",
     "UserFormComponentEmailError": "L'adresse e-mail est requise!",
     "UserFormComponentPasswordError": "Un mot de passe est requis!",
+    "UserFormComponentWrongPasswordError": "Mauvais mot de passe!",
     "UserFormComponentEditUser": "Modifier l'utilisateur",
     "UserFormComponentSignup": "S'inscrire",
     "UserFormComponentUsername": "Nom d'utilisateur",

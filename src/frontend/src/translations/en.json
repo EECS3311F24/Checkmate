@@ -28,6 +28,7 @@
     "UserFormComponentUsernameError": "Username is required!",
     "UserFormComponentEmailError": "Email is required!",
     "UserFormComponentPasswordError": "Password is required!",
+    "UserFormComponentWrongPasswordError": "Wrong Password!",
     "UserFormComponentEditUser": "Edit User",
     "UserFormComponentSignup": "Signup",
     "UserFormComponentUsername": "Username",

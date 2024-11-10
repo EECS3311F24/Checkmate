@@ -40,6 +40,7 @@
     "UserFormComponentChangePassword": "Changer le mot de passe",
 
     "LoginComponentLogin": "Se connecter",
+    "LoginComponentLoginError": "La connexion a échoué!",
     "LoginComponentUserLoginError": "Nom d'utilisateur ou e-mail requis!",
     "LoginComponentPasswordError": "Un mot de passe est requis!",
     "LoginComponentUserLogin": "Connexion utilisateur",

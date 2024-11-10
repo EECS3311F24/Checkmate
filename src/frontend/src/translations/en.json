@@ -40,6 +40,7 @@
     "UserFormComponentChangePassword": "Change Password",
 
     "LoginComponentLogin": "Login",
+    "LoginComponentLoginError": "Login failed!",
     "LoginComponentUserLoginError": "Username or Email required!",
     "LoginComponentPasswordError": "Password is required!",
     "LoginComponentUserLogin": "User Login",

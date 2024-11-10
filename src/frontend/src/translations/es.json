@@ -40,6 +40,7 @@
     "UserFormComponentChangePassword": "Cambiar la contraseña",
 
     "LoginComponentLogin": "Acceso",
+    "LoginComponentLoginError": "¡Error de inicio de sesion!",
     "LoginComponentUserLoginError": "¡Se requiere nombre de usuario o correo electrónico!",
     "LoginComponentPasswordError": "¡Se requiere contraseña!",
     "LoginComponentUserLogin": "Inicio de sesión de usuario",

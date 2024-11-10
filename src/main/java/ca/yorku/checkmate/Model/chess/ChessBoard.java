@@ -195,7 +195,7 @@ public class ChessBoard {
             if(inCheck) result = false;
         }
         if (!fakeMove) {
-            checkCheckMate(this.getOtherPlayerColor(playerColor));
+            checkCheckMate(ChessBoard.getOtherPlayerColor(playerColor));
         }
         if(cp instanceof Pawn) this.checkPawnPromo((Pawn)cp);
         return result;
@@ -296,8 +296,9 @@ public class ChessBoard {
     }
 
     public boolean checkPawnPromo(Pawn p){
-
-        return false;
+        Move lastMove = p.getMovesHistory().get(p.getMovesHistory().size() - 1);
+        if(p.getColor()==ChessBoard.white) return lastMove.row()==0;
+        else return lastMove.col()==7;
     }
 
     public void enPassant(Pawn p, Move move) {
@@ -305,7 +306,7 @@ public class ChessBoard {
     }
 
     public char getPawnPromoStatus(){
-        return this.pawnPromoStatus
+        return this.pawnPromoStatus;
     }
     private int checkPawnCaptureMove(Pawn cp, Move move, char playerColor) {
         Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);

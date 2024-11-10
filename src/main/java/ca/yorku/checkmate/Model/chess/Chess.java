@@ -39,11 +39,19 @@ public class Chess {
     }
 
     public boolean isGameOver(){
-        return cb.checkMated!=' ' || cb.insufficientPieces() || cb.hasMove(this.whosTurn);
+        return cb.getCheckMated()!=' ' || cb.insufficientPieces() || cb.hasMove(this.whosTurn) || this.resign(this.whosTurn) || this.draw();
     }
 
+    public boolean resign(Player player) {
+        this.cb.setCheckMated(ChessBoard.getOtherPlayerColor(player.playerColor()));
+        return true;
+    }
+
+    public boolean draw(){
+        return true;
+    }
     public Player getWinner(){
-        return this.getOtherPlayer(new Player(cb.checkMated));
+        return this.getOtherPlayer(new Player(cb.getCheckMated()));
     }
 
     public Player getWhosTurn() {

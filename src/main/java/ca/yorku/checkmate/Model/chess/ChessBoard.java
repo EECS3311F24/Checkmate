@@ -15,7 +15,7 @@ public class ChessBoard {
     public List<ChessPiece> capturedPieces;
     private Move whiteKingLocation;
     private Move blackKingLocation;
-    public char checkMated = ' ';
+    private char checkMated = ' ';
 
     //setup standard chess board
     public ChessBoard() {
@@ -212,7 +212,7 @@ public class ChessBoard {
         this.checkMated = playerColor == ChessBoard.white ? ChessBoard.white : ChessBoard.black;
     }
 
-    private char getOtherPlayerColor(char playerColor) {
+    public static char getOtherPlayerColor(char playerColor) {
         if (playerColor == ChessBoard.white) {
             return ChessBoard.black;
         } else return ChessBoard.white;
@@ -272,6 +272,11 @@ public class ChessBoard {
         }
         return false;
     }
+
+    public char getCheckMated(){
+        return this.checkMated;
+    }
+    public void setCheckMated(char checkMated){this.checkMated=checkMated;}
 
     public boolean insufficientPieces() {
         return this.whitePieces.size() == 1 && this.blackPieces.size() == 1;

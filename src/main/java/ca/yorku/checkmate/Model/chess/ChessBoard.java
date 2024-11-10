@@ -147,9 +147,6 @@ public class ChessBoard {
     }
 
     public boolean move(ChessPiece cp, Move move, char playerColor, boolean fakeMove) {
-        if(move.row()==4 && move.col()==7) {
-            System.out.println("hi");
-        }
         if (this.isValid(cp, move) && cp.move(move)) {
             boolean pawnCapture = false;
             Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);
@@ -183,7 +180,8 @@ public class ChessBoard {
     private boolean passesChecks(char playerColor, List<ChessPiece> opponentPieces, ChessPiece cp, Move old, Move
             newSpot, boolean fakeMove) {
         boolean result = true;
-        if (inCheck(playerColor) || fakeMove) {
+        boolean inCheck = inCheck(playerColor);
+        if (inCheck || fakeMove) {
             if (opponentPieces != null) {
                 ChessPiece revive = this.capturedPieces.get(this.capturedPieces.size() - 1);
                 this.capturedPieces.remove(revive);
@@ -194,12 +192,12 @@ public class ChessBoard {
             this.board[old.row()][old.col()] = new Placeholder(cp);
             if (cp instanceof King)
                 this.updateKingLocation(cp.getMovesHistory().get(cp.getMovesHistory().size() - 1), (King) cp);
-            if (!fakeMove) result = false; //TODO: this line is a problem
+            if(inCheck) result = false;
         }
         if (!fakeMove) {
             checkCheckMate(this.getOtherPlayerColor(playerColor));
         }
-        return result; //result is true for inCheck and move is undone //can be fake move but still need to return false for incheck
+        return result;
     }
 
     private void checkCheckMate(char playerColor) {

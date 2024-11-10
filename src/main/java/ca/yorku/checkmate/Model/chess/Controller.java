@@ -22,7 +22,7 @@ public class Controller {
     }
 
     public void play() {
-
+        //note: TODO: after every move, if pawnPromoStatus reqs input, dont switch whosTurn
         while (!chess.isGameOver()) {
             this.report();
 

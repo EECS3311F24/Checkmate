@@ -289,6 +289,14 @@ public class ChessBoard {
         return false;
     }
 
+    public ChessPiece pawnPromotion(Pawn p) {
+
+        return null;
+    }
+
+    public void enPassant(Pawn p, Move move) {
+        
+    }
 
 
     private int checkPawnCaptureMove(Pawn cp, Move move, char playerColor) {

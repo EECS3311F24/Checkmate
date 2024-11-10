@@ -282,9 +282,6 @@ public class ChessBoard {
         return false;
     }
 
-    //TODO: add methods: getAllValidMoves for checksForChecks and/or castling
-    //TODO: en passant
-
     private int checkPawnCaptureMove(Pawn cp, Move move, char playerColor) {
         Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);
         if (Math.abs(lastMove.col() - move.col()) == 1) {
@@ -298,16 +295,6 @@ public class ChessBoard {
 
     @Override
     public String toString() {
-//        String s = "______________________________" +'\n';
-//        for(int i = 0; i < ChessBoard.dimensions; i++){
-//            s+= "|";
-//            for(int j = 0; j < ChessBoard.dimensions; j++){
-//                Placeholder p = this.board[i][j];
-//                s += p.getChar() + "|";
-//            }
-//            s += "\n";
-//        }
-//        return s + "______________________________"+'\n';
         String s = "";
         s += "  ";
         for (int col = 0; col < 8; col++) {

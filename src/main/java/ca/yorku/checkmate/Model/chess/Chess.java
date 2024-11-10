@@ -39,7 +39,7 @@ public class Chess {
     }
 
     public boolean isGameOver(){
-        return cb.checkMated!=' ';
+        return cb.checkMated!=' ' || cb.insufficientPieces() || cb.hasMove(this.whosTurn);
     }
 
     public Player getWinner(){

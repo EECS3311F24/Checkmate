@@ -131,14 +131,14 @@ public class ChessBoardController {
      * with Http status 200 if joined or 409 if not joined or 404 if no user found.
      */
     @PutMapping
-    public ResponseEntity<ChessBoardDB> joinBoard(HttpServletResponse response, @CookieValue(name = "userId") String userId) {
+    public ResponseEntity<ChessBoardDB> joinBoard(HttpServletResponse response, @CookieValue(name = "userId", required = false) String userId) {
         if (userId == null) {
-            User user = service.getUserController().createUser(response, new User("Guest", "Guest")).getBody();
+            User user = service.getUserController().createUser(response, new User()).getBody();
             if (user == null) return new ResponseEntity<>(HttpStatus.CONFLICT);
             userId = user.id;
         }
         final String id = userId;
-        // TODO search if userId assigned to a game
+        // TODO check if id exists in repo
         return service.getBoards().stream()
                 .filter(chessBoard -> id.equals(chessBoard.player1Id))
                 .filter(chessBoard -> id.equals(chessBoard.player2Id))

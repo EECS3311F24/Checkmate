@@ -147,12 +147,16 @@ public class ChessBoard {
     }
 
     public boolean move(ChessPiece cp, Move move, char playerColor, boolean fakeMove) {
+        if(move.row()==4 && move.col()==7) {
+            System.out.println("hi");
+        }
         if (this.isValid(cp, move) && cp.move(move)) {
             boolean pawnCapture = false;
-            Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size()-1);
+            Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);
             if (cp instanceof Pawn) {
-                if(this.checkPawnCaptureMove((Pawn)cp, move, playerColor)==-1)return false;
-                else if(Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row() - move.row()) == 1) pawnCapture = true;
+                if (this.checkPawnCaptureMove((Pawn) cp, move, playerColor) == -1) return false;
+                else if (Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row() - move.row()) == 1)
+                    pawnCapture = true;
             }
             List<ChessPiece> opponentPieces = null;
             Placeholder last = board[move.row()][move.col()];
@@ -161,7 +165,8 @@ public class ChessBoard {
             if (last.getChar() != ' ' && last.getChessPiece().getColor() == playerColor) return false;
             if (!this.checkForAllClearPath(pathMinusLast)) return false;
             if (last.getChar() != ' ') { //capture here//TODO: what is this captured list. 1) need to add to captured list, and remove from pieces
-                if(cp instanceof Pawn && !pawnCapture) return false; //when there is captureable piece with non diagonal
+                if (cp instanceof Pawn && !pawnCapture)
+                    return false; //when there is captureable piece with non diagonal
                 opponentPieces = last.getChessPiece().getColor() == ChessBoard.white ? this.whitePieces : this.blackPieces;
                 opponentPieces.remove(last.getChessPiece()); //remove from existing pieces
                 this.capturedPieces.add(last.getChessPiece());
@@ -189,12 +194,12 @@ public class ChessBoard {
             this.board[old.row()][old.col()] = new Placeholder(cp);
             if (cp instanceof King)
                 this.updateKingLocation(cp.getMovesHistory().get(cp.getMovesHistory().size() - 1), (King) cp);
-            if (!fakeMove) result = false;
+            if (!fakeMove) result = false; //TODO: this line is a problem
         }
         if (!fakeMove) {
             checkCheckMate(this.getOtherPlayerColor(playerColor));
         }
-        return result;
+        return result; //result is true for inCheck and move is undone //can be fake move but still need to return false for incheck
     }
 
     private void checkCheckMate(char playerColor) {

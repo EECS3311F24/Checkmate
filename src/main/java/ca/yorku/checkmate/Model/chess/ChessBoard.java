@@ -196,6 +196,7 @@ public class ChessBoard {
         if (!fakeMove) {
             checkCheckMate(this.getOtherPlayerColor(playerColor));
         }
+        if(cp instanceof Pawn) this.pawnPromotion((Pawn)cp);
         return result;
     }
 

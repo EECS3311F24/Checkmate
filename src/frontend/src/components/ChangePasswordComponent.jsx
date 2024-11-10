@@ -29,7 +29,7 @@ const ChangePasswordComponent = () => {
                 }).catch(error => {
                     setErrors(prev => ({
                         ...prev,
-                        password: getTranslation("ChangePasswordComponentWrongPasswordError", language)
+                        password: "ChangePasswordComponentWrongPasswordError"
                     }));
                 })
             }
@@ -50,7 +50,7 @@ const ChangePasswordComponent = () => {
         if (password.trim()) {
             errorsCopy.password = '';
         } else {
-            errorsCopy.password = getTranslation("ChangePasswordComponentPasswordError", language)
+            errorsCopy.password = "ChangePasswordComponentPasswordError"
             valid = false;
         }
 
@@ -88,7 +88,7 @@ const ChangePasswordComponent = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                             >
                             </input>
-                            {errors.password && <div className='invalid-feedback'> {errors.password} </div>}
+                            {errors.password && <div className='invalid-feedback'> {getTranslation(errors.password, language)} </div>}
                         </div>
                         <button className='btn btn-danger' onClick={changePassword}>{getTranslation("ChangePasswordComponentChangePassword", language)}</button>
                     </form>

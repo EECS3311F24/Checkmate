@@ -282,10 +282,14 @@ public class ChessBoard {
         return this.whitePieces.size() == 1 && this.blackPieces.size() == 1;
     }
 
-    public boolean castle() {
+    public boolean castle(King k, Rook r) {
         //TODO: check if can castle: check at start of player input (if >1 square from king origin)
+        //get pathway, check clear pathway, use passChecks
+        //check if rook or king has >1moves history
         return false;
     }
+
+
 
     private int checkPawnCaptureMove(Pawn cp, Move move, char playerColor) {
         Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);

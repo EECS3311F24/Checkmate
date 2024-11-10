@@ -132,13 +132,12 @@ public class ChessBoardController {
      */
     @PutMapping
     public ResponseEntity<ChessBoardDB> joinBoard(HttpServletResponse response, @CookieValue(name = "userId", required = false) String userId) {
-        if (userId == null) {
+        if (userId == null || !service.getUserController().getUserById(userId).getStatusCode().is2xxSuccessful()) {
             User user = service.getUserController().createUser(response, new User()).getBody();
             if (user == null) return new ResponseEntity<>(HttpStatus.CONFLICT);
             userId = user.id;
         }
         final String id = userId;
-        // TODO check if id exists in repo
         return service.getBoards().stream()
                 .filter(chessBoard -> id.equals(chessBoard.player1Id))
                 .filter(chessBoard -> id.equals(chessBoard.player2Id))

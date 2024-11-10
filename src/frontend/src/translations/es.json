@@ -52,6 +52,7 @@
     "ChangePasswordComponentChangePassword": "Cambiar la contraseña",
     "ChangePasswordComponentOldPasswordError": "¡Se requiere contraseña anterior!",
     "ChangePasswordComponentPasswordError": "¡Se requiere una nueva contraseña!",
+    "ChangePasswordComponenttWrongPasswordError": "¡Contraseña incorrecta!",
     "ChangePasswordComponentOldPassword": "Contraseña anterior",
     "ChangePasswordComponentOldPasswordPlaceholder": "Contraseña anterior",
     "ChangePasswordComponentPassword": "Contraseña",

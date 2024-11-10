@@ -45,11 +45,6 @@ public class UserService {
         return user.getPasswordHash().equals(hashPasswordWithId(user.id, placeholder.getPasswordHash()));
     }
 
-    public boolean authenticatePassword(User user, String password) {
-        // TODO password is hashed of (hashed text + id)
-        return user.getPasswordHash().equals(hashPassword(password));
-    }
-
     public boolean hasUserById(String id) {
         return repository.existsById(id);
     }
@@ -111,7 +106,7 @@ public class UserService {
     }
 
     private String hashPasswordWithId(String id, String password) {
-        return new DigestUtils("SHA3-256").digestAsHex(password + id);
+        return hashPassword(password + id);
     }
 
     public void deleteUser(User user) {

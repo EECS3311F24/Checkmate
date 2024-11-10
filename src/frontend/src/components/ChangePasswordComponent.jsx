@@ -6,9 +6,8 @@ import { getTranslation, useLanguage } from './LanguageProvider';
 
 const ChangePasswordComponent = () => {
     const { language, setLanguage } = useLanguage();
-    const [oldPassword, setoldPassword] = useState('')
+    const [oldPassword, setOldPassword] = useState('')
     const [password, setPassword] = useState('')
-// TODO translations!
     const { id } = useParams();
 
     const [errors, setErrors] = useState({
@@ -28,8 +27,10 @@ const ChangePasswordComponent = () => {
                     console.log(response.data);
                     navigator("/users")
                 }).catch(error => {
-                    // TODO show error for wrong password
-                    console.error(error);
+                    setErrors(prev => ({
+                        ...prev,
+                        password: getTranslation("ChangePasswordComponentWrongPasswordError", language)
+                    }));
                 })
             }
         }
@@ -71,7 +72,7 @@ const ChangePasswordComponent = () => {
                                 name='oldPassword'
                                 value={oldPassword}
                                 className={`form-control ${errors.oldPassword ? 'is-invalid' : ''}`}
-                                onChange={(e) => setoldPassword(e.target.value)}
+                                onChange={(e) => setOldPassword(e.target.value)}
                             >
                             </input>
                             {errors.oldPassword && <div className='invalid-feedback'> {errors.oldPassword} </div>}

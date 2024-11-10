@@ -112,15 +112,23 @@ public class UserController {
      * with Http status 200 if authenticated, 401 if not authenticated, 404 if not found.
      */
     @PutMapping("/authenticate")
-    public ResponseEntity<User> authenticate(@RequestBody User user) {
-        // TODO return sessionID with cookie.
+    public ResponseEntity<User> authenticate(HttpServletResponse response, @CookieValue(name = "userId", required = false) String userId, @RequestBody User user) {
         if (user == null || user.username == null) return ResponseEntity.badRequest().build();
+        if (userId != null && !userId.isBlank()) {
+            ResponseEntity<User> userEntity = getUserById(userId);
+            if (userEntity.getStatusCode().is2xxSuccessful() && userEntity.getBody() != null)
+                if (userService.authenticate(userEntity.getBody(), user)) return userEntity;
+        }
         final List<User> users = new ArrayList<>();
         users.addAll(userService.getUsersByUsername(user.username));
         users.addAll(userService.getUsersByEmail(user.username));
         if (users.isEmpty()) return ResponseEntity.notFound().build();
         for (final User u : users) {
             if (!userService.authenticate(u, user)) continue;
+            Cookie cookie = new Cookie("userId", u.id);
+            cookie.setSecure(false);
+            cookie.setAttribute("SameSite", "Lax");
+            response.addCookie(cookie);
             return ResponseEntity.ok(u);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

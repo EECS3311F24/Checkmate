@@ -16,6 +16,7 @@ public class ChessBoard {
     private Move whiteKingLocation;
     private Move blackKingLocation;
     private char checkMated = ' ';
+    private char pawnPromoStatus; //' ' for no promo, 'W' for white needs input promo, 'B' for black
 
     //setup standard chess board
     public ChessBoard() {
@@ -295,7 +296,7 @@ public class ChessBoard {
     }
 
     public boolean checkPawnPromo(Pawn p){
-        
+
         return false;
     }
 
@@ -303,7 +304,9 @@ public class ChessBoard {
         //(2) priority
     }
 
-
+    public char getPawnPromoStatus(){
+        return this.pawnPromoStatus
+    }
     private int checkPawnCaptureMove(Pawn cp, Move move, char playerColor) {
         Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);
         if (Math.abs(lastMove.col() - move.col()) == 1) {

@@ -161,9 +161,9 @@ public class ChessBoard {
             List<Move> pathMinusLast = path.subList(0, path.size() - 1);
             if (last.getChar() != ' ' && last.getChessPiece().getColor() == playerColor) return false;
             if (!this.checkForAllClearPath(pathMinusLast)) return false;
-            if (last.getChar() != ' ') { //capture here//TODO: what is this captured list. 1) need to add to captured list, and remove from pieces
+            if (last.getChar() != ' ') {
                 if (cp instanceof Pawn && !pawnCapture)
-                    return false; //when there is captureable piece with non diagonal
+                    return false;
                 opponentPieces = last.getChessPiece().getColor() == ChessBoard.white ? this.whitePieces : this.blackPieces;
                 opponentPieces.remove(last.getChessPiece()); //remove from existing pieces
                 this.capturedPieces.add(last.getChessPiece());
@@ -287,7 +287,7 @@ public class ChessBoard {
 
     private int checkPawnCaptureMove(Pawn cp, Move move, char playerColor) {
         Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);
-        if (Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row() - move.row()) == 1) {
+        if (Math.abs(lastMove.col() - move.col()) == 1) {
             if (this.board[move.row()][move.col()].getChar() == ' ' ||
                     this.board[move.row()][move.col()].getChessPiece().getColor() == playerColor) {
                 return -1;

@@ -196,7 +196,7 @@ public class ChessBoard {
         if (!fakeMove) {
             checkCheckMate(this.getOtherPlayerColor(playerColor));
         }
-        if(cp instanceof Pawn) this.pawnPromotion((Pawn)cp);
+        if(cp instanceof Pawn) this.checkPawnPromo((Pawn)cp);
         return result;
     }
 
@@ -290,9 +290,13 @@ public class ChessBoard {
         return false;
     }
 
-    public ChessPiece pawnPromotion(Pawn p) {
-        //(1) priority
-        return null;
+    public void pawnPromotion(Pawn p, ChessPiece upgrade) {
+
+    }
+
+    public boolean checkPawnPromo(Pawn p){
+        
+        return false;
     }
 
     public void enPassant(Pawn p, Move move) {

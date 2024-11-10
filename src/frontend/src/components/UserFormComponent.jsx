@@ -39,14 +39,16 @@ const UserFormComponent = () => {
                     console.log(response.data);
                     navigator("/users")
                 }).catch(error => {
-                    console.error(error);
+                    setErrors(prev => ({
+                        ...prev,
+                        password: getTranslation("UserFormComponentWrongPasswordError", language)
+                    }));
                 })
             } else {
                 createUser(user).then((response) => {
                     console.log(response.data);
                     navigator("/users")
                 }).catch(error => {
-                    console.error(error);
                 })
             }
         }

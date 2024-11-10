@@ -286,16 +286,17 @@ public class ChessBoard {
         //TODO: check if can castle: check at start of player input (if >1 square from king origin)
         //get pathway, check clear pathway, use passChecks
         //check if rook or king has >1moves history
+        //(3) priority
         return false;
     }
 
     public ChessPiece pawnPromotion(Pawn p) {
-
+        //(1) priority
         return null;
     }
 
     public void enPassant(Pawn p, Move move) {
-        
+        //(2) priority
     }
 
 

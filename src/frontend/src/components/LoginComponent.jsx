@@ -11,7 +11,8 @@ const LoginComponent = () => {
 
     const [errors, setErrors] = useState({
         userLogin: '',
-        password: ''
+        password: '',
+        login: ''
     })
 
     const navigator = useNavigate();
@@ -25,8 +26,10 @@ const LoginComponent = () => {
                 console.log(response.data);
                 navigator("/users")
             }).catch(error => {
-                // TODO show error for wrong password
-                console.error(error);
+                setErrors(prev => ({
+                    ...prev,
+                    login: getTranslation("LoginComponentLoginError", language)
+                }));
             })
         }
     }
@@ -85,7 +88,10 @@ const LoginComponent = () => {
                             </input>
                             {errors.password && <div className='invalid-feedback'> {errors.password} </div>}
                         </div>
-                        <button className='btn btn-success' onClick={login}>{getTranslation("LoginComponentLogin", language)}</button>
+                        <div>
+                            <button className='btn btn-success' onClick={login}>{getTranslation("LoginComponentLogin", language)}</button>
+                            {errors.login && <div> {getTranslation("LoginComponentLoginError", language)} </div>}
+                        </div>
                     </form>
                 </div>
             </div>

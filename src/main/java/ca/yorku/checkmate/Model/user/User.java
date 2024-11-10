@@ -21,7 +21,7 @@ public class User {
     public User() {}
 
     public User(String username, String email) {
-        new User(username, email);
+        new User(username, email, null);
     }
 
     @PersistenceCreator

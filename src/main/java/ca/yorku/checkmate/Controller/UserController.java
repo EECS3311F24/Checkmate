@@ -77,7 +77,8 @@ public class UserController {
      */
     @PostMapping
     public ResponseEntity<User> createUser(HttpServletResponse response, @RequestBody User user) {
-        if (!userService.createUser(user)) return new ResponseEntity<>(HttpStatus.CONFLICT);
+        user = userService.createUser(user);
+        if (user == null) return new ResponseEntity<>(HttpStatus.CONFLICT);
         Cookie cookie = new Cookie("userId", user.id);
         cookie.setSecure(false);
         cookie.setAttribute("SameSite", "Lax");

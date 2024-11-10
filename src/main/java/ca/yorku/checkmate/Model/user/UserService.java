@@ -58,18 +58,33 @@ public class UserService {
         return !getUsersByUsername(username).isEmpty();
     }
 
-    public boolean createUser(User user) {
+    public User createUser(User user) {
+        if (user.getPasswordHash() == null) return createGuestUser();
         repository.save(user);
-        return repository.findAll().stream()
+        return getUsersByUsername(user.username).stream()
                 .filter(u -> u.samePassword(user))
                 .findFirst()
                 .map(u -> {
                     u.setPasswordHash(hashPasswordWithId(user.id, user.getPasswordHash()));
                     repository.save(u);
-                    return true;
+                    return u;
                 })
-                .orElse(false);
+                .orElse(null);
     }
+
+    public User createGuestUser() {
+        User guest = new User("Guest", "Guest", null);
+        repository.save(guest);
+        return getUsersByUsername(guest.username).stream()
+                .findFirst()
+                .map(u -> {
+                    u.setUsername(u.username + "_" + u.id);
+                    repository.save(u);
+                    return u;
+                })
+                .orElse(null);
+    }
+
 
     public boolean updateUser(User user, User placeholder) {
         placeholder.setPasswordHash(hashPasswordWithId(user.id, placeholder.getPasswordHash()));

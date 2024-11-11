@@ -68,6 +68,7 @@ public class UserService {
                 .map(u -> {
                     u.setPasswordHash(hashPasswordWithId(user.id, user.getPasswordHash()));
                     repository.save(u);
+                    userDataService.createUserData(u.id);
                     return u;
                 })
                 .orElse(null);
@@ -117,6 +118,7 @@ public class UserService {
 
     public void deleteUser(User user) {
         repository.delete(user);
+        userDataService.deleteUserData(user.id);
     }
 
     public void deleteAll() {

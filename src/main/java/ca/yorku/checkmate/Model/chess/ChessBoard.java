@@ -128,6 +128,12 @@ public class ChessBoard {
         board[dimensions - 1][7] = new Placeholder(whiteRook2);
         whiteRook2.addMove(new Move(dimensions - 1, 7));
         this.whitePieces.add(whiteRook2);
+
+//        //TODO: delete bottom lines
+//        ChessPiece whitePawn00 = new Pawn(white);
+//        board[1][0] = new Placeholder(whitePawn00);
+//        whitePawn00.addMove(new Move(1, 0));
+//        this.blackPieces.add(whitePawn00);
     }
 
     public Placeholder[][] getBoard() {
@@ -305,6 +311,7 @@ public class ChessBoard {
         if (cp != null) {
             modifyList.add(cp);
             this.board[lastMove.row()][lastMove.col()] = new Placeholder(cp);
+            cp.addMove(lastMove);
             modifyList.remove(p);
             this.pawnPromoStatus = null;
         }

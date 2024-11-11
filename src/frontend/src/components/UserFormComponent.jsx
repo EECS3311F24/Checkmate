@@ -141,7 +141,7 @@ const UserFormComponent = () => {
                             {errors.password && <div className='invalid-feedback'> {getTranslation(errors.password, language)} </div>}
                         </div>
                         <button className='btn btn-success' onClick={saveUser}>{getTranslation("UserFormComponentSubmit", language)}</button>
-                        <button className='btn btn-danger' onClick={changePassword}>{getTranslation("UserFormComponentChangePassword", language)}</button>
+                        {id && <button className='btn btn-danger' onClick={changePassword}>{getTranslation("UserFormComponentChangePassword", language)}</button>}
                     </form>
                 </div>
             </div>

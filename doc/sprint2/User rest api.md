@@ -39,7 +39,7 @@ Host: {{HOST}}
 
 |HTTP Status Code |Meaning|
 |---|---|
-|200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
+|200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
 ### Get by id
 Gets a user with given id.
 
@@ -169,13 +169,15 @@ Content-Length: 66
 ## PUT
 ### Update User
 Update a user by giving body parameters for a user.
+This user must provide a correct password to update.
 
 `PUT /api/v1/users/{{id}}`
 > Body Parameters
 ```json
 {
   "username": "{{username}}",
-  "email": "{{email}}"
+  "email": "{{email}}",
+  "passwordHash": "{{passwordHash}}"
 }
 ```
 #### Examples
@@ -188,8 +190,9 @@ Content-Type: application/json
 Content-Length: 66
 
 {
-    "username": "newusername",
-    "email": "newuseremail@example.org"
+    "username": "username",
+    "email": "useremail@example.org"
+    "passwordHash": "********"
 }
 ```
 > Response
@@ -198,8 +201,8 @@ Content-Length: 66
     {
         "id": "validId",
         "createdOn": "2024-10-30T23:35:49.737+00:00",
-        "username": "newusername",
-        "email": "newuseremail@example.org"
+        "username": "username",
+        "email": "useremail@example.org"
     }
 ]
 ```
@@ -216,6 +219,7 @@ Content-Length: 66
 {
     "username": "newusername",
     "email": "newuseremail@example.org"
+    "passwordHash": "********"
 }
 ```
 > Response
@@ -225,13 +229,118 @@ Content-Length: 66
 |HTTP Status Code |Meaning|
 |---|---|
 |200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
+|401|[Unauthorized](https://datatracker.ietf.org/doc/html/rfc7235#section-3.1)|
+|404|[Not Found](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4)|
+### Authenticate
+Authenticate a user by providing proper user login username or email and
+a correct password. The user login can either be username or email.
+A cookie may also be used to authenticate.
+
+`PUT /api/v1/users/authenticate`
+> Body Parameters
+```json
+{
+  "username": "{{usernameLogin}}",
+  "passwordHash": "{{passwordHash}}"
+}
+```
+#### Examples
+Successful Response Example:
+> HTTP Request
+```HTTP
+PUT /api/v1/users/authenticate HTTP/1.1
+Host: {{HOST}}
+Content-Type: application/json
+Content-Length: 66
+
+{
+    "username": "username",
+    "passwordHash": "********"
+}
+```
+> Response
+```json
+[
+    {
+        "id": "validId",
+        "createdOn": "2024-10-30T23:35:49.737+00:00",
+        "username": "username",
+        "email": "useremail@example.org"
+    }
+]
+```
+> 200 Response
+____
+Wrong Password Response Example:
+> HTTP Request
+```HTTP
+PUT /api/v1/users/authenticate HTTP/1.1
+Host: {{HOST}}
+Content-Type: application/json
+Content-Length: 66
+
+{
+    "username": "username",
+    "passwordHash": "A wrong password"
+}
+```
+> Response
+
+> 401 Response
+#### Responses
+|HTTP Status Code |Meaning|
+|---|---|
+|200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
+|401|[Unauthorized](https://datatracker.ietf.org/doc/html/rfc7235#section-3.1)|
+|404|[Not Found](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4)|
+## PATCH
+### Set Password
+Set a users password by providing the old password and the new password.
+
+`PATCH /api/v1/users/{{id}}?oldPassword={{oldPassword}}&password={{password}}`
+
+|Name|Location|Type|Required|Description|
+|---|---|---|---|---|
+|oldPassword|query|string| no |The old password of the user|
+|password|query|string| yes |The new password of the user|
+#### Examples
+Successful Response Example:
+> HTTP Request
+```HTTP
+PATCH /api/v1/users/vailidId?oldPassword=******&password=***** HTTP/1.1
+Host: {{HOST}}
+```
+> Response
+```json
+[
+    {
+        "id": "6722c1d538e9d1070bcf3735",
+        "createdOn": "2024-10-30T23:35:49.737+00:00",
+        "username": "username",
+        "email": "username@example.org"
+    }
+]
+```
+> 200 Response
+____
+Wrong Password Response Example:
+> HTTP Request
+```HTTP
+PATCH /api/v1/users/vailidId?oldPassword=wrongPassword&password=***** HTTP/1.1
+Host: {{HOST}}
+```
+> 401 Response
+#### Responses
+|HTTP Status Code |Meaning|
+|---|---|
+|200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
+|401|[Unauthorized](https://datatracker.ietf.org/doc/html/rfc7235#section-3.1)|
 |404|[Not Found](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4)|
 ## DELETE 
 ### Delete User
 Delete a user with given id.
 
 `DELETE /api/v1/users/{{id}}`
-
 ### Examples
 Successful Response Example:
 > HTTP Request

@@ -297,7 +297,10 @@ public class ChessBoard {
             if(p.getChessPiece()!=null && p.getChessPiece() instanceof Pawn) this.promotePawnHelper((Pawn)p.getChessPiece(), upgrade);
         }
     }
-
+    //1. passesMove calls checkPawnPromo (updates if needed)
+    //2. controller checks pawnPromoStatus and grabs input from user
+    //3. controller passes input to promotePawn(char upgrade)
+    //4. promotePawn calls promotePawnHelper which does the upgrading
     private void promotePawnHelper(Pawn p, char upgrade) { //user input to be validated in controller class, call from controller class
         Move lastMove = p.getMovesHistory().get(p.getMovesHistory().size() - 1);
         List<ChessPiece> modifyList = p.getColor() == ChessBoard.white ? this.whitePieces : this.blackPieces;
@@ -312,6 +315,7 @@ public class ChessBoard {
             modifyList.add(cp);
             this.board[lastMove.row()][lastMove.col()] = new Placeholder(cp);
             modifyList.remove(p);
+            this.pawnPromoStatus = null;
         }
     }
 

@@ -62,6 +62,14 @@ public class Chess {
         return this.cb;
     }
 
+    public Move getPawnPromoStat() {
+        return this.cb.getPawnPromoStatus();
+    }
+
+    public void promotePawn(char upgrade) {
+        this.cb.promotePawn(upgrade);
+    }
+
     public ChessPiece getChessPiece(int row, int col) {
         if(this.cb.getBoard()[row][col].getChar() == ' '){
             return null;

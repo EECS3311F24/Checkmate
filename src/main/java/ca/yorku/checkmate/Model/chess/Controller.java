@@ -37,6 +37,10 @@ public class Controller {
             if(piece != null) {
                 if(piece.getColor() == whosTurn.playerColor()) {
                     chess.move(to.row(), to.col(), piece);
+                    if(chess.getPawnPromoStat() != null) {
+                        char promoChar = this.getPawnPromoChar("input upgrade piece \n");
+                        chess.promotePawn(promoChar);
+                    }
                 }
             }
         }
@@ -91,6 +95,31 @@ public class Controller {
             }
         }
         return -1;
+    }
+
+    private char getPawnPromoChar(String message) {
+        char promoChar;
+        while (true) {
+            try {
+                System.out.print(message);
+                String line = stdin.readLine();
+                line = line.trim();
+                line = line.strip();
+                System.out.println(line);
+                promoChar = (char)line.charAt(0);
+                if (promoChar == 'Q' || promoChar == 'B' || promoChar == 'N' || promoChar == 'R') {
+                    return promoChar;
+                } else {
+                    System.out.println(INVALID_INPUT_MESSAGE);
+                }
+            } catch (IOException e) {
+                System.out.println(INVALID_INPUT_MESSAGE);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println(INVALID_INPUT_MESSAGE);
+            }
+        }
+        return ' ';
     }
 
     public static void main(String[] args) {

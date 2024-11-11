@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios from 'axios';
+import { BACKEND } from './Service';
 
-//TODO add env variable instead of hardcoded localhost:8080
-const REST_API_BASE_URL = 'http://localhost:8080/api/v1/users';
+const REST_API_BASE_URL = BACKEND + '/api/v1/users';
 
 export const listUsers = () => axios.get(REST_API_BASE_URL);
 

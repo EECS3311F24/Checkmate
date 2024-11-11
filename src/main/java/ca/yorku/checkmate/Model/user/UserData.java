@@ -5,8 +5,8 @@ package ca.yorku.checkmate.Model.user;
  */
 public class UserData {
     public String id;
-    public String language;
-    public String theme;
+    public Language language = Language.ENGLISH;
+    public Theme theme = Theme.LIGHT;
     int wins;
     int loses;
     int gamesPlayed;
@@ -18,12 +18,12 @@ public class UserData {
         return this;
     }
 
-    public UserData setLanguage(String language) {
+    public UserData setLanguage(Language language) {
         this.language = language;
         return this;
     }
 
-    public UserData setTheme(String theme) {
+    public UserData setTheme(Theme theme) {
         this.theme = theme;
         return this;
     }
@@ -41,5 +41,33 @@ public class UserData {
     public UserData setGamesPlayed(int gamesPlayed) {
         this.gamesPlayed = gamesPlayed;
         return this;
+    }
+
+    public enum Language {
+        ENGLISH,
+        FRENCH,
+        SPANISH;
+
+        @Override
+        public String toString(){
+            return switch (this) {
+                case ENGLISH -> "English";
+                case FRENCH -> "French";
+                case SPANISH -> "Spanish";
+            };
+        }
+    }
+
+    public enum Theme {
+        LIGHT,
+        DARK;
+
+        @Override
+        public String toString(){
+            return switch (this) {
+                case LIGHT -> "Light";
+                case DARK -> "Dark";
+            };
+        }
     }
 }

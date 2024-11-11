@@ -11,15 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static ca.yorku.checkmate.CheckmateApplication.ORIGINS;
-
 /**
  * Endpoint is api/v1/boards
  * <br>
  * Controller for chess boards, providing a rest endpoint
  * that allows getting, creating, updating, or deleting chess boards.
  */
-@CrossOrigin(origins = ORIGINS, allowCredentials = "true")
 @RestController
 @RequestMapping("api/v1/boards")
 public class ChessBoardController {

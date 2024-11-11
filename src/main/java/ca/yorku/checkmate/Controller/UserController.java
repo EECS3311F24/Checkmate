@@ -12,15 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ca.yorku.checkmate.CheckmateApplication.ORIGINS;
-
 /**
  * Endpoint is api/v1/users
  * <br>
  * Controller for users, providing a rest endpoint
  * that allows getting, creating, updating, or deleting users.
  */
-@CrossOrigin(origins = ORIGINS, allowCredentials = "true")
 @RestController
 @RequestMapping("api/v1/users")
 public class UserController {

@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     public String getOrigin() {
-        String frontendEnv = System.getenv("HOST_FRONTED");
+        String frontendEnv = System.getenv("HOST_FRONTEND");
         return frontendEnv == null ? ORIGIN : frontendEnv;
     }
 }

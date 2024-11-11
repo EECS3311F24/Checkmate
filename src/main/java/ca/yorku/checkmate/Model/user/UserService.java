@@ -15,10 +15,12 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository repository;
+    private final UserDataService userDataService;
 
     @Autowired
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, UserDataService userDataService) {
         this.repository = repository;
+        this.userDataService = userDataService;
     }
 
     public List<User> getUsers() {
@@ -39,6 +41,10 @@ public class UserService {
 
     public Optional<User> getUserById(String id) {
         return repository.findById(id);
+    }
+
+    public UserDataService getUserDataService() {
+        return this.userDataService;
     }
 
     public boolean authenticate(User user, User placeholder) {

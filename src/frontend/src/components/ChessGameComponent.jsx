@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { startGuestGame, move, getBoard } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
+//import { useEffect } from './TimerModeComponent';
+
 import './chess.css';
+//import './timermode.css';
 
 const ChessGame = () => {
   // TODO decides just not to update
@@ -48,11 +51,16 @@ const ChessGame = () => {
         currentPlayer: 'WHITE',
         capturedPieces: {
             WHITE: [],
-            BLACK: []
+            BLACK: [],
+        timerMode: false,
+        timeLimit: 300, // 5 minutes default
+        whiteTime: 300,
+        blackTime: 300,
+        isTimerActive: false
         },
         status: null // New state for game status messages
     });
-    
+
       // Initialize the board with starting positions
       function initializeBoard() {
         const board = Array(8).fill(null).map(() => Array(8).fill(null));
@@ -170,7 +178,10 @@ const ChessGame = () => {
               board: convertBoard(response.data.chess.chessBoard.board),
               isGameStarted: true,
               error: null,
-              currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
+              currentPlayer: convertColor(response.data.chess.whosTurn.playerColor),
+              isTimerActive: prev.timerMode,
+              whiteTime: prev.timeLimit,
+              blackTime: prev.timeLimit
           }));
         } catch (error) {
           setGameState(prev => ({
@@ -178,6 +189,24 @@ const ChessGame = () => {
               error: "Failed to start game. Please try again."
           }));
         }
+      };
+      const handleTimeLimitChange = (event) => {
+        const minutes = parseInt(event.target.value);
+        const seconds = minutes * 60;
+        setGameState(prev => ({
+          ...prev,
+          timeLimit: seconds,
+          whiteTime: seconds,
+          blackTime: seconds
+        }));
+      };
+
+      const handleTimeUp = () => {
+        setGameState(prev => ({
+          ...prev,
+          isGameStarted: false,
+          status: `Game Over - ${prev.currentPlayer === 'WHITE' ? 'BLACK' : 'WHITE'} wins by timeout!`
+        }));
       };
     
       const handleSquareClick = async (row, col) => {
@@ -217,7 +246,10 @@ const ChessGame = () => {
               chess: response.data.chess,
               board: newBoard,
               selectedPiece: null,
-              currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
+              currentPlayer: convertColor(response.data.chess.whosTurn.playerColor),
+              // Update the timer for the player who just moved
+              whiteTime: prev.currentPlayer === 'WHITE' ? prev.timeLimit : prev.whiteTime,
+              blackTime: prev.currentPlayer === 'BLACK' ? prev.timeLimit : prev.blackTime
             }));
           })
           .catch(e => gameState.selectedPiece = null) 

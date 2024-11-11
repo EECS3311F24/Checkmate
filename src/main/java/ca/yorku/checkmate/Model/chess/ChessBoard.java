@@ -16,7 +16,7 @@ public class ChessBoard {
     private Move whiteKingLocation;
     private Move blackKingLocation;
     private char checkMated = ' ';
-    private char pawnPromoStatus; //' ' for no promo, 'W' for white needs input promo, 'B' for black
+    private Move pawnPromoStatus;
 
     //setup standard chess board
     public ChessBoard() {
@@ -291,21 +291,41 @@ public class ChessBoard {
         return false;
     }
 
-    public void pawnPromotion(Pawn p, ChessPiece upgrade) {
-
+    public void promotePawn(char upgrade) {
+        if(this.pawnPromoStatus != null) {
+            Placeholder p = this.board[this.pawnPromoStatus.row()][this.pawnPromoStatus.col()];
+            if(p.getChessPiece()!=null && p.getChessPiece() instanceof Pawn) this.promotePawnHelper((Pawn)p.getChessPiece(), upgrade);
+        }
     }
 
-    public boolean checkPawnPromo(Pawn p){
+    private void promotePawnHelper(Pawn p, char upgrade) { //user input to be validated in controller class, call from controller class
         Move lastMove = p.getMovesHistory().get(p.getMovesHistory().size() - 1);
-        if(p.getColor()==ChessBoard.white) return lastMove.row()==0;
-        else return lastMove.col()==7;
+        List<ChessPiece> modifyList = p.getColor() == ChessBoard.white ? this.whitePieces : this.blackPieces;
+        ChessPiece cp = switch (upgrade) {
+            case 'Q' -> new Queen(p.getColor());
+            case 'B' -> new Bishop(p.getColor());
+            case 'N' -> new Knight(p.getColor());
+            case 'R' -> new Rook(p.getColor());
+            default -> null;
+        };
+        if(cp != null) {
+            modifyList.add(cp);
+            this.board[lastMove.row()][lastMove.col()] = new Placeholder(cp);
+            modifyList.remove(p);
+        }
+    }
+
+    public void checkPawnPromo(Pawn p){
+        Move lastMove = p.getMovesHistory().get(p.getMovesHistory().size() - 1);
+        if(p.getColor()==ChessBoard.white && lastMove.row()==0) this.pawnPromoStatus = new Move(0, lastMove.col());
+        else if(lastMove.row()==7) this.pawnPromoStatus = new Move(7, lastMove.col());
     }
 
     public void enPassant(Pawn p, Move move) {
         //(2) priority
     }
 
-    public char getPawnPromoStatus(){
+    public Move getPawnPromoStatus(){
         return this.pawnPromoStatus;
     }
     private int checkPawnCaptureMove(Pawn cp, Move move, char playerColor) {

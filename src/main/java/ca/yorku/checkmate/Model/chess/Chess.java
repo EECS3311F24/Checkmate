@@ -8,6 +8,7 @@ public class Chess {
     private Player playerBlack;
     private int numMoves = 0;
     private ChessBoard cb;
+    private boolean draw;
     //self note: add points system?
 
     public Chess() {
@@ -39,16 +40,15 @@ public class Chess {
     }
 
     public boolean isGameOver(){
-        return cb.getCheckMated()!=' ' || cb.insufficientPieces() || cb.hasMove(this.whosTurn) || this.resign(this.whosTurn) || this.draw();
+        return cb.getCheckMated()!=' ' || cb.insufficientPieces() || (!cb.hasMove(this.whosTurn)) || this.draw;
     }
 
-    public boolean resign(Player player) {
+    public void resign(Player player) {
         this.cb.setCheckMated(ChessBoard.getOtherPlayerColor(player.playerColor()));
-        return true;
     }
 
-    public boolean draw(){
-        return true;
+    public void draw(){
+        this.draw = true;
     }
     public Player getWinner(){
         return this.getOtherPlayer(new Player(cb.getCheckMated()));

@@ -153,7 +153,8 @@ public class ChessBoard {
             Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);
             if (cp instanceof Pawn) {
                 if (this.checkPawnCaptureMove((Pawn) cp, move, playerColor) == -1) return false;
-                else if (Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row() - move.row()) == 1) pawnCapture = true;
+                else if (Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row() - move.row()) == 1)
+                    pawnCapture = true;
             }
             List<ChessPiece> opponentPieces = null;
             Placeholder last = board[move.row()][move.col()];
@@ -192,12 +193,12 @@ public class ChessBoard {
             this.board[old.row()][old.col()] = new Placeholder(cp);
             if (cp instanceof King)
                 this.updateKingLocation(cp.getMovesHistory().get(cp.getMovesHistory().size() - 1), (King) cp);
-            if(inCheck) result = false;
+            if (inCheck) result = false;
         }
         if (!fakeMove) {
             checkCheckMate(ChessBoard.getOtherPlayerColor(playerColor));
         }
-        if(cp instanceof Pawn) this.checkPawnPromo((Pawn)cp);
+        if (cp instanceof Pawn) this.checkPawnPromo((Pawn) cp);
         return result;
     }
 
@@ -230,26 +231,11 @@ public class ChessBoard {
 
     public boolean hasMove(Player player) { //TODO: REVIEW THIS, HASmOVE WORK IF DOESN'T CHECK FOR INCHECKS? // fine to use getUnverifiedMovesList , but needs to pass through this.move
         //checks for move for player, checks at start of turn//used to check for draws//check later
-        if (player.playerColor() == ChessBoard.white) {
-            //have player return array of moves that needs to be checked for empty
-            //create isEmpty method
-            List<Move> possibleMoves = new ArrayList<>();
-            for (ChessPiece cp : this.whitePieces) {
-                if (this.checkForFirstEmpty(cp.listOfShortestMoves())) return true;
+        List<ChessPiece> list = player.playerColor() == ChessBoard.white ? this.whitePieces : this.blackPieces;
+        for (ChessPiece cp : list) {
+            for (Move m : cp.listOfShortestMoves()) {
+                if (this.move(cp, m, cp.getColor(), true)) return true;
             }
-        } else {
-            List<Move> possibleMoves = new ArrayList<>();
-            for (ChessPiece cp : this.blackPieces) {
-                if (this.checkForFirstEmpty(cp.listOfShortestMoves())) return true;
-            }
-        }
-        //needs to run beginning of every turn to check for draws
-        return false;
-    }
-
-    private boolean checkForFirstEmpty(List<Move> moveList) {
-        for (Move m : moveList) {
-            if (board[m.row()][m.col()].getChar() != ' ') return true;
         }
         return false;
     }
@@ -274,10 +260,13 @@ public class ChessBoard {
         return false;
     }
 
-    public char getCheckMated(){
+    public char getCheckMated() {
         return this.checkMated;
     }
-    public void setCheckMated(char checkMated){this.checkMated=checkMated;}
+
+    public void setCheckMated(char checkMated) {
+        this.checkMated = checkMated;
+    }
 
     public boolean insufficientPieces() {
         return this.whitePieces.size() == 1 && this.blackPieces.size() == 1;
@@ -292,11 +281,13 @@ public class ChessBoard {
     }
 
     public void promotePawn(char upgrade) {
-        if(this.pawnPromoStatus != null) {
+        if (this.pawnPromoStatus != null) {
             Placeholder p = this.board[this.pawnPromoStatus.row()][this.pawnPromoStatus.col()];
-            if(p.getChessPiece()!=null && p.getChessPiece() instanceof Pawn) this.promotePawnHelper((Pawn)p.getChessPiece(), upgrade);
+            if (p.getChessPiece() != null && p.getChessPiece() instanceof Pawn)
+                this.promotePawnHelper((Pawn) p.getChessPiece(), upgrade);
         }
     }
+
     //1. passesMove calls checkPawnPromo (updates if needed)
     //2. controller checks pawnPromoStatus and grabs input from user
     //3. controller passes input to promotePawn(char upgrade)
@@ -311,7 +302,7 @@ public class ChessBoard {
             case 'R' -> new Rook(p.getColor());
             default -> null;
         };
-        if(cp != null) {
+        if (cp != null) {
             modifyList.add(cp);
             this.board[lastMove.row()][lastMove.col()] = new Placeholder(cp);
             modifyList.remove(p);
@@ -319,19 +310,20 @@ public class ChessBoard {
         }
     }
 
-    public void checkPawnPromo(Pawn p){
+    public void checkPawnPromo(Pawn p) {
         Move lastMove = p.getMovesHistory().get(p.getMovesHistory().size() - 1);
-        if(p.getColor()==ChessBoard.white && lastMove.row()==0) this.pawnPromoStatus = new Move(0, lastMove.col());
-        else if(lastMove.row()==7) this.pawnPromoStatus = new Move(7, lastMove.col());
+        if (p.getColor() == ChessBoard.white && lastMove.row() == 0) this.pawnPromoStatus = new Move(0, lastMove.col());
+        else if (lastMove.row() == 7) this.pawnPromoStatus = new Move(7, lastMove.col());
     }
 
     public void enPassant(Pawn p, Move move) {
         //(2) priority
     }
 
-    public Move getPawnPromoStatus(){
+    public Move getPawnPromoStatus() {
         return this.pawnPromoStatus;
     }
+
     private int checkPawnCaptureMove(Pawn cp, Move move, char playerColor) {
         Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);
         if (Math.abs(lastMove.col() - move.col()) == 1) {

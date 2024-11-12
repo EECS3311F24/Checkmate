@@ -17,6 +17,7 @@ public class Pawn extends ChessPiece {
     @Override
     public boolean move(Move move) {
         Move lastMove = this.getMovesHistory().get(this.movesHistory.size() - 1);
+        if(this.enPassant(move).contains(move)) return true;
         if(this.color==ChessBoard.white && move.row() == lastMove.row()-1) {//-1-1, -1+1
             if (move.col() == lastMove.col() - 1 || move.col() == lastMove.col() + 1) return true;
         }
@@ -34,6 +35,22 @@ public class Pawn extends ChessPiece {
             else rowsMoved = lastMove.row() - move.row();
             return rowsMoved > 0 && rowsMoved < 3;
         }
+    }
+
+    public List<Move> enPassant(Move move) {
+        List<Move> enPassants = new ArrayList<>();
+        Move lastMove = this.getMovesHistory().get(this.movesHistory.size() - 1);
+        if(this.color == ChessBoard.white) {
+            enPassants.add(new Move(lastMove.row()-1, lastMove.col()-1));
+            enPassants.add(new Move(lastMove.row()-1, lastMove.col()+1));
+        }
+
+        else {
+            enPassants.add(new Move(lastMove.row()+1, lastMove.col()-1));
+            enPassants.add(new Move(lastMove.row()+1, lastMove.col()+1));
+        }
+        return enPassants;
+        //TODO; add to getLists//en passant doesn't need to get pathway//if into getLists then need to deal with fakeMoves
     }
 
     @Override
@@ -70,11 +87,12 @@ public class Pawn extends ChessPiece {
             list.add(new Move(lastMove.row()+1,lastMove.col()-1));
             list.add(new Move(lastMove.row()+1,lastMove.col()+1));
         }
+        list.addAll(this.enPassant(lastMove));
         return list;
     }
 
     @Override
-    public List<Move> listOfAllMoves() { //fix: use listOfShortestmoves + 2square first move
+    public List<Move> listOfAllMoves() { //includes unverified enpassant
         Move lastMove = this.getMovesHistory().get(this.getMovesHistory().size()-1);
         List<Move> list = new ArrayList<>(this.listOfShortestMoves());
         if(this.movesHistory.size() == 1) {

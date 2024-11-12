@@ -17,6 +17,7 @@ public class ChessBoard {
     private Move blackKingLocation;
     private char checkMated = ' ';
     private Move pawnPromoStatus;
+    private Move lastPlayed;
 
     //setup standard chess board
     public ChessBoard() {
@@ -153,26 +154,27 @@ public class ChessBoard {
         else this.blackKingLocation = move;
     }
 
+
+    //TODO FIX MOVE HASMOVE FAKE MOVE ETC PASSESCHECK FOR EN PASSANT, DEAL WTIH PAWN BEGINNING OF MOVE
     public boolean move(ChessPiece cp, Move move, char playerColor, boolean fakeMove) {
         if (this.isValid(cp, move) && cp.move(move)) {
             boolean pawnCapture = false;
             Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);
             if (cp instanceof Pawn) {
-                if (this.checkPawnCaptureMove((Pawn) cp, move, playerColor) == -1) return false;
-                else if (Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row() - move.row()) == 1)
-                    pawnCapture = true;
+                if (this.checkPawnIllegalDiagonal((Pawn) cp, move, playerColor) == -1) return false;
+                else if (Math.abs(lastMove.col() - move.col()) == 1 && Math.abs(lastMove.row() - move.row()) == 1) pawnCapture = true;
             }
             List<ChessPiece> opponentPieces = null;
             Placeholder last = board[move.row()][move.col()];
-            List<Move> path = cp.getPathWay(move); //tiles to move, except knight
+            List<Move> path = cp.getPathWay(move); //for pawn: enpassant only gives diag
             List<Move> pathMinusLast = path.subList(0, path.size() - 1);
             if (last.getChar() != ' ' && last.getChessPiece().getColor() == playerColor) return false;
             if (!this.checkForAllClearPath(pathMinusLast)) return false;
-            if (last.getChar() != ' ') {
-                if (cp instanceof Pawn && !pawnCapture)
-                    return false;
+            if (last.getChar() != ' ' || pawnCapture) { //fix this for enpassant
+                if (cp instanceof Pawn && !pawnCapture) return false;
+                if(pawnCapture && last.getChar()==' ') last = this.board[this.lastPlayed.row()][this.lastPlayed.col()];
                 opponentPieces = last.getChessPiece().getColor() == ChessBoard.white ? this.whitePieces : this.blackPieces;
-                opponentPieces.remove(last.getChessPiece()); //remove from existing pieces
+                opponentPieces.remove(last.getChessPiece());
                 this.capturedPieces.add(last.getChessPiece());
             }
             this.board[move.row()][move.col()] = new Placeholder(cp);
@@ -183,7 +185,11 @@ public class ChessBoard {
         }
         return false;
     }
+//if i pass enpassant in move, it will check for clear path etc etc make the move or reverse the move
+    //what do i want it to do
+    //it will grab thte move then verify if can do it
 
+    //TODO: revive enpassant piece if inCheck and deal with fakeMove
     private boolean passesChecks(char playerColor, List<ChessPiece> opponentPieces, ChessPiece cp, Move old, Move
             newSpot, boolean fakeMove) {
         boolean result = true;
@@ -193,7 +199,8 @@ public class ChessBoard {
                 ChessPiece revive = this.capturedPieces.get(this.capturedPieces.size() - 1);
                 this.capturedPieces.remove(revive);
                 opponentPieces.add(revive);
-                board[newSpot.row()][newSpot.col()] = new Placeholder(revive);
+                Move moveBackTo = revive.getMovesHistory().get(revive.getMovesHistory().size() - 1);
+                board[moveBackTo.row()][moveBackTo.col()] = new Placeholder(revive);
             } else board[newSpot.row()][newSpot.col()] = new Placeholder();
             cp.getMovesHistory().remove(cp.getMovesHistory().size() - 1);
             this.board[old.row()][old.col()] = new Placeholder(cp);
@@ -203,8 +210,9 @@ public class ChessBoard {
         }
         if (!fakeMove) {
             checkCheckMate(ChessBoard.getOtherPlayerColor(playerColor));
+            if (cp instanceof Pawn) pawnPromoCheck((Pawn)cp);
         }
-        if (cp instanceof Pawn) this.checkPawnPromo((Pawn) cp);
+        if(result && !fakeMove) this.lastPlayed = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);
         return result;
     }
 
@@ -286,6 +294,32 @@ public class ChessBoard {
         return false;
     }
 
+    public boolean enPassantCheck(Pawn p, Move move) {
+        ChessPiece piece = this.board[lastPlayed.row()][lastPlayed.col()].getChessPiece();
+        if(piece instanceof Pawn && piece.getMovesHistory().size()>1) {
+            Move otherPlayerLast = piece.getMovesHistory().get(piece.getMovesHistory().size() - 1);
+            Move otherPlayer2Last = piece.getMovesHistory().get(piece.getMovesHistory().size() - 2);
+            if(Math.abs(otherPlayer2Last.row()-otherPlayerLast.row())==2) {
+                if(p.getColor()==ChessBoard.white) return piece == this.board[move.row() + 2][move.col()].getChessPiece();
+                else return piece == this.board[move.row() - 2][move.col()].getChessPiece();
+            }
+        }
+        return false;
+    }
+
+    private void pawnPromoCheck(Pawn p){
+        Move lastMove = p.getMovesHistory().get(p.getMovesHistory().size() - 1);
+        if (p.getColor() == ChessBoard.white && lastMove.row() == 0) this.pawnPromoStatus = new Move(0, lastMove.col());
+        else if (lastMove.row() == 7) this.pawnPromoStatus = new Move(7, lastMove.col());
+    }
+
+    //
+
+    public void enPassant(Pawn p, Move move) {
+        //deal separately from move//should keep last move of other player
+        //TODO;
+    }
+
     public void promotePawn(char upgrade) {
         if (this.pawnPromoStatus != null) {
             Placeholder p = this.board[this.pawnPromoStatus.row()][this.pawnPromoStatus.col()];
@@ -317,25 +351,15 @@ public class ChessBoard {
         }
     }
 
-    public void checkPawnPromo(Pawn p) {
-        Move lastMove = p.getMovesHistory().get(p.getMovesHistory().size() - 1);
-        if (p.getColor() == ChessBoard.white && lastMove.row() == 0) this.pawnPromoStatus = new Move(0, lastMove.col());
-        else if (lastMove.row() == 7) this.pawnPromoStatus = new Move(7, lastMove.col());
-    }
-
-    public void enPassant(Pawn p, Move move) {
-        //(2) priority
-    }
-
     public Move getPawnPromoStatus() {
         return this.pawnPromoStatus;
     }
 
-    private int checkPawnCaptureMove(Pawn cp, Move move, char playerColor) {
+    private int checkPawnIllegalDiagonal(Pawn cp, Move move, char playerColor) { //false if empty&&not enP && not capturable
         Move lastMove = cp.getMovesHistory().get(cp.getMovesHistory().size() - 1);
-        if (Math.abs(lastMove.col() - move.col()) == 1) {
-            if (this.board[move.row()][move.col()].getChar() == ' ' ||
-                    this.board[move.row()][move.col()].getChessPiece().getColor() == playerColor) {
+        if (Math.abs(lastMove.row() - move.row()) == 1 && Math.abs(lastMove.col() - move.col()) == 1) { //checks if diagonal
+            if ((this.board[move.row()][move.col()].getChar() == ' ' && !this.enPassantCheck(cp, move)) || //if empty & not enPassant ret F or own piece F
+                    (this.board[move.row()][move.col()].getChar() != ' ' && this.board[move.row()][move.col()].getChessPiece().getColor() == playerColor)) {
                 return -1;
             }
         }

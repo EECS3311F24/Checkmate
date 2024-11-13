@@ -3,8 +3,8 @@ package ca.yorku.checkmate.Model.chess;
 import ca.yorku.checkmate.Model.chess.chesspieces.ChessPiece;
 
 public class Placeholder {
-    private char piece;
-    private ChessPiece chessPiece;
+    public char piece; //TODO: private
+    public ChessPiece chessPiece;//TODO: private
 
     public Placeholder() {
         this.piece = ' ';

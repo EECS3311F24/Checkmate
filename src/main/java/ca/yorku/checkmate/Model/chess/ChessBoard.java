@@ -7,11 +7,11 @@ import java.util.List;
 
 public class ChessBoard {
     public static final int dimensions = 8;
-    private final Placeholder[][] board;
+    public Placeholder[][] board; //TODO: change to: private final after testing
     public static final char black = 'B';
     public static final char white = 'W';
-    private List<ChessPiece> blackPieces;
-    private List<ChessPiece> whitePieces;
+    public List<ChessPiece> blackPieces; //TODO: private
+    public List<ChessPiece> whitePieces; //TODO: private
     public List<ChessPiece> capturedPieces;
     private Move whiteKingLocation;
     private Move blackKingLocation;
@@ -155,7 +155,6 @@ public class ChessBoard {
     }
 
 
-    //TODO FIX MOVE HASMOVE FAKE MOVE ETC PASSESCHECK FOR EN PASSANT, DEAL WTIH PAWN BEGINNING OF MOVE
     public boolean move(ChessPiece cp, Move move, char playerColor, boolean fakeMove) {
         if (this.isValid(cp, move) && cp.move(move)) {
             boolean pawnCapture = false;
@@ -170,13 +169,20 @@ public class ChessBoard {
             List<Move> pathMinusLast = path.subList(0, path.size() - 1);
             if (last.getChar() != ' ' && last.getChessPiece().getColor() == playerColor) return false;
             if (!this.checkForAllClearPath(pathMinusLast)) return false;
-            if (last.getChar() != ' ' || pawnCapture) { //fix this for enpassant
+            if (last.getChar() == ChessBoard.getOtherPlayerColor(playerColor) || pawnCapture) {
                 if (cp instanceof Pawn && !pawnCapture) return false;
-                if(pawnCapture && last.getChar()==' ') last = this.board[this.lastPlayed.row()][this.lastPlayed.col()];
+                if(pawnCapture && last.getChar()==' ') {
+                    last = this.board[this.lastPlayed.row()][this.lastPlayed.col()];
+                    this.board[this.lastPlayed.row()][this.lastPlayed.col()] = new Placeholder();
+                }
                 opponentPieces = last.getChessPiece().getColor() == ChessBoard.white ? this.whitePieces : this.blackPieces;
                 opponentPieces.remove(last.getChessPiece());
                 this.capturedPieces.add(last.getChessPiece());
             }
+            if(cp instanceof King) if(Math.abs(move.col()-lastMove.col())==2) return this.castle((King)cp, move, fakeMove);
+            //if castling move and failed,
+            //if is castling but fake move returned.
+            //continue if not castling
             this.board[move.row()][move.col()] = new Placeholder(cp);
             if (cp instanceof King) this.updateKingLocation(move, (King) cp);
             this.board[lastMove.row()][lastMove.col()] = new Placeholder();
@@ -185,9 +191,6 @@ public class ChessBoard {
         }
         return false;
     }
-//if i pass enpassant in move, it will check for clear path etc etc make the move or reverse the move
-    //what do i want it to do
-    //it will grab thte move then verify if can do it
 
     //TODO: revive enpassant piece if inCheck and deal with fakeMove
     private boolean passesChecks(char playerColor, List<ChessPiece> opponentPieces, ChessPiece cp, Move old, Move
@@ -204,8 +207,7 @@ public class ChessBoard {
             } else board[newSpot.row()][newSpot.col()] = new Placeholder();
             cp.getMovesHistory().remove(cp.getMovesHistory().size() - 1);
             this.board[old.row()][old.col()] = new Placeholder(cp);
-            if (cp instanceof King)
-                this.updateKingLocation(cp.getMovesHistory().get(cp.getMovesHistory().size() - 1), (King) cp);
+            if (cp instanceof King) this.updateKingLocation(cp.getMovesHistory().get(cp.getMovesHistory().size() - 1), (King) cp);
             if (inCheck) result = false;
         }
         if (!fakeMove) {
@@ -268,8 +270,9 @@ public class ChessBoard {
         Move kingLoc = player == ChessBoard.white ? this.whiteKingLocation : this.blackKingLocation;
         for (ChessPiece cp : listToLoop) {
             List<Move> pathToKing = cp.getPathWay(kingLoc);
-            if (cp.move(kingLoc) && (pathToKing.size() == 1 || this.checkForAllClearPath(pathToKing.subList(0, pathToKing.size() - 1)))) //TODO: THROWN EXCEPTION KING MOVE CAPTURE
+            if (cp.move(kingLoc) && (pathToKing.size() == 1 || (!pathToKing.isEmpty() && this.checkForAllClearPath(pathToKing.subList(0, pathToKing.size() - 1))))) //how could path be 0 cp able to move to kingLoc
                 return true;
+            if(pathToKing.isEmpty())break;
         }
         return false;
     }
@@ -286,12 +289,66 @@ public class ChessBoard {
         return this.whitePieces.size() == 1 && this.blackPieces.size() == 1;
     }
 
-    public boolean castle(King k, Rook r) {
-        //TODO: check if can castle: check at start of player input (if >1 square from king origin)
-        //get pathway, check clear pathway, use passChecks
-        //check if rook or king has >1moves history
-        //(3) priority
+    public boolean castle(King k, Move move, boolean fakeMove) {
+        Move lastMove = k.getMovesHistory().get(k.getMovesHistory().size() - 1);
+        if(!((k.getColor()==ChessBoard.white && lastMove.row()==7 && lastMove.col()==4 && k.getMovesHistory().size()==1) ||
+                (k.getColor()==ChessBoard.black && lastMove.row()==0 && lastMove.col()==4 && k.getMovesHistory().size()==1))) return false; //checks for exact coordinates
+        Placeholder h = null;
+        h = move.col()==lastMove.col()-2 ? this.board[move.row()][0]:this.board[move.row()][7];
+        if(h== null || !(h.getChessPiece() instanceof Rook rook)) return false;
+        if(move.col()==2 && this.board[move.row()][1].getChar()!=' ') return false;//check unadded pathway for empty path
+        if(rook.getMovesHistory().size()!= 1) return false;
+        List<Move> path = k.getPathWay(move);
+        if(this.checkForAllClearPath(path) && this.freeOfCheckCastling(k, move, path)) {
+            doCastlingShuffle(k, move, rook);
+            if(fakeMove) this.undoCastling(k, rook);
+            else this.lastPlayed = k.getMovesHistory().get(k.getMovesHistory().size() - 1);
+            return true;
+        }
         return false;
+    }
+
+    private void undoCastling(King k, Rook r) {
+        Move kingTo = k.getMovesHistory().get(k.getMovesHistory().size() - 2);
+        Move kingFrom = k.getMovesHistory().get(k.getMovesHistory().size() - 1);
+        Move rookTo = r.getMovesHistory().get(r.getMovesHistory().size() - 2);
+        Move rookFrom = r.getMovesHistory().get(r.getMovesHistory().size() - 1);
+
+        this.board[kingTo.row()][kingTo.col()] = new Placeholder(k);
+        this.board[kingFrom.row()][kingFrom.col()] = new Placeholder();
+        this.board[rookTo.row()][rookTo.col()] = new Placeholder(r);
+        this.board[rookTo.row()][rookTo.col()] = new Placeholder();
+        k.getMovesHistory().remove(k.getMovesHistory().size() - 1);
+        r.getMovesHistory().remove(k.getMovesHistory().size() - 1);
+        if(k.getColor()==ChessBoard.white) this.whiteKingLocation = kingTo;
+        else this.blackKingLocation = kingTo;
+    }
+
+    private boolean freeOfCheckCastling(King k, Move move, List<Move> path) {
+        boolean result = true;
+        Move actualKingLoc = (k.getColor() == ChessBoard.white ? this.whiteKingLocation : this.blackKingLocation);
+        for(Move m: path) {
+            if(k.getColor()==ChessBoard.white) this.whiteKingLocation = m;
+            else this.blackKingLocation = m;
+            if(inCheck(k.getColor())) result = false;
+            if(k.getColor()==ChessBoard.white) this.whiteKingLocation = actualKingLoc;
+            else this.blackKingLocation = actualKingLoc;
+            if(!result) return result;
+        }
+        return true;
+    }
+
+    public void doCastlingShuffle(King k, Move move, Rook rook) {
+        Move oldKing = k.getMovesHistory().get(k.getMovesHistory().size() - 1);
+        Move oldRook = rook.getMovesHistory().get(rook.getMovesHistory().size() - 1);
+        Move newRook = move.col()==2 ? new Move(move.row(), 3): new Move(move.row(), 5);
+        this.board[oldKing.row()][oldKing.col()] = new Placeholder();
+        this.board[oldRook.row()][oldRook.col()] = new Placeholder();
+        this.board[move.row()][move.col()] = new Placeholder(k);
+        this.board[newRook.row()][newRook.col()] = new Placeholder(rook);
+        rook.addMove(newRook);
+        k.addMove(move);
+        this.updateKingLocation(move, k);
     }
 
     public boolean enPassantCheck(Pawn p, Move move) {
@@ -300,8 +357,8 @@ public class ChessBoard {
             Move otherPlayerLast = piece.getMovesHistory().get(piece.getMovesHistory().size() - 1);
             Move otherPlayer2Last = piece.getMovesHistory().get(piece.getMovesHistory().size() - 2);
             if(Math.abs(otherPlayer2Last.row()-otherPlayerLast.row())==2) {
-                if(p.getColor()==ChessBoard.white) return piece == this.board[move.row() + 2][move.col()].getChessPiece();
-                else return piece == this.board[move.row() - 2][move.col()].getChessPiece();
+                if(p.getColor()==ChessBoard.white) return piece == this.board[move.row() + 1][move.col()].getChessPiece();
+                else return piece == this.board[move.row() - 1][move.col()].getChessPiece();
             }
         }
         return false;
@@ -313,12 +370,6 @@ public class ChessBoard {
         else if (lastMove.row() == 7) this.pawnPromoStatus = new Move(7, lastMove.col());
     }
 
-    //
-
-    public void enPassant(Pawn p, Move move) {
-        //deal separately from move//should keep last move of other player
-        //TODO;
-    }
 
     public void promotePawn(char upgrade) {
         if (this.pawnPromoStatus != null) {

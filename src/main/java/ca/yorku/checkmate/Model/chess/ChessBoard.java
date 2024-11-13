@@ -3,16 +3,17 @@ package ca.yorku.checkmate.Model.chess;
 import ca.yorku.checkmate.Model.chess.chesspieces.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ChessBoard {
     public static final int dimensions = 8;
-    public Placeholder[][] board; //TODO: change to: private final after testing
+    public Placeholder[][] board = new Placeholder[dimensions][dimensions]; //TODO: change to: private final after testing
     public static final char black = 'B';
     public static final char white = 'W';
-    public List<ChessPiece> blackPieces; //TODO: private
-    public List<ChessPiece> whitePieces; //TODO: private
-    public List<ChessPiece> capturedPieces;
+    public List<ChessPiece> blackPieces = new ArrayList<>(); //TODO: private
+    public List<ChessPiece> whitePieces = new ArrayList<>(); //TODO: private
+    public List<ChessPiece> capturedPieces = new ArrayList<>();
     private Move whiteKingLocation;
     private Move blackKingLocation;
     private char checkMated = ' ';
@@ -21,120 +22,190 @@ public class ChessBoard {
 
     //setup standard chess board
     public ChessBoard() {
-        board = new Placeholder[dimensions][dimensions];
-        this.blackPieces = new ArrayList<>();
-        this.whitePieces = new ArrayList<>();
-        this.capturedPieces = new ArrayList<>();
-        //place blank spaces
-        for (int i = 2; i < dimensions - 2; i++) {
-            for (int j = 0; j < dimensions; j++) {
-                board[i][j] = new Placeholder();
+        this.initializeBoard(Chess.standard);
+    }
+
+    public ChessBoard(char mode) {
+        this.initializeBoard(mode);
+    }
+
+    public ChessBoard(List<ChessPiece> removeBlack, List<ChessPiece> removeWhite) {
+        this.initializeBoard(Chess.standard);
+        for(ChessPiece cp: removeBlack) {
+            if(this.blackPieces.contains(cp)) {
+                this.blackPieces.remove(cp);
+                this.board[cp.getMovesHistory().get(0).row()][cp.getMovesHistory().get(0).col()] = new Placeholder();
             }
         }
-        //place black pawns
-        for (int i = 0; i < dimensions; i++) {
-            Pawn blackPawn = new Pawn(black);
-            board[1][i] = new Placeholder(blackPawn);
-            blackPawn.addMove(new Move(1, i));
-            this.blackPieces.add(blackPawn);
+        for(ChessPiece cp: removeWhite) {
+            if(this.whitePieces.contains(cp)) {
+                this.whitePieces.remove(cp);
+                this.board[cp.getMovesHistory().get(0).row()][cp.getMovesHistory().get(0).col()] = new Placeholder();
+            }
         }
-        //place white pawns
-        for (int i = 0; i < dimensions; i++) {
-            Pawn whitePawn = new Pawn(white);
-            board[dimensions - 2][i] = new Placeholder(whitePawn);
-            whitePawn.addMove(new Move(dimensions - 2, i));
-            this.whitePieces.add(whitePawn);
+    }
+
+    private void initializeBoard(char mode) {
+        if(mode == Chess.standard || mode == Chess.noPawns) {
+            //place blank spaces
+            for (int i = 2; i < dimensions - 2; i++) {
+                for (int j = 0; j < dimensions; j++) {
+                    board[i][j] = new Placeholder();
+                }
+            }
+            //place black pawns
+            for (int i = 0; i < dimensions; i++) {
+                Pawn blackPawn = new Pawn(black);
+                board[1][i] = new Placeholder(blackPawn);
+                blackPawn.addMove(new Move(1, i));
+                this.blackPieces.add(blackPawn);
+            }
+            //place white pawns
+            for (int i = 0; i < dimensions; i++) {
+                Pawn whitePawn = new Pawn(white);
+                board[dimensions - 2][i] = new Placeholder(whitePawn);
+                whitePawn.addMove(new Move(dimensions - 2, i));
+                this.whitePieces.add(whitePawn);
+            }
+            //place black pieces
+            ChessPiece blackRook = new Rook(black);
+            board[0][0] = new Placeholder(blackRook);
+            blackRook.addMove(new Move(0, 0));
+            this.blackPieces.add(blackRook);
+
+            ChessPiece blackKnight = new Knight(black);
+            board[0][1] = new Placeholder(blackKnight);
+            blackKnight.addMove(new Move(0, 1));
+            this.blackPieces.add(blackKnight);
+
+            ChessPiece blackBishop = new Bishop(black);
+            board[0][2] = new Placeholder(blackBishop);
+            blackBishop.addMove(new Move(0, 2));
+            this.blackPieces.add(blackBishop);
+
+            ChessPiece blackQueen = new Queen(black);
+            board[0][3] = new Placeholder(blackQueen);
+            blackQueen.addMove(new Move(0, 3));
+            this.blackPieces.add(blackQueen);
+
+            ChessPiece blackKing = new King(black);
+            board[0][4] = new Placeholder(blackKing);
+            this.blackKingLocation = new Move(0, 4);
+            blackKing.addMove(this.blackKingLocation);
+            this.blackPieces.add(blackKing);
+
+            ChessPiece blackBishop2 = new Bishop(black);
+            board[0][5] = new Placeholder(blackBishop2);
+            blackBishop2.addMove(new Move(0, 5));
+            this.blackPieces.add(blackBishop2);
+
+            ChessPiece blackKnight2 = new Knight(black);
+            board[0][6] = new Placeholder(blackKnight2);
+            blackKnight2.addMove(new Move(0, 6));
+            this.blackPieces.add(blackKnight2);
+
+            ChessPiece blackRook2 = new Rook(black);
+            board[0][7] = new Placeholder(blackRook2);
+            blackRook2.addMove(new Move(0, 7));
+            this.blackPieces.add(blackRook2);
+
+
+            //place white pieces
+            ChessPiece whiteRook = new Rook(white);
+            board[dimensions - 1][0] = new Placeholder(whiteRook);
+            whiteRook.addMove(new Move(dimensions - 1, 0));
+            this.whitePieces.add(whiteRook);
+
+            ChessPiece whiteKnight = new Knight(white);
+            board[dimensions - 1][1] = new Placeholder(whiteKnight);
+            whiteKnight.addMove(new Move(dimensions - 1, 1));
+            this.whitePieces.add(whiteKnight);
+
+            ChessPiece whiteBishop = new Bishop(white);
+            board[dimensions - 1][2] = new Placeholder(whiteBishop);
+            whiteBishop.addMove(new Move(dimensions - 1, 2));
+            this.whitePieces.add(whiteBishop);
+
+            ChessPiece whiteQueen = new Queen(white);
+            board[dimensions - 1][3] = new Placeholder(whiteQueen);
+            whiteQueen.addMove(new Move(dimensions - 1, 3));
+            this.whitePieces.add(whiteQueen);
+
+            ChessPiece whiteKing = new King(white);
+            board[dimensions - 1][4] = new Placeholder(whiteKing);
+            this.whiteKingLocation = new Move(dimensions - 1, 4);
+            whiteKing.addMove(this.whiteKingLocation);
+            this.whitePieces.add(whiteKing);
+
+            ChessPiece whiteBishop2 = new Bishop(white);
+            board[dimensions - 1][5] = new Placeholder(whiteBishop2);
+            whiteBishop2.addMove(new Move(dimensions - 1, 5));
+            this.whitePieces.add(whiteBishop2);
+
+            ChessPiece whiteKnight2 = new Knight(white);
+            board[dimensions - 1][6] = new Placeholder(whiteKnight2);
+            whiteKnight2.addMove(new Move(dimensions - 1, 6));
+            this.whitePieces.add(whiteKnight2);
+
+            ChessPiece whiteRook2 = new Rook(white);
+            board[dimensions - 1][7] = new Placeholder(whiteRook2);
+            whiteRook2.addMove(new Move(dimensions - 1, 7));
+            this.whitePieces.add(whiteRook2);
         }
-        //place black pieces
-        ChessPiece blackRook = new Rook(black);
-        board[0][0] = new Placeholder(blackRook);
-        blackRook.addMove(new Move(0, 0));
-        this.blackPieces.add(blackRook);
+        else if(mode == Chess.pawnsGame) {
+            for (int i = 2; i < dimensions - 2; i++) {
+                for (int j = 0; j < dimensions; j++) {
+                    board[i][j] = new Placeholder();
+                }
+            }
+            //place black pawns
+            for (int i = 0; i < dimensions; i++) {
+                Pawn blackPawn0 = new Pawn(black);
+                Pawn blackPawn1 = new Pawn(black);
+                if(i!=4) {
+                    board[0][i] = new Placeholder(blackPawn0);
+                    blackPawn0.addMove(new Move(0, i));
+                    this.blackPieces.add(blackPawn0);
+                }
+                board[1][i] = new Placeholder(blackPawn1);
+                blackPawn1.addMove(new Move(1, i));
+                this.blackPieces.add(blackPawn1);
+            }
+            //place white pawns
+            for (int i = 0; i < dimensions; i++) {
+                Pawn whitePawn0 = new Pawn(white);
+                Pawn whitePawn1 = new Pawn(white);
+                if(i!=4) {
+                    board[7][i] = new Placeholder(whitePawn0);
+                    whitePawn0.addMove(new Move(7, i));
+                    this.whitePieces.add(whitePawn0);
+                }
+                board[6][i] = new Placeholder(whitePawn1);
+                whitePawn1.addMove(new Move(6, i));
+                this.whitePieces.add(whitePawn1);
+            }
+            //place black king
+            ChessPiece blackKing = new King(black);
+            board[0][4] = new Placeholder(blackKing);
+            this.blackKingLocation = new Move(0, 4);
+            blackKing.addMove(this.blackKingLocation);
+            this.blackPieces.add(blackKing);
+            //place white king
+            ChessPiece whiteKing = new King(white);
+            board[dimensions - 1][4] = new Placeholder(whiteKing);
+            this.whiteKingLocation = new Move(dimensions - 1, 4);
+            whiteKing.addMove(this.whiteKingLocation);
+            this.whitePieces.add(whiteKing);
+        }
+        if(mode==Chess.noPawns) {
+            for(int i = 0; i < ChessBoard.dimensions; i++) {
+                this.blackPieces.remove(this.board[1][i].getChessPiece());
+                this.board[1][i] = new Placeholder();
+                this.whitePieces.remove(this.board[6][i].getChessPiece());
+                this.board[6][i] = new Placeholder();
+            }
+        }
 
-        ChessPiece blackKnight = new Knight(black);
-        board[0][1] = new Placeholder(blackKnight);
-        blackKnight.addMove(new Move(0, 1));
-        this.blackPieces.add(blackKnight);
-
-        ChessPiece blackBishop = new Bishop(black);
-        board[0][2] = new Placeholder(blackBishop);
-        blackBishop.addMove(new Move(0, 2));
-        this.blackPieces.add(blackBishop);
-
-        ChessPiece blackQueen = new Queen(black);
-        board[0][3] = new Placeholder(blackQueen);
-        blackQueen.addMove(new Move(0, 3));
-        this.blackPieces.add(blackQueen);
-
-        ChessPiece blackKing = new King(black);
-        board[0][4] = new Placeholder(blackKing);
-        this.blackKingLocation = new Move(0, 4);
-        blackKing.addMove(this.blackKingLocation);
-        this.blackPieces.add(blackKing);
-
-        ChessPiece blackBishop2 = new Bishop(black);
-        board[0][5] = new Placeholder(blackBishop2);
-        blackBishop2.addMove(new Move(0, 5));
-        this.blackPieces.add(blackBishop2);
-
-        ChessPiece blackKnight2 = new Knight(black);
-        board[0][6] = new Placeholder(blackKnight2);
-        blackKnight2.addMove(new Move(0, 6));
-        this.blackPieces.add(blackKnight2);
-
-        ChessPiece blackRook2 = new Rook(black);
-        board[0][7] = new Placeholder(blackRook2);
-        blackRook2.addMove(new Move(0, 7));
-        this.blackPieces.add(blackRook2);
-
-
-        //place white pieces
-        ChessPiece whiteRook = new Rook(white);
-        board[dimensions - 1][0] = new Placeholder(whiteRook);
-        whiteRook.addMove(new Move(dimensions - 1, 0));
-        this.whitePieces.add(whiteRook);
-
-        ChessPiece whiteKnight = new Knight(white);
-        board[dimensions - 1][1] = new Placeholder(whiteKnight);
-        whiteKnight.addMove(new Move(dimensions - 1, 1));
-        this.whitePieces.add(whiteKnight);
-
-        ChessPiece whiteBishop = new Bishop(white);
-        board[dimensions - 1][2] = new Placeholder(whiteBishop);
-        whiteBishop.addMove(new Move(dimensions - 1, 2));
-        this.whitePieces.add(whiteBishop);
-
-        ChessPiece whiteQueen = new Queen(white);
-        board[dimensions - 1][3] = new Placeholder(whiteQueen);
-        whiteQueen.addMove(new Move(dimensions - 1, 3));
-        this.whitePieces.add(whiteQueen);
-
-        ChessPiece whiteKing = new King(white);
-        board[dimensions - 1][4] = new Placeholder(whiteKing);
-        this.whiteKingLocation = new Move(dimensions - 1, 4);
-        whiteKing.addMove(this.whiteKingLocation);
-        this.whitePieces.add(whiteKing);
-
-        ChessPiece whiteBishop2 = new Bishop(white);
-        board[dimensions - 1][5] = new Placeholder(whiteBishop2);
-        whiteBishop2.addMove(new Move(dimensions - 1, 5));
-        this.whitePieces.add(whiteBishop2);
-
-        ChessPiece whiteKnight2 = new Knight(white);
-        board[dimensions - 1][6] = new Placeholder(whiteKnight2);
-        whiteKnight2.addMove(new Move(dimensions - 1, 6));
-        this.whitePieces.add(whiteKnight2);
-
-        ChessPiece whiteRook2 = new Rook(white);
-        board[dimensions - 1][7] = new Placeholder(whiteRook2);
-        whiteRook2.addMove(new Move(dimensions - 1, 7));
-        this.whitePieces.add(whiteRook2);
-
-//        //TODO: delete bottom lines
-//        ChessPiece whitePawn00 = new Pawn(white);
-//        board[1][0] = new Placeholder(whitePawn00);
-//        whitePawn00.addMove(new Move(1, 0));
-//        this.blackPieces.add(whitePawn00);
     }
 
     public Placeholder[][] getBoard() {
@@ -165,7 +236,7 @@ public class ChessBoard {
             }
             List<ChessPiece> opponentPieces = null;
             Placeholder last = board[move.row()][move.col()];
-            List<Move> path = cp.getPathWay(move); //for pawn: enpassant only gives diag
+            List<Move> path = cp.getPathWay(move);
             List<Move> pathMinusLast = path.subList(0, path.size() - 1);
             if (last.getChar() != ' ' && last.getChessPiece().getColor() == playerColor) return false;
             if (!this.checkForAllClearPath(pathMinusLast)) return false;
@@ -180,9 +251,6 @@ public class ChessBoard {
                 this.capturedPieces.add(last.getChessPiece());
             }
             if(cp instanceof King) if(Math.abs(move.col()-lastMove.col())==2) return this.castle((King)cp, move, fakeMove);
-            //if castling move and failed,
-            //if is castling but fake move returned.
-            //continue if not castling
             this.board[move.row()][move.col()] = new Placeholder(cp);
             if (cp instanceof King) this.updateKingLocation(move, (King) cp);
             this.board[lastMove.row()][lastMove.col()] = new Placeholder();
@@ -192,7 +260,6 @@ public class ChessBoard {
         return false;
     }
 
-    //TODO: revive enpassant piece if inCheck and deal with fakeMove
     private boolean passesChecks(char playerColor, List<ChessPiece> opponentPieces, ChessPiece cp, Move old, Move
             newSpot, boolean fakeMove) {
         boolean result = true;
@@ -237,7 +304,6 @@ public class ChessBoard {
     }
 
     private boolean isValid(ChessPiece cp, Move move) {
-        //checks coordinates and not same
         return (move.row() >= 0 && move.row() < ChessBoard.dimensions &&
                 move.col() >= 0 && move.col() < ChessBoard.dimensions)
                 &&
@@ -245,8 +311,7 @@ public class ChessBoard {
                         move.col() != cp.getMovesHistory().get(cp.getMovesHistory().size() - 1).col());
     }
 
-    public boolean hasMove(Player player) { //TODO: REVIEW THIS, HASmOVE WORK IF DOESN'T CHECK FOR INCHECKS? // fine to use getUnverifiedMovesList , but needs to pass through this.move
-        //checks for move for player, checks at start of turn//used to check for draws//check later
+    public boolean hasMove(Player player) {
         List<ChessPiece> list = player.playerColor() == ChessBoard.white ? this.whitePieces : this.blackPieces;
         for (ChessPiece cp : list) {
             for (Move m : cp.listOfShortestMoves()) {
@@ -378,10 +443,6 @@ public class ChessBoard {
         }
     }
 
-    //1. passesMove calls checkPawnPromo (updates if needed)
-    //2. controller checks pawnPromoStatus and grabs input from user
-    //3. controller passes input to promotePawn(char upgrade)
-    //4. promotePawn calls promotePawnHelper which does the upgrading
     private void promotePawnHelper(Pawn p, char upgrade) { //user input to be validated in controller class, call from controller class
         Move lastMove = p.getMovesHistory().get(p.getMovesHistory().size() - 1);
         List<ChessPiece> modifyList = p.getColor() == ChessBoard.white ? this.whitePieces : this.blackPieces;

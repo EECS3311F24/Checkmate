@@ -39,7 +39,7 @@ public class ChessBoardTest extends ChessBoard {
 			}
 			default: {
 				//#TODO throw exception
-				System.err.println("invaild piece char");
+				System.err.println("invalid piece char");
 				return;
 			}
 		}

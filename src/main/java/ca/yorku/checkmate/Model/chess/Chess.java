@@ -2,6 +2,10 @@ package ca.yorku.checkmate.Model.chess;
 
 import ca.yorku.checkmate.Model.chess.chesspieces.ChessPiece;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Chess {
     private Player whosTurn;
     private Player playerWhite;
@@ -9,7 +13,11 @@ public class Chess {
     private int numMoves = 0;
     private ChessBoard cb;
     private boolean draw;
-    //self note: add points system?
+    public static final char custom = 'C';
+    public static final char standard = 'S';
+    public static final char pawnsGame = 'P';
+    public static final char noPawns = 'N';
+    public static final List<Character> modeList = new ArrayList<>(Arrays.asList(pawnsGame, noPawns, standard));
 
     public Chess() {
         this.cb = new ChessBoard();
@@ -23,6 +31,14 @@ public class Chess {
         this.playerWhite = playerW;
         this.playerBlack = playerB;
         this.whosTurn = this.playerWhite;
+    }
+
+    public Chess(Player playerW, Player playerB, char mode, List<ChessPiece> removeBlacks, List<ChessPiece> removeWhites) {
+        this.playerWhite = playerW;
+        this.playerBlack = playerB;
+        this.whosTurn = this.playerWhite;
+        if(mode==Chess.custom) this.cb = new ChessBoard(removeBlacks, removeWhites);
+        else this.cb = new ChessBoard(mode);
     }
 
     public boolean move(int row, int col, ChessPiece cp) {

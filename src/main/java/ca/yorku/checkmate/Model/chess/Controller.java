@@ -1,7 +1,8 @@
 package ca.yorku.checkmate.Model.chess;
 
 import ca.yorku.checkmate.Model.chess.chesspieces.ChessPiece;
-
+import java.util.List;
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,6 +20,12 @@ public class Controller {
         this.pW = new Player(ChessBoard.white);
         this.pB = new Player(ChessBoard.black);
         this.chess = new Chess(pW, pB);
+    }
+
+    public Controller(char mode, List<ChessPiece> removeBlack, List<ChessPiece> removeWhite) {
+        this.pW = new Player(ChessBoard.white);
+        this.pB = new Player(ChessBoard.black);
+        this.chess = new Chess(pW, pB, mode, removeBlack, removeWhite);
     }
 
     public void play() {
@@ -123,6 +130,7 @@ public class Controller {
     }
 
     public static void main(String[] args) {
+//        Controller c = new Controller('P', null, null);
         Controller c = new Controller();
         c.play();
     }

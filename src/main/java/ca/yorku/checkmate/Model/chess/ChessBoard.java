@@ -169,7 +169,7 @@ public class ChessBoard {
             List<Move> pathMinusLast = path.subList(0, path.size() - 1);
             if (last.getChar() != ' ' && last.getChessPiece().getColor() == playerColor) return false;
             if (!this.checkForAllClearPath(pathMinusLast)) return false;
-            if (last.getChar() == ChessBoard.getOtherPlayerColor(playerColor) || pawnCapture) {
+            if ((last.getChessPiece()!=null && last.chessPiece.color == ChessBoard.getOtherPlayerColor(playerColor)) || pawnCapture) {
                 if (cp instanceof Pawn && !pawnCapture) return false;
                 if(pawnCapture && last.getChar()==' ') {
                     last = this.board[this.lastPlayed.row()][this.lastPlayed.col()];
@@ -270,8 +270,7 @@ public class ChessBoard {
         Move kingLoc = player == ChessBoard.white ? this.whiteKingLocation : this.blackKingLocation;
         for (ChessPiece cp : listToLoop) {
             List<Move> pathToKing = cp.getPathWay(kingLoc);
-            if (cp.move(kingLoc) && (pathToKing.size() == 1 || (!pathToKing.isEmpty() && this.checkForAllClearPath(pathToKing.subList(0, pathToKing.size() - 1))))) //how could path be 0 cp able to move to kingLoc
-                return true;
+            if (cp.move(kingLoc) && (pathToKing.size() == 1 || (!pathToKing.isEmpty() && this.checkForAllClearPath(pathToKing.subList(0, pathToKing.size() - 1))))) return true;
             if(pathToKing.isEmpty())break;
         }
         return false;

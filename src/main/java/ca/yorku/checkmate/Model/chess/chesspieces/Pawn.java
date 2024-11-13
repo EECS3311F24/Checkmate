@@ -63,11 +63,13 @@ public class Pawn extends ChessPiece {
             while (this.color == ChessBoard.black && move.row() >= counter) {
                 path.add(new Move(counter, this.getMovesHistory().get(this.getMovesHistory().size() - 1).col()));
                 counter++;
+                if(path.size()>1) break;
             }
             counter = this.getMovesHistory().get(this.getMovesHistory().size() - 1).row() - 1;
             while (this.color == ChessBoard.white && move.row() <= counter) {
                 path.add(new Move(counter, this.getMovesHistory().get(this.getMovesHistory().size() - 1).col()));
                 counter--;
+                if(path.size()>1) break;
             }
         }
         return path;

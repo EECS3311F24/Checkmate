@@ -263,7 +263,7 @@ public class ChessBoard {
     private boolean passesChecks(char playerColor, List<ChessPiece> opponentPieces, ChessPiece cp, Move old, Move
             newSpot, boolean fakeMove) {
         boolean result = true;
-        boolean inCheck = inCheck(playerColor);
+        boolean inCheck = inCheck(playerColor, false);
         if (inCheck || fakeMove) {
             if (opponentPieces != null) {
                 ChessPiece revive = this.capturedPieces.get(this.capturedPieces.size() - 1);
@@ -330,13 +330,16 @@ public class ChessBoard {
         return true;
     }
 
-    public boolean inCheck(char player) {
+    public boolean inCheck(char player, boolean zeroPathCheck) {
         List<ChessPiece> listToLoop = player == ChessBoard.white ? this.blackPieces : this.whitePieces;
         Move kingLoc = player == ChessBoard.white ? this.whiteKingLocation : this.blackKingLocation;
         for (ChessPiece cp : listToLoop) {
             List<Move> pathToKing = cp.getPathWay(kingLoc);
             if (cp.move(kingLoc) && (pathToKing.size() == 1 || (!pathToKing.isEmpty() && this.checkForAllClearPath(pathToKing.subList(0, pathToKing.size() - 1))))) return true;
-            if(pathToKing.isEmpty())break;
+            if(pathToKing.isEmpty() && !zeroPathCheck){//this assumes its not inCheck but this position could put it in danger to other things. need to run in Check to this position
+                //break;//how to stop it infinitely running: fake move
+                return inCheck(player, true);//add infinite loop stopper
+            }
         }
         return false;
     }
@@ -394,7 +397,7 @@ public class ChessBoard {
         for(Move m: path) {
             if(k.getColor()==ChessBoard.white) this.whiteKingLocation = m;
             else this.blackKingLocation = m;
-            if(inCheck(k.getColor())) result = false;
+            if(inCheck(k.getColor(), false)) result = false;
             if(k.getColor()==ChessBoard.white) this.whiteKingLocation = actualKingLoc;
             else this.blackKingLocation = actualKingLoc;
             if(!result) return result;

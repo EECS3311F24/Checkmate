@@ -394,6 +394,7 @@ public class ChessBoard {
     private boolean freeOfCheckCastling(King k, Move move, List<Move> path) {
         boolean result = true;
         Move actualKingLoc = (k.getColor() == ChessBoard.white ? this.whiteKingLocation : this.blackKingLocation);
+        if(inCheck(k.getColor(), false)) return false;
         for(Move m: path) {
             if(k.getColor()==ChessBoard.white) this.whiteKingLocation = m;
             else this.blackKingLocation = m;

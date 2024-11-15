@@ -17,9 +17,9 @@ const ChessGame = () => {
 
   const [timeLimit, setTimeLimit] = useState(300); // 5 minutes (300 seconds)
 
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isTimerMode, setIsTimerRunning] = useState(false);
 
-  const handleTimeUp = () => {
+  const handleTimerUp = () => {
     console.log('Time\'s up!');
     // Add logic to handle the timer expiration (e.g., end the turn, alert the user)
     setIsTimerRunning(false);

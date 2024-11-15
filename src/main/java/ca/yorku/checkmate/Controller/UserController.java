@@ -1,6 +1,7 @@
 package ca.yorku.checkmate.Controller;
 
 import ca.yorku.checkmate.Model.user.User;
+import ca.yorku.checkmate.Model.user.UserData;
 import ca.yorku.checkmate.Model.user.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -64,6 +65,26 @@ public class UserController {
     public ResponseEntity<List<User>> getUsersByUsername(String username) {
         if (!userService.hasUserByUsername(username)) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(userService.getUsersByUsername(username));
+    }
+
+    /**
+     * URL: api/v1/users/{id}/userdata
+     * <br>
+     * Gets the users data with the associated id.
+     * @param id The id of the user.
+     * @return The userdata associated with the id if it exists.
+     */
+    @GetMapping("{id}/userdata")
+    public ResponseEntity<UserData> getUserData(@PathVariable("id") String id) {
+        if (!userService.hasUserById(id)) return ResponseEntity.notFound().build();
+        return userService.getUserDataService().getUserData(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> {
+                    userService.getUserDataService().createUserData(id);
+                    return userService.getUserDataService().getUserData(id)
+                            .map(ResponseEntity::ok)
+                            .orElse(ResponseEntity.notFound().build());
+                });
     }
 
     /**

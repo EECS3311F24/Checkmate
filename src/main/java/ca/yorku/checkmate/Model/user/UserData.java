@@ -7,9 +7,9 @@ public class UserData {
     public String id;
     public Language language = Language.ENGLISH;
     public Theme theme = Theme.LIGHT;
-    int wins;
-    int loses;
-    int gamesPlayed;
+    public int wins;
+    public int loses;
+    public int gamesPlayed;
 
     public UserData() {}
 

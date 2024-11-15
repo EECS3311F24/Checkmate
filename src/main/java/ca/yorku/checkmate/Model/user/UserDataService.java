@@ -29,13 +29,12 @@ public class UserDataService {
     }
 
     public UserData updateUserData(UserData userData, UserData placeholder) {
-        // TODO make sure nothing in placeholder is null or bad data.
         if (userData == null || placeholder == null) return null;
-        userData.setTheme(placeholder.theme);
-        userData.setLanguage(placeholder.language);
-        userData.setWins(placeholder.wins);
-        userData.setLoses(placeholder.loses);
-        userData.setGamesPlayed(placeholder.gamesPlayed);
+        userData = userData.setTheme(placeholder.theme)
+                .setLanguage(placeholder.language)
+                .setWins(placeholder.wins)
+                .setLoses(placeholder.loses)
+                .setGamesPlayed(placeholder.gamesPlayed);
         repository.save(userData);
         return userData;
     }

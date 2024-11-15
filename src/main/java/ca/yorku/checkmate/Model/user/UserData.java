@@ -19,27 +19,27 @@ public class UserData {
     }
 
     public UserData setLanguage(Language language) {
-        this.language = language;
+        this.language = language == null ? Language.ENGLISH : language;
         return this;
     }
 
     public UserData setTheme(Theme theme) {
-        this.theme = theme;
+        this.theme = theme == null ? Theme.LIGHT : theme;
         return this;
     }
 
     public UserData setWins(int wins) {
-        this.wins = wins;
+        this.wins = Math.max(wins, 0);
         return this;
     }
 
     public UserData setLoses(int loses) {
-        this.loses = loses;
+        this.loses = Math.max(loses, 0);
         return this;
     }
 
     public UserData setGamesPlayed(int gamesPlayed) {
-        this.gamesPlayed = gamesPlayed;
+        this.gamesPlayed = Math.max(gamesPlayed, 0);
         return this;
     }
 

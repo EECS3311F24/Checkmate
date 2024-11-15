@@ -24,7 +24,7 @@ const LoginComponent = () => {
             const user = { username:userLogin, email:null, passwordHash }
             authenticate(user).then((response) => {
                 console.log(response.data);
-                navigator("/users")
+                navigator(`/account/${response.data.id}`)
             }).catch(error => {
                 setErrors(prev => ({
                     ...prev,

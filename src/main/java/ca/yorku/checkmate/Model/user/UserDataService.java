@@ -28,12 +28,18 @@ public class UserDataService {
         repository.save(userData);
     }
 
-    public void deleteUserData(String id) {
-        getUserData(id).ifPresent(repository::delete);
-    }
+
 
     public boolean saveUserData(UserData userData) {
         repository.save(userData);
         return true;
+    }
+
+    public void deleteUserData(String id) {
+        getUserData(id).ifPresent(repository::delete);
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
     }
 }

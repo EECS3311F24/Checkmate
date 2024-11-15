@@ -28,7 +28,17 @@ public class UserDataService {
         repository.save(userData);
     }
 
-
+    public UserData updateUserData(UserData userData, UserData placeholder) {
+        // TODO make sure nothing in placeholder is null or bad data.
+        if (userData == null || placeholder == null) return null;
+        userData.setTheme(placeholder.theme);
+        userData.setLanguage(placeholder.language);
+        userData.setWins(placeholder.wins);
+        userData.setLoses(placeholder.loses);
+        userData.setGamesPlayed(placeholder.gamesPlayed);
+        repository.save(userData);
+        return userData;
+    }
 
     public boolean saveUserData(UserData userData) {
         repository.save(userData);

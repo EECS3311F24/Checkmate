@@ -131,11 +131,11 @@ public class UserController {
      * @param id The id of the user.
      * @param userData The userdata to be updated.
      * @return A response entity with user, informing client
-     * with Http status 200 if updated, 400 if bad request, 404 if not found.
+     * with Http status 200 if updated, 400 if bad request, 401 if unauthorized, 404 if not found.
      */
     @PutMapping("{id}/userdata")
-    public ResponseEntity<UserData> updateUserData(@PathVariable("id") String id, @RequestBody UserData userData) {
-        // TODO add cookie to update
+    public ResponseEntity<UserData> updateUserData(@PathVariable("id") String id, @CookieValue(name = "userId") String userId, @RequestBody UserData userData) {
+        if (userId == null || !userId.equals(id)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         ResponseEntity<UserData> response = getUserData(id);
         if (!response.getStatusCode().is2xxSuccessful()) return ResponseEntity.notFound().build();
         userData = userService.getUserDataService().updateUserData(response.getBody(), userData);

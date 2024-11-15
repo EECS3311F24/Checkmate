@@ -122,6 +122,44 @@ Host: {{HOST}}
 |---|---|
 |200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
 |404|[Not Found](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4)|
+### Get user data
+Gets userdata by users id. Returns the userdata associated with id if it exists.
+
+`GET /api/v1/users/{{id}}/userdata`
+#### Examples
+Successful Response Example:
+> HTTP Request
+```HTTP
+GET /api/v1/users/validId/userdata HTTP/1.1
+Host: {{HOST}}
+```
+> Response
+```json
+[
+    {
+        "id": "6722c1d538e9d1070bcf3735",
+        "language": "english",
+        "theme": "light",
+        "wins": "0",
+        "loses": "1000",
+        "gamesPlayed": "1053"
+    }
+]
+```
+> 200 Response
+____
+Not Found Response Example:
+> HTTP Request
+```HTTP
+GET /api/v1/users/notValidId/userdata HTTP/1.1
+Host: {{HOST}}
+```
+> 404 Response
+#### Responses
+|HTTP Status Code |Meaning|
+|---|---|
+|200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
+|404|[Not Found](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4)|
 ## POST
 ### Create User
 Create a user with given id by giving body parameters for a user.
@@ -220,6 +258,80 @@ Content-Length: 66
     "username": "newusername",
     "email": "newuseremail@example.org"
     "passwordHash": "********"
+}
+```
+> Response
+
+> 404 Response
+#### Responses
+|HTTP Status Code |Meaning|
+|---|---|
+|200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
+|401|[Unauthorized](https://datatracker.ietf.org/doc/html/rfc7235#section-3.1)|
+|404|[Not Found](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4)|
+### Update UserData
+Update userdata by giving body parameters for the new userdata.
+This user must provide a cookie with the userid to authenticate changes.
+
+`PUT /api/v1/users/{{id}}/userdata`
+> Body Parameters
+```json
+[
+    {
+        "language": "{{language}}",
+        "theme": "{{theme}}",
+        "wins": "{{wins}}",
+        "loses": "{{loses}}",
+        "gamesPlayed": "{{gamesPlayed}}"
+    }
+]
+```
+```
+#### Examples
+Successful Response Example:
+> HTTP Request
+```HTTP
+PUT /api/v1/users/validId HTTP/1.1
+Host: {{HOST}}
+Content-Type: application/json
+Content-Length: 66
+
+{
+    "language": "english",
+    "theme": "dark",
+    "wins": "14",
+    "loses": "1000",
+    "gamesPlayed": "1076"
+}
+```
+> Response
+```json
+[
+    {
+        "language": "english",
+        "theme": "dark",
+        "wins": "14",
+        "loses": "1000",
+        "gamesPlayed": "1076"
+}
+]
+```
+> 200 Response
+____
+Not Found Response Example:
+> HTTP Request
+```HTTP
+PUT /api/v1/users/notValidId/userdata HTTP/1.1
+Host: {{HOST}}
+Content-Type: application/json
+Content-Length: 66
+
+{
+    "language": "english",
+    "theme": "dark",
+    "wins": "14",
+    "loses": "1000",
+    "gamesPlayed": "1076"
 }
 ```
 > Response

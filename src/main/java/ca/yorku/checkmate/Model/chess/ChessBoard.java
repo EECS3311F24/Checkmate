@@ -240,7 +240,7 @@ public class ChessBoard {
             List<Move> pathMinusLast = path.subList(0, path.size() - 1);
             if (last.getChar() != ' ' && last.getChessPiece().getColor() == playerColor) return false;
             if (!this.checkForAllClearPath(pathMinusLast)) return false;
-            if ((last.getChessPiece()!=null && last.chessPiece.color == ChessBoard.getOtherPlayerColor(playerColor)) || pawnCapture) {
+            if (!(cp instanceof King && Math.abs(move.col()-lastMove.col())==2)&&(last.getChessPiece()!=null && last.chessPiece.color == ChessBoard.getOtherPlayerColor(playerColor)) || pawnCapture) {
                 if (cp instanceof Pawn && !pawnCapture) return false;
                 if(pawnCapture && last.getChar()==' ') {
                     last = this.board[this.lastPlayed.row()][this.lastPlayed.col()];
@@ -420,6 +420,7 @@ public class ChessBoard {
     }
 
     public boolean enPassantCheck(Pawn p, Move move) {
+        if (this.lastPlayed == null) return false;
         ChessPiece piece = this.board[lastPlayed.row()][lastPlayed.col()].getChessPiece();
         if(piece instanceof Pawn && piece.getMovesHistory().size()>1) {
             Move otherPlayerLast = piece.getMovesHistory().get(piece.getMovesHistory().size() - 1);

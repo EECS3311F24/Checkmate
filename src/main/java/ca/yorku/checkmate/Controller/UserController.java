@@ -87,6 +87,21 @@ public class UserController {
     }
 
     /**
+     * URL: api/v1/users/authenticate
+     * <br>
+     * Gets the users data with the associated userId provided by a cookie.
+     * @param userId The id of the user.
+     * @return The userdata associated with the userId if it exists.
+     */
+    @GetMapping("authenticate")
+    public ResponseEntity<User> getAuthenticate(@CookieValue(name = "userId", required = false) String userId) {
+        if (userId == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return userService.getUserById(userId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
      * URL: api/v1/users
      * <br>
      * Create a new user in the database.

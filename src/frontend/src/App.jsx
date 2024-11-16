@@ -1,5 +1,6 @@
 import './App.css'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import HeaderComponent from './components/HeaderComponent'
 import ListUserComponent from './components/ListUserComponent'
 import UserFormComponent from './components/UserFormComponent'
@@ -11,8 +12,10 @@ import { LanguageProvider } from './components/LanguageProvider'
 import ChangePasswordComponent from './components/ChangePasswordComponent'
 
 function App() {
+  const queryClient = new QueryClient()
   return (
     <>
+    <QueryClientProvider client={queryClient}>
     <BrowserRouter>
     <LanguageProvider>
       <HeaderComponent/>
@@ -28,6 +31,7 @@ function App() {
       </Routes>
       </LanguageProvider>
     </BrowserRouter>
+    </QueryClientProvider>
     </>
   )
 }

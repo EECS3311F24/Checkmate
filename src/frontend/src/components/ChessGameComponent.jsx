@@ -1,34 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import { startGuestGame, move, getBoard, deleteBoard } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 import './chess.css';
 
 const ChessGame = () => {
-  // TODO decides just not to update
-  let [count, setCount] = useState(0)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCount(count + 1)
-      updateBoard();
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  /*
-    // TODO user useQuery to update every second
-  const userData = useQuery(
-    ['users'],
-    () => {
-      updateBoard()
-    },
-    {
-      enabled: false,
-    }
-  );
-  */
-
   const { language, setLanguage } = useLanguage();
+
+  const fetchChessBoard = async () => {
+    if (gameState !== null && !gameState.isGameStarted) return;
+    const res = await getBoard(gameState.id);
+    updateBoard(res?.data);
+    return res?.data;
+  };
+
+  useQuery('chessBoards', fetchChessBoard, {refetchInterval: 500})
+  
     // Piece image mapping
     const pieceImages = {
         'WHITE': {
@@ -158,20 +146,15 @@ const ChessGame = () => {
         return null;
       }
 
-      async function updateBoard() {
-        // TODO update captured pieces.
-        if (gameState !== null && !gameState.isGameStarted) return;
-        try {
-          const response = await getBoard(gameState.id);
+      function updateBoard(data) {
+        if (data) {
           setGameState(prev => ({
             ...prev,
-            chess: response.data.chess,
-            board: convertBoard(response.data.chess.chessBoard.board),
-            currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
+            chess: data.chess,
+            board: convertBoard(data.chess.chessBoard.board),
+            currentPlayer: convertColor(data.chess.whosTurn.playerColor)
             //capturedPieces: convertCapturedPieces(response.data.chess.chessBoard.capturedPieces)
           }));
-        } catch(error) {
-          console.error(error)
         }
       }
 
@@ -226,7 +209,6 @@ const ChessGame = () => {
       async function handleSquareClick(row, col) {
         // TODO start game when there are two players, eg id1 and id2 are not null
         if (!gameState.isGameStarted) return;
-        updateBoard();
         const piece = gameState.board[row][col];
         if (piece && gameState.currentPlayer === piece.color) {
               setGameState(prev => ({

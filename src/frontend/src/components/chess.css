@@ -253,3 +253,12 @@
   padding: 0.5rem;
   border-radius: 4px;
 }
+.game-status-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+}

@@ -128,14 +128,7 @@ const ChessGame = () => {
         }
       }, [playerTimes, gameState.currentPlayer]);
     
-      const handleTimeUp = () => {
-        setGameState(prev => ({
-          ...prev,
-          status: `Game Over - ${gameState.currentPlayer} lost on time!`,
-          isGameStarted: false
-        }));
-      };
-    
+
       function convertCapturedPieces(captured) {
         var white = [];
         var black = [];
@@ -190,7 +183,18 @@ const ChessGame = () => {
           }));
         });
       }
-
+      const [gameStatus, setGameStatus] = useState(null); 
+      const handleTimeUp = () => {
+        const winner = gameState.currentPlayer === 'WHITE' ? 'BLACK' : 'WHITE';
+        const statusMessage = `Game Over - ${winner} wins! ${gameState.currentPlayer} ran out of time.`;
+        console.log(statusMessage); // Log to console
+        setGameStatus(statusMessage);
+        setGameState(prev => ({
+          ...prev,
+          status: statusMessage,
+          isGameStarted: false
+        }));
+      };
       const handleStartGame = async () => {
         try {
           const response = await startGuestGame();
@@ -281,6 +285,11 @@ const ChessGame = () => {
                 {gameState.error}
               </div>
             )}
+            {gameStatus && (
+          <div className="game-status-message">
+            {gameStatus}
+          </div>
+        )}
             {!gameState.isGameStarted ? (
               <div className="chess-controls welcome-screen">
                
@@ -291,7 +300,7 @@ const ChessGame = () => {
                   {getTranslation("ChessGameComponentPlayAsGuest",language)}
                 </button>
                 <button
-              className="chess-button-outline"
+              className="chess-button"
               onClick={() => setIsTimerMode(!isTimerMode)}
             >
               {isTimerMode ? 'Disable Timer' : 'Enable Timer'}

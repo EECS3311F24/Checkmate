@@ -5,7 +5,8 @@ import { getTranslation, useLanguage } from './LanguageProvider';
 
 const UserDataFormComponent = () => {
     const { language, setLanguage } = useLanguage();
-    const { theme, setTheme } = useState('')
+    const [ userLanguage, setUserLanguage ] = useState('');
+    const [ theme, setUserTheme ] = useState('');
     const [userData, setUserData] = useState([])
     const { id } = useParams();
 
@@ -16,6 +17,8 @@ const UserDataFormComponent = () => {
     function getData() {
         getUserData(id).then((response) => {
             setUserData(response.data);
+            setUserLanguage(response.data.language);
+            setUserTheme(response.data.theme);
         }).catch(error => {
             console.error(error);
         })
@@ -25,11 +28,8 @@ const UserDataFormComponent = () => {
 
     function updateData() {
         if (id) {
-            // TODO language and theme should be upper case
-            // TODO translations
-            // TODO fix setTheme is not a function???
-            const data = { language, theme, wins: userData.wins, loses: userData.loses, gamesPlayed: userData.gamesPlayed }
-            updateUserData(data).then((response) => {
+            const data = { language: userLanguage, theme, wins: userData.wins, loses: userData.loses, gamesPlayed: userData.gamesPlayed }
+            updateUserData(id, data).then((response) => {
                 console.log(response.data);
                 //navigator("/users")
             }).catch(error => {
@@ -51,14 +51,14 @@ const UserDataFormComponent = () => {
                             <label className='form-label'>{"Language: "}</label>
                             <select
                                 name='Language'
-                                value={language}
+                                value={userLanguage}
                                 className="ms-auto"
                                 style={{ width: '150px' }}
-                                onChange={(e) => setLanguage(e.target.value)}
+                                onChange={(e) => setUserLanguage(e.target.value)}
                             >
-                                <option value="en">English</option>
-                                <option value="fn">Français</option>
-                                <option value="es">Español</option>
+                                <option value="ENGLISH">English</option>
+                                <option value="FRENCH">Français</option>
+                                <option value="SPANISH">Español</option>
                             </select>
                         </div>
                         <div className='form-group mb-2'>
@@ -68,14 +68,14 @@ const UserDataFormComponent = () => {
                                 value={theme}
                                 className="ms-auto"
                                 style={{ width: '150px' }}
-                                onChange={(e) => setTheme(e.target.value)}
+                                onChange={(e) => setUserTheme(e.target.value)}
                             >
                                 <option value="LIGHT">Light</option>
                                 <option value="DARK">Dark</option>
                             </select>
                         </div>
-                        <button className='btn btn-success' onClick={updateData}>{getTranslation("UserFormComponentSubmit", language)}</button>
                     </form>
+                    <button className='btn btn-success' onClick={updateData}>{getTranslation("UserFormComponentSubmit", language)}</button>
                 </div>
             </div>
         </div>

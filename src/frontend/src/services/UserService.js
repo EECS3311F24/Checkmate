@@ -13,7 +13,7 @@ export const createUser = (user) => axios.post(REST_API_BASE_URL, user);
 
 export const updateUser = (id, user) => axios.put(REST_API_BASE_URL + '/' + id, user);
 
-export const updateUserData = (id, userData) => axios.put(REST_API_BASE_URL + '/' + id + 'userdata', userData);
+export const updateUserData = (id, userData) => axios.put(REST_API_BASE_URL + '/' + id + '/userdata', userData);
 
 export const authenticate = (user) => axios.put(REST_API_BASE_URL + '/authenticate', user);
 

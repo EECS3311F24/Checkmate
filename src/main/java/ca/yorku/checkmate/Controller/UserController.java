@@ -3,7 +3,6 @@ package ca.yorku.checkmate.Controller;
 import ca.yorku.checkmate.Model.user.User;
 import ca.yorku.checkmate.Model.user.UserData;
 import ca.yorku.checkmate.Model.user.UserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -99,10 +98,7 @@ public class UserController {
     public ResponseEntity<User> createUser(HttpServletResponse response, @RequestBody User user) {
         user = userService.createUser(user);
         if (user == null) return new ResponseEntity<>(HttpStatus.CONFLICT);
-        Cookie cookie = new Cookie("userId", user.id);
-        cookie.setSecure(false);
-        cookie.setAttribute("SameSite", "Lax");
-        response.addCookie(cookie);
+        response.addCookie(userService.createCookie(user.id));
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
@@ -165,10 +161,7 @@ public class UserController {
         if (users.isEmpty()) return ResponseEntity.notFound().build();
         for (final User u : users) {
             if (!userService.authenticate(u, user)) continue;
-            Cookie cookie = new Cookie("userId", u.id);
-            cookie.setSecure(false);
-            cookie.setAttribute("SameSite", "Lax");
-            response.addCookie(cookie);
+            response.addCookie(userService.createCookie(user.id));
             return ResponseEntity.ok(u);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

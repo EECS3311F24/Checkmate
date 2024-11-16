@@ -1,5 +1,6 @@
 package ca.yorku.checkmate.Model.user;
 
+import jakarta.servlet.http.Cookie;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,6 +73,13 @@ public class UserService {
                     return u;
                 })
                 .orElse(null);
+    }
+
+    public Cookie createCookie(String id) {
+        Cookie cookie = new Cookie("userId", id);
+        cookie.setSecure(false);
+        cookie.setAttribute("SameSite", "Lax");
+        return cookie;
     }
 
     public User createGuestUser() {

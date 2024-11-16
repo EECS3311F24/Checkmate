@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { startGuestGame, move, getBoard } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
-import TimerComponent from './TimerComponent';
 import './chess.css';
 
 const ChessGame = () => {
@@ -15,15 +14,12 @@ const ChessGame = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const [timeLimit, setTimeLimit] = useState(300); // 5 minutes (300 seconds)
-
-  const [isTimerMode, setIsTimerRunning] = useState(false);
-
-  const handleTimerUp = () => {
-    console.log('Time\'s up!');
-    // Add logic to handle the timer expiration (e.g., end the turn, alert the user)
-    setIsTimerRunning(false);
-  };
+  const [isTimerMode, setIsTimerMode] = useState(false);
+  const [timeLimit, setTimeLimit] = useState(300);
+  const [playerTimes, setPlayerTimes] = useState({
+    WHITE: 300,
+    BLACK: 300
+  });
 
   const { language, setLanguage } = useLanguage();
     // Piece image mapping
@@ -113,7 +109,33 @@ const ChessGame = () => {
           )))
           return b;
       }
-
+      useEffect(() => {
+        let interval;
+        if (gameState.isGameStarted && isTimerMode) {
+          interval = setInterval(() => {
+            setPlayerTimes(prev => ({
+              ...prev,
+              [gameState.currentPlayer]: Math.max(0, prev[gameState.currentPlayer] - 1)
+            }));
+          }, 1000);
+        }
+        return () => clearInterval(interval);
+      }, [gameState.isGameStarted, isTimerMode, gameState.currentPlayer]);
+    
+      useEffect(() => {
+        if (isTimerMode && playerTimes[gameState.currentPlayer] === 0) {
+          handleTimeUp();
+        }
+      }, [playerTimes, gameState.currentPlayer]);
+    
+      const handleTimeUp = () => {
+        setGameState(prev => ({
+          ...prev,
+          status: `Game Over - ${gameState.currentPlayer} lost on time!`,
+          isGameStarted: false
+        }));
+      };
+    
       function convertCapturedPieces(captured) {
         var white = [];
         var black = [];
@@ -182,10 +204,14 @@ const ChessGame = () => {
               isGameStarted: true,
               error: null,
               currentPlayer: convertColor(response.data.chess.whosTurn.playerColor),
-              if (isTimerMode) {
-                setTimeRemaining(timeLimit);
-              }
+              
           }));
+          if (isTimerMode) {
+            setPlayerTimes({
+              WHITE: timeLimit,
+              BLACK: timeLimit
+            });
+          }
         } catch (error) {
           setGameState(prev => ({
               ...prev,
@@ -208,9 +234,6 @@ const ChessGame = () => {
             const selectedPiece = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col];
             const targetPiece = gameState.board[row][col];
 
-            if (isTimerMode) {
-              setTimeRemaining(timeLimit); // Reset timer on each move
-            }
             // If there's a piece at the target location, add it to captured pieces
             if (targetPiece) {
               const newCapturedPieces = {
@@ -258,13 +281,6 @@ const ChessGame = () => {
                 {gameState.error}
               </div>
             )}
-              {isTimerMode && (
-          <TimerComponent
-            timeLimit={timeLimit}
-            onTimeUp={handleTimerUp}
-            currentPlayer={gameState.currentPlayer}
-          />
-        )}
             {!gameState.isGameStarted ? (
               <div className="chess-controls welcome-screen">
                
@@ -274,31 +290,43 @@ const ChessGame = () => {
                 >
                   {getTranslation("ChessGameComponentPlayAsGuest",language)}
                 </button>
-
                 <button
-          className="chess-button-outline"
-          onClick={() => setIsTimerMode(!isTimerMode)}
-          >
-          {isTimerMode ? 'Disable Timer' : 'Enable Timer'}
-        </button>
+              className="chess-button-outline"
+              onClick={() => setIsTimerMode(!isTimerMode)}
+            >
+              {isTimerMode ? 'Disable Timer' : 'Enable Timer'}
+            </button>
 
-        {isTimerMode && (
-          <select
-            value={timeLimit}
-            onChange={(e) => setTimeLimit(parseInt(e.target.value))}
-          >
-            <option value={300}>5 minutes</option>
-            <option value={600}>10 minutes</option>
-            <option value={900}>15 minutes</option>
-          </select>
-        )}
+            {isTimerMode && (
+              <select
+                className="time-select"
+                value={timeLimit}
+                onChange={(e) => setTimeLimit(parseInt(e.target.value))}
+              >
+                <option value={60}>1 minutes</option>
+                <option value={300}>5 minutes</option>
+                <option value={600}>10 minutes</option>
+                <option value={900}>15 minutes</option>
+              </select>
+            )}
               </div>
             ) : (
               <div>
                 <div className="chess-current-player">
                 {getTranslation("ChessGameComponentCurrentPlayer",language)} {gameState.currentPlayer}
                 </div>
-
+                
+                {isTimerMode && (
+                <div className="timers">
+                  <div className="player-timer">
+                    White: {Math.floor(playerTimes.WHITE / 60)}:{(playerTimes.WHITE % 60).toString().padStart(2, '0')}
+                  </div>
+                  <div className="player-timer">
+                    Black: {Math.floor(playerTimes.BLACK / 60)}:{(playerTimes.BLACK % 60).toString().padStart(2, '0')}
+                  </div>
+                </div>
+              )}
+            
                 {/*Captured pieces display*/}
 
                 <div className="chess-captured-pieces">

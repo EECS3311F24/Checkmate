@@ -227,17 +227,29 @@
   opacity: 1;
   transform: scale(1.2);
 }
-.timer-container {
-  margin: 20px 0;
+.timers {
+  display: flex;
+  justify-content: space-around;
+  margin: 1rem 0;
+}
+
+.player-timer {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background: #f0f0f0;
+  font-family: monospace;
+  font-size: 1.2rem;
+}
+
+.game-status {
+  margin-top: 1rem;
+  padding: 0.5rem;
   text-align: center;
-}
-
-.timer {
-  font-size: 2rem;
   font-weight: bold;
-  color: #3498db;
 }
 
-.low-time {
-  color: #e74c3c;
+.time-select {
+  margin-left: 1rem;
+  padding: 0.5rem;
+  border-radius: 4px;
 }

@@ -161,7 +161,7 @@ public class UserController {
         if (users.isEmpty()) return ResponseEntity.notFound().build();
         for (final User u : users) {
             if (!userService.authenticate(u, user)) continue;
-            response.addCookie(userService.createCookie(user.id));
+            response.addCookie(userService.createCookie(u.id));
             return ResponseEntity.ok(u);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

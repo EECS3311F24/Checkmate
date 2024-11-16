@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { BACKEND } from './Service';
 
-axios.defaults.withCredentials = true
-
 const CHESS_API_BASE_URL = BACKEND + '/api/v1/boards';
 
 export const startGuestGame = () => axios.put(CHESS_API_BASE_URL);

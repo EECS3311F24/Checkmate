@@ -4,6 +4,7 @@ import { getUserData, updateUserData } from '../services/UserService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 
 const UserDataFormComponent = () => {
+    const navigator = useNavigate();
     const { language, setLanguage } = useLanguage();
     const [ userLanguage, setUserLanguage ] = useState('');
     const [ theme, setUserTheme ] = useState('');
@@ -17,6 +18,7 @@ const UserDataFormComponent = () => {
     function getData() {
         getUserData(id).then((response) => {
             setUserData(response.data);
+            setLanguage(convertLanguage(response.data.language))
             setUserLanguage(response.data.language);
             setUserTheme(response.data.theme);
         }).catch(error => {
@@ -24,12 +26,18 @@ const UserDataFormComponent = () => {
         })
     }
 
-    const navigator = useNavigate();
+    function convertLanguage(language) {
+        if (language === "ENGLISH") return "en";
+        if (language === "FRENCH") return "fn";
+        if (language === "SPANISH") return "es";
+        return language;
+    }
 
     function updateData() {
         if (id) {
             const data = { language: userLanguage, theme, wins: userData.wins, loses: userData.loses, gamesPlayed: userData.gamesPlayed }
             updateUserData(id, data).then((response) => {
+                setLanguage(convertLanguage(response.data.language))
                 console.log(response.data);
                 //navigator("/users")
             }).catch(error => {

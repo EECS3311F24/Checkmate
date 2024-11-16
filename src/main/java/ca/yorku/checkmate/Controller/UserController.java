@@ -183,6 +183,20 @@ public class UserController {
     }
 
     /**
+     * URL: api/v1/users/logout
+     * <br>
+     * Logout the user removing the cookie that was set.
+     * @param userId The userId to logout of.
+     * @return A response entity with message, informing client
+     * with Http status 200 when logged out.
+     */
+    @PutMapping("/logout")
+    public ResponseEntity<String> logOut(HttpServletResponse response, @CookieValue(name = "userId") String userId) {
+        response.addCookie(userService.deleteCookie());
+        return ResponseEntity.ok("Logged out!");
+    }
+
+    /**
      * URL: api/v1/users/{id}?oldPassword={oldPassword}&password={password}
      * <br>
      * Set a user password.

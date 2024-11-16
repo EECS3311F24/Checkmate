@@ -82,6 +82,12 @@ public class UserService {
         return cookie;
     }
 
+    public Cookie deleteCookie() {
+        Cookie cookie = new Cookie("userId", null);
+        cookie.setMaxAge(0);
+        return cookie;
+    }
+
     public User createGuestUser() {
         User guest = new User("Guest", "Guest", null);
         repository.save(guest);

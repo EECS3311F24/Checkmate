@@ -19,6 +19,8 @@ export const updateUserData = (id, userData) => axios.put(REST_API_BASE_URL + '/
 
 export const authenticate = (user) => axios.put(REST_API_BASE_URL + '/authenticate', user);
 
+export const logout = () => axios.put(REST_API_BASE_URL + '/logout');
+
 export const setUserPassword = (id, oldPassword, password) => 
     axios.patch(REST_API_BASE_URL + '/' + id + '?oldPassword=' + oldPassword + '&password=' + password);
 

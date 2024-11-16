@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom';
-import { getUserData, updateUserData } from '../services/UserService';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getUserData, updateUserData, logout } from '../services/UserService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 
 const UserDataFormComponent = () => {
+    const navigator = useNavigate();
     const { language, setLanguage } = useLanguage();
     const [ userLanguage, setUserLanguage ] = useState('');
     const [ theme, setUserTheme ] = useState('');
@@ -44,6 +45,15 @@ const UserDataFormComponent = () => {
         }
     }
 
+    function logoutUser() {
+        if (id) {
+            logout().then((response) => {
+                console.log(response.data);
+                navigator("/")
+            }).catch(error => {});
+        }
+    }
+
     return (
         <div className='container'>
             <div className='card col-md-6 offset-md-3 offset-md-3'>
@@ -81,7 +91,8 @@ const UserDataFormComponent = () => {
                             </select>
                         </div>
                     </form>
-                    <button className='btn btn-success' onClick={updateData}>{getTranslation("UserDataFormComponentSubmit", language) + ": "}</button>
+                    <button className='btn btn-success' onClick={updateData}>{getTranslation("UserDataFormComponentSubmit", language)}</button>
+                    <button className='btn btn-danger' onClick={logoutUser}>{getTranslation("UserDataFormComponentLogout", language)}</button>
                 </div>
             </div>
         </div>

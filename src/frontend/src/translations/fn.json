@@ -11,6 +11,7 @@
     "ChessGameComponentPlayAsGuest": "Jouer en tant qu'invité",
     "ChessGameComponentCurrentPlayer": "Jouer en tant qu'invité",
 
+    "HeaderComponentAccount": "Compte",
     "HeaderComponentUsers": "Utilisateurs",
     "HeaderComponentSignup": "S'inscrire",
     "HeaderComponentLogin": "Se connecter",

@@ -11,6 +11,7 @@
     "ChessGameComponentPlayAsGuest": "Play as Guest",
     "ChessGameComponentCurrentPlayer": "Play as Guest",
 
+    "HeaderComponentAccount": "Account",
     "HeaderComponentUsers": "Users",
     "HeaderComponentSignup": "Signup",
     "HeaderComponentLogin": "Login",

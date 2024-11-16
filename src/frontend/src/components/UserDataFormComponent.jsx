@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getUserData, updateUserData } from '../services/UserService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 
 const UserDataFormComponent = () => {
-    const navigator = useNavigate();
     const { language, setLanguage } = useLanguage();
     const [ userLanguage, setUserLanguage ] = useState('');
     const [ theme, setUserTheme ] = useState('');
@@ -39,7 +38,6 @@ const UserDataFormComponent = () => {
             updateUserData(id, data).then((response) => {
                 setLanguage(convertLanguage(response.data.language))
                 console.log(response.data);
-                //navigator("/users")
             }).catch(error => {
                 console.error(error);
             })
@@ -49,14 +47,14 @@ const UserDataFormComponent = () => {
     return (
         <div className='container'>
             <div className='card col-md-6 offset-md-3 offset-md-3'>
-                {<h2 className='text-center'>{getTranslation("LoginComponentLogin", language)}</h2>}
+                {<h2 className='text-center'>{getTranslation("UserDataFormComponentAccount", language)}</h2>}
                 <div className='card-body'>
                     <form>
-                        <p>Wins: {userData.wins}</p>
-                        <p>Loses: {userData.loses}</p>
-                        <p>Games Played: {userData.gamesPlayed}</p>
+                        <p>{getTranslation("UserDataFormComponentWins", language) + ": "} {userData.wins}</p>
+                        <p>{getTranslation("UserDataFormComponentLoses", language) + ": "} {userData.loses}</p>
+                        <p>{getTranslation("UserDataFormComponentGamesPlayed", language) + ": "} {userData.gamesPlayed}</p>
                         <div className='form-group mb-2'>
-                            <label className='form-label'>{"Language: "}</label>
+                            <label className='form-label'>{getTranslation("UserDataFormComponentLanguage", language) + ": "}</label>
                             <select
                                 name='Language'
                                 value={userLanguage}
@@ -70,7 +68,7 @@ const UserDataFormComponent = () => {
                             </select>
                         </div>
                         <div className='form-group mb-2'>
-                            <label className='form-label'>{"Theme: "}</label>
+                            <label className='form-label'>{getTranslation("UserDataFormComponentTheme", language) + ": "}</label>
                             <select
                                 name='Theme'
                                 value={theme}
@@ -83,7 +81,7 @@ const UserDataFormComponent = () => {
                             </select>
                         </div>
                     </form>
-                    <button className='btn btn-success' onClick={updateData}>{getTranslation("UserFormComponentSubmit", language)}</button>
+                    <button className='btn btn-success' onClick={updateData}>{getTranslation("UserDataFormComponentSubmit", language) + ": "}</button>
                 </div>
             </div>
         </div>

@@ -40,6 +40,14 @@
     "UserFormComponentSubmit": "Submit",
     "UserFormComponentChangePassword": "Change Password",
 
+    "UserDataFormComponentAccount": "Account",
+    "UserDataFormComponentLanguage": "Language",
+    "UserDataFormComponentTheme": "Theme",
+    "UserDataFormComponentWins": "Wins",
+    "UserDataFormComponentLoses": "Loses",
+    "UserDataFormComponentGamesPlayed": "Games Played",
+    "UserDataFormComponentSubmit": "Submit",
+
     "LoginComponentLogin": "Login",
     "LoginComponentLoginError": "Login failed!",
     "LoginComponentUserLoginError": "Username or Email required!",

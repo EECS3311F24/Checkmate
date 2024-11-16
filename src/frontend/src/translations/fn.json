@@ -40,6 +40,14 @@
     "UserFormComponentSubmit": "Soumettre",
     "UserFormComponentChangePassword": "Changer le mot de passe",
 
+    "UserDataFormComponentAccount": "Compte",
+    "UserDataFormComponentLanguage": "Langue",
+    "UserDataFormComponentTheme": "Thème",
+    "UserDataFormComponentWins": "Gagner",
+    "UserDataFormComponentLoses": "Perd",
+    "UserDataFormComponentGamesPlayed": "Jeux Joués",
+    "UserDataFormComponentSubmit": "Soumettre",
+
     "LoginComponentLogin": "Se connecter",
     "LoginComponentLoginError": "La connexion a échoué!",
     "LoginComponentUserLoginError": "Nom d'utilisateur ou e-mail requis!",

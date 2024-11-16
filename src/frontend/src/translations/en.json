@@ -48,6 +48,7 @@
     "UserDataFormComponentLoses": "Loses",
     "UserDataFormComponentGamesPlayed": "Games Played",
     "UserDataFormComponentSubmit": "Submit",
+    "UserDataFormComponentLogout": "Logout",
 
     "LoginComponentLogin": "Login",
     "LoginComponentLoginError": "Login failed!",

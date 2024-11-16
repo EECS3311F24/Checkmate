@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ChessPiece {
-    public char color;//TODO: default
-    public char symbol; //TODO: default
+    char color;
+    char symbol;
     List<Move> movesHistory;
 
     public ChessPiece() {

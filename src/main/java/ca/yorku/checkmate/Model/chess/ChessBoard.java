@@ -8,11 +8,11 @@ import java.util.List;
 
 public class ChessBoard {
     public static final int dimensions = 8;
-    public Placeholder[][] board = new Placeholder[dimensions][dimensions]; //TODO: change to: private final after testing
+    private Placeholder[][] board = new Placeholder[dimensions][dimensions];
     public static final char black = 'B';
     public static final char white = 'W';
-    public List<ChessPiece> blackPieces = new ArrayList<>(); //TODO: private
-    public List<ChessPiece> whitePieces = new ArrayList<>(); //TODO: private
+    private List<ChessPiece> blackPieces = new ArrayList<>();
+    private List<ChessPiece> whitePieces = new ArrayList<>();
     public List<ChessPiece> capturedPieces = new ArrayList<>();
     private Move whiteKingLocation;
     private Move blackKingLocation;
@@ -240,7 +240,7 @@ public class ChessBoard {
             List<Move> pathMinusLast = path.subList(0, path.size() - 1);
             if (last.getChar() != ' ' && last.getChessPiece().getColor() == playerColor) return false;
             if (!this.checkForAllClearPath(pathMinusLast)) return false;
-            if (!(cp instanceof King && Math.abs(move.col()-lastMove.col())==2)&&(last.getChessPiece()!=null && last.chessPiece.color == ChessBoard.getOtherPlayerColor(playerColor)) || pawnCapture) {
+            if (!(cp instanceof King && Math.abs(move.col()-lastMove.col())==2)&&(last.getChessPiece()!=null && last.getChessPiece().getColor() == ChessBoard.getOtherPlayerColor(playerColor)) || pawnCapture) {
                 if (cp instanceof Pawn && !pawnCapture) return false;
                 if(pawnCapture && last.getChar()==' ') {
                     last = this.board[this.lastPlayed.row()][this.lastPlayed.col()];

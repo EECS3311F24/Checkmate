@@ -160,6 +160,43 @@ Host: {{HOST}}
 |---|---|
 |200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
 |404|[Not Found](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4)|
+### Get Authentication
+Gets the user you are authenticated to. Requires a user cookie of userId.
+
+`GET /api/v1/users/{{id}}/userdata`
+#### Examples
+Successful Response Example:
+> HTTP Request
+```HTTP
+GET /api/v1/users/authenticate HTTP/1.1
+Host: {{HOST}}
+```
+> Response
+```json
+[
+    {
+        "id": "6722c1d538e9d1070bcf3737",
+        "createdOn": "2024-11-30T23:35:49.737+00:00",
+        "username": "user1",
+        "email": "user1alt@example.org"
+    }
+]
+```
+> 200 Response
+____
+Not Found Response Example:
+> HTTP Request
+```HTTP
+GET /api/v1/users/authenticate HTTP/1.1
+Host: {{HOST}}
+```
+> 404 Response
+#### Responses
+|HTTP Status Code |Meaning|
+|---|---|
+|200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
+|401|[Unauthorized](https://datatracker.ietf.org/doc/html/rfc7235#section-3.1)|
+|404|[Not Found](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4)|
 ## POST
 ### Create User
 Create a user with given id by giving body parameters for a user.

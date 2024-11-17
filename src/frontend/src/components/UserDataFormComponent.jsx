@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { getUserData, updateUserData, logout } from '../services/UserService';
+import { getUserData, updateUserData, logout, deleteUser } from '../services/UserService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 
 const UserDataFormComponent = () => {
@@ -45,6 +45,10 @@ const UserDataFormComponent = () => {
         }
     }
 
+    function editUser() {
+        navigator(`/edit-user/` + id)
+    }
+
     function logoutUser() {
         if (id) {
             logout().then((response) => {
@@ -52,6 +56,11 @@ const UserDataFormComponent = () => {
                 navigator("/")
             }).catch(error => {});
         }
+    }
+
+    function removeUser() {
+        deleteUser(id).catch(e => {})
+        navigator("/")
     }
 
     return (
@@ -92,7 +101,9 @@ const UserDataFormComponent = () => {
                         </div>
                     </form>
                     <button className='btn btn-success' onClick={updateData}>{getTranslation("UserDataFormComponentSubmit", language)}</button>
+                    <button className='btn btn-info' onClick={editUser}>{getTranslation("UserDataFormComponentEdit", language)}</button>
                     <button className='btn btn-danger' onClick={logoutUser}>{getTranslation("UserDataFormComponentLogout", language)}</button>
+                    <button className='btn btn-danger' onClick={removeUser}>{getTranslation("UserDataFormComponentDelete", language)}</button>
                 </div>
             </div>
         </div>

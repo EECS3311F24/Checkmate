@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { startGuestGame, move, getBoard, deleteBoard } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
+import { useTheme } from './ThemeProvider';
 import './chess.css';
 
 const ChessGame = () => {
   const { language, setLanguage } = useLanguage();
+  const { theme } = useTheme();
 
   const fetchChessBoard = async () => {
     if (gameState !== null && !gameState.isGameStarted) return;
@@ -266,12 +268,16 @@ const ChessGame = () => {
         }
       };
     
+
+      const headerStyle = theme === 'dark' ? { color: '#ffffff' } : theme === 'solarized' ? { color: '#00008b' } : { color: '#000000' };
+      const cardStyle = theme === 'dark' ? { backgroundColor: '#333333', color: '#ffffff' } : theme === 'solarized' ? { backgroundColor: '#f0f8ff', color: '#000000' } : { backgroundColor: '#ffffff', color: '#000000' };
+    
       return (
         <div className="chess-container">
           <div className="chess-header">
             <h2>{getTranslation("ChessGameComponentChessGame",language)}</h2>
           </div>
-          <div className="chess-content">
+          <div className="chess-content" style={cardStyle}>
             {gameState.error && (
               <div className="chess-error">
                 {gameState.error}
@@ -294,7 +300,7 @@ const ChessGame = () => {
                 <div className="container text-center">
                   {<button className='btn btn-danger' onClick={() => quitGame(gameState.id)}>{getTranslation("ChessGameComponentQuit", language)}</button>}
                 </div>
-                <div className="chess-current-player">
+                <div className="chess-current-player" style={cardStyle}>
                 {getTranslation("ChessGameComponentCurrentPlayer",language)}
                 {( gameState.currentPlayer === 'WHITE' ? getTranslation("ChessGameComponentWhite",language) 
                 : getTranslation("ChessGameComponentBlack",language))}
@@ -302,7 +308,7 @@ const ChessGame = () => {
                 
                 {/*Captured pieces display*/}
 
-                <div className="chess-captured-pieces">
+                <div className="chess-captured-pieces" style={cardStyle}>
                             <div className="captured-white">
                                 {gameState.capturedPieces.WHITE.map((piece, index) => (
                                     <img

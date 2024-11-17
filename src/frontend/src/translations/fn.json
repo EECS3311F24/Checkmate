@@ -48,7 +48,9 @@
     "UserDataFormComponentLoses": "Perd",
     "UserDataFormComponentGamesPlayed": "Jeux Joués",
     "UserDataFormComponentSubmit": "Soumettre",
+    "UserDataFormComponentEdit": "Éditer",
     "UserDataFormComponentLogout": "Déconnexion",
+    "UserDataFormComponentDelete": "Supprimer",
 
     "LoginComponentLogin": "Se connecter",
     "LoginComponentLoginError": "La connexion a échoué!",

@@ -48,7 +48,9 @@
     "UserDataFormComponentLoses": "Pierde",
     "UserDataFormComponentGamesPlayed": "Juegos Jugados",
     "UserDataFormComponentSubmit": "Enviar",
+    "UserDataFormComponentEdit": "Editar",
     "UserDataFormComponentLogout": "Cerrar Sesión",
+    "UserDataFormComponentDelete": "Eliminar",
 
     "LoginComponentLogin": "Acceso",
     "LoginComponentLoginError": "¡Error de inicio de sesion!",

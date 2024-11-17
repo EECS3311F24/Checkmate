@@ -145,7 +145,7 @@ public class UserController {
      * with Http status 200 if updated, 400 if bad request, 401 if unauthorized, 404 if not found.
      */
     @PutMapping("{id}/userdata")
-    public ResponseEntity<UserData> updateUserData(@PathVariable("id") String id, @CookieValue(name = "userId") String userId, @RequestBody UserData userData) {
+    public ResponseEntity<UserData> updateUserData(@PathVariable("id") String id, @CookieValue(name = "userId", required = false) String userId, @RequestBody UserData userData) {
         if (userId == null || !userId.equals(id)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         ResponseEntity<UserData> response = getUserData(id);
         if (!response.getStatusCode().is2xxSuccessful()) return ResponseEntity.notFound().build();

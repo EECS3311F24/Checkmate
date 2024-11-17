@@ -2,7 +2,9 @@ package ca.yorku.checkmate.Model.chess;
 
 import ca.yorku.checkmate.Controller.UserController;
 import ca.yorku.checkmate.Model.chess.chesspieces.ChessPiece;
+import ca.yorku.checkmate.Model.user.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,12 +48,26 @@ public class ChessBoardService {
     }
 
     public boolean createChessBoard(ChessBoardDB chessBoard) {
+        if (chessBoard == null || chessBoard.player1Id == null) return false;
+        if (!updateGamesPlayed(chessBoard)) return false;
         repository.save(chessBoard);
+        return true;
+    }
+
+    public boolean updateGamesPlayed(ChessBoardDB chessBoard) {
+        if (chessBoard.player1Id.equals(chessBoard.player2Id)) return false;
+        String id = chessBoard.player2Id == null ? chessBoard.player1Id : chessBoard.player2Id;
+        ResponseEntity<UserData> response = userController.getUserData(id);
+        if (!response.getStatusCode().is2xxSuccessful()) return false;
+        UserData userData = response.getBody();
+        if (userData == null) return false;
+        userController.updateUserData(id, id, userData.setGamesPlayed(userData.gamesPlayed + 1));
         return true;
     }
 
     public void setPlayer2Id(ChessBoardDB chessBoard, String id) {
         chessBoard.player2Id = id;
+        updateGamesPlayed(chessBoard);
         repository.save(chessBoard);
     }
 
@@ -59,9 +75,9 @@ public class ChessBoardService {
         Player whosTurn = chessBoard.chess.getWhosTurn();
         // TODO assumes player1 is always white
         if (whosTurn.playerColor() == ChessBoard.white) {
-           if (!chessBoard.player1Id.equals(userId)) return false;
+           if (chessBoard.player1Id != null && !chessBoard.player1Id.equals(userId)) return false;
         } else if (whosTurn.playerColor() == ChessBoard.black) {
-           if (!chessBoard.player2Id.equals(userId)) return false;
+           if (chessBoard.player2Id != null && !chessBoard.player2Id.equals(userId)) return false;
         } else return false;
 
         ChessPiece piece = chessBoard.chess.getChessPiece(moves.start().row(), moves.start().col());

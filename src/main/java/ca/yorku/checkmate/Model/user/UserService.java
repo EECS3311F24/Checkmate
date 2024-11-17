@@ -78,6 +78,7 @@ public class UserService {
     public Cookie createCookie(String id) {
         Cookie cookie = new Cookie("userId", id);
         cookie.setSecure(false);
+        cookie.setPath("/");
         cookie.setAttribute("SameSite", "Lax");
         return cookie;
     }

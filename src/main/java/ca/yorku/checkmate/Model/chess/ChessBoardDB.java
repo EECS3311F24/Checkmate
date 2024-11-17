@@ -11,13 +11,15 @@ public class ChessBoardDB {
     @CreatedDate
     public Date createdOn;
     public Chess chess;
+    public char mode;
     public String player1Id;
     public String player2Id;
 
-    public ChessBoardDB(Chess chess, String player1Id, String player2Id) {
+    public ChessBoardDB(Chess chess, String player1Id, String player2Id, char mode) {
         this.chess = chess;
         this.player1Id = player1Id;
         this.player2Id = player2Id;
+        this.mode = mode;
     }
 
     @Override

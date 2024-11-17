@@ -17,7 +17,6 @@ import java.util.List;
  * Controller for chess boards, providing a rest endpoint
  * that allows getting, creating, updating, or deleting chess boards.
  */
-@CrossOrigin("*")
 @RestController
 @RequestMapping("api/v1/boards")
 public class ChessBoardController {
@@ -98,8 +97,8 @@ public class ChessBoardController {
      * with Http status 201 if created or 409 if not created.
      */
     @PostMapping
-    public ResponseEntity<ChessBoardDB> createChessBoard(@RequestParam(name = "id1") String player1Id, @RequestParam(name = "id2", required = false) String player2Id) {
-        ChessBoardDB chessBoard = new ChessBoardDB(new Chess(), player1Id, player2Id);
+    public ResponseEntity<ChessBoardDB> createChessBoard(@RequestParam(name = "id1") String player1Id, @RequestParam(name = "id2", required = false) String player2Id, @RequestParam(name = "mode") String mode) {
+        ChessBoardDB chessBoard = new ChessBoardDB(new Chess(mode.charAt(0)), player1Id, player2Id, mode.charAt(0));
         if (!service.createChessBoard(chessBoard)) return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(chessBoard, HttpStatus.CREATED);
     }
@@ -131,20 +130,26 @@ public class ChessBoardController {
      * with Http status 200 if joined or 409 if not joined or 404 if no user found.
      */
     @PutMapping
-    public ResponseEntity<ChessBoardDB> joinBoard(HttpServletResponse response, @CookieValue(name = "userId", required = false) String userId) {
-        if (userId == null) {
-            User user = service.getUserController().createUser(response, new User("Guest", "Guest")).getBody();
+    public ResponseEntity<ChessBoardDB> joinBoard(HttpServletResponse response, @CookieValue(name = "userId", required = false) String userId, @RequestParam(name = "mode") String mode) {
+        if (userId == null || !service.getUserController().getUserById(userId).getStatusCode().is2xxSuccessful()) {
+            User user = service.getUserController().createUser(response, new User()).getBody();
             if (user == null) return new ResponseEntity<>(HttpStatus.CONFLICT);
             userId = user.id;
         }
-        String id = userId;
+        final String id = userId;
         return service.getBoards().stream()
-                .filter(chessBoard -> chessBoard.player2Id == null)
+                .filter(chessBoard -> chessBoard.mode == mode.charAt(0))
+                .filter(chessBoard -> id.equals(chessBoard.player1Id) || id.equals(chessBoard.player2Id))
                 .findFirst()
-                .map(chessBoard -> {
-                    service.setPlayer2Id(chessBoard, id);
-                    return ResponseEntity.ok(chessBoard);
-                }).orElse(createChessBoard(id, null));
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> service.getBoards().stream()
+                        .filter(chessBoard -> chessBoard.player2Id == null)
+                        .findFirst()
+                        .map(chessBoard -> {
+                            service.setPlayer2Id(chessBoard, id);
+                            return ResponseEntity.ok(chessBoard);
+                        }).orElse(createChessBoard(id, null, mode))
+                );
     }
 
     /**
@@ -158,7 +163,7 @@ public class ChessBoardController {
      * with Http status 200 if moved or 400 if not a valid move or 409 if not moved or 404 if not found .
      */
     @PatchMapping("{id}/moves")
-    public ResponseEntity<ChessBoardDB> move(@PathVariable("id") String id, @CookieValue(name = "userId", required = false) String userId, @RequestBody Moves moves) {
+    public ResponseEntity<ChessBoardDB> move(@PathVariable("id") String id, @CookieValue(name = "userId") String userId, @RequestBody Moves moves) {
         if (!moves.isValid()) return ResponseEntity.badRequest().build();
         return service.getBoardById(id).map(chessBoard -> {
             if (!service.moveChessPiece(chessBoard, userId, moves))

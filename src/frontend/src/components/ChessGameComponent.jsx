@@ -295,7 +295,9 @@ const ChessGame = () => {
                   {<button className='btn btn-danger' onClick={() => quitGame(gameState.id)}>{getTranslation("ChessGameComponentQuit", language)}</button>}
                 </div>
                 <div className="chess-current-player">
-                {getTranslation("ChessGameComponentCurrentPlayer",language)} {gameState.currentPlayer}
+                {getTranslation("ChessGameComponentCurrentPlayer",language)}
+                {( gameState.currentPlayer === 'WHITE' ? getTranslation("ChessGameComponentWhite",language) 
+                : getTranslation("ChessGameComponentBlack",language))}
                 </div>
                 
                 {/*Captured pieces display*/}

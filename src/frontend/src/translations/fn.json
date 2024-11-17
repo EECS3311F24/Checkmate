@@ -10,6 +10,8 @@
     "ChessGameComponentQuit": "Quitter",
     "ChessGameComponentPlayAsGuest": "Jouer en tant qu'invité",
     "ChessGameComponentCurrentPlayer": "Jouer en tant qu'invité",
+    "ChessGameComponentWhite": " Blanc",
+    "ChessGameComponentBlack": " Noir",
 
     "HeaderComponentAccount": "Compte",
     "HeaderComponentUsers": "Utilisateurs",

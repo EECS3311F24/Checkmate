@@ -8,6 +8,10 @@ Checkmate is a website designed and focused on the beginner and casual players o
   
   * Language Support
 
+  * Timer mode
+ 
+  * Themes and Local Customization
+
 
 ## Guest Play
 

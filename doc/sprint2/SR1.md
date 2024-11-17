@@ -18,14 +18,11 @@ Create UI components for the tutorial.
 
 Record content explaining chess rules for beginners.
 
-Reason: The Tutorial feature was removed from Sprint 1 due to the need to focus on core game functionality first. The tutorial relies on the fully implemented game logic and visuals, 
-and these were not yet stable. 
-Once the core game features are in place, we can prioritize delivering an engaging, beginner-friendly tutorial.
+Reason: The Tutorial feature was removed from Sprint 1 due to the need to focus on core game functionality first. The tutorial relies on the fully implemented game logic and visuals, and these were not yet stable. Once the core game features are in place, we can prioritize delivering an engaging, beginner-friendly tutorial.
 
 Themes & Local Customization
 
-As Karen, I want to customize the look of the chessboard and pieces, so that the game feels more personal and visually appealing to me.
-Tasks remaining:
+As Karen, I want to customize the look of the chessboard and pieces, so that the game feels more personal and visually appealing to me. Tasks remaining:
 
 Implement customizable UI components for theme selection (e.g., dark, light, classic, modern).
 

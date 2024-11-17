@@ -72,8 +72,26 @@ public class ChessBoardService {
     }
 
     public boolean moveChessPiece(ChessBoardDB chessBoard, String userId, Moves moves) {
+        if (chessBoard.chess.isGameOver()) {
+            // TODO check for draw?
+            String id = chessBoard.chess.getWinner().playerColor() == ChessBoard.white ? chessBoard.player1Id : chessBoard.player2Id;
+            if (id != null) {
+                ResponseEntity<UserData> response = userController.getUserData(id);
+                UserData userData = response.getBody();
+                if (userData != null) userController.updateUserData(id, id, userData.setWins(userData.wins + 1));
+            }
+            id = chessBoard.chess.getWinner().playerColor() == ChessBoard.white ? chessBoard.player2Id : chessBoard.player1Id;
+            if (id != null) {
+                ResponseEntity<UserData> response = userController.getUserData(id);
+                UserData userData = response.getBody();
+                if (userData != null) userController.updateUserData(id, id, userData.setLoses(userData.loses + 1));
+            }
+            chessBoard.player1Id = null;
+            chessBoard.player2Id = null;
+            repository.save(chessBoard);
+            return false;
+        }
         Player whosTurn = chessBoard.chess.getWhosTurn();
-        // TODO assumes player1 is always white
         if (whosTurn.playerColor() == ChessBoard.white) {
            if (chessBoard.player1Id != null && !chessBoard.player1Id.equals(userId)) return false;
         } else if (whosTurn.playerColor() == ChessBoard.black) {

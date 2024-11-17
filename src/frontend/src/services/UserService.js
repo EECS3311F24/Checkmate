@@ -25,3 +25,5 @@ export const setUserPassword = (id, oldPassword, password) =>
     axios.patch(REST_API_BASE_URL + '/' + id + '?oldPassword=' + oldPassword + '&password=' + password);
 
 export const deleteUser = (id) => axios.delete(REST_API_BASE_URL + '/' + id);
+
+export const deleteAllUsers = () => axios.delete(REST_API_BASE_URL);

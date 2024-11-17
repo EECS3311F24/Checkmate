@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteUser, listUsers } from '../services/UserService';
+import { deleteUser, listUsers, deleteAllUsers } from '../services/UserService';
+import { deleteAllBoards } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 import { useTheme } from './ThemeProvider';
 
 const ListUserComponent = () => {
+    const navigator = useNavigate();
     const { language } = useLanguage();
     const { theme } = useTheme();
     const [users, setUsers] = useState([]);
@@ -26,7 +28,11 @@ const ListUserComponent = () => {
         });
     }
 
-    const navigator = useNavigate();
+    const clearDatabase = () => {
+        deleteAllUsers();
+        deleteAllBoards();
+        navigator("/");
+    }
 
     function editUser(id) {
         navigator(`/edit-user/${id}`);
@@ -71,6 +77,7 @@ const ListUserComponent = () => {
                     }
                 </tbody>
             </table>
+            <button className='btn btn-danger' onClick={() => clearDatabase()}>{"Clear Databases"}</button>
         </div>
     );
 };

@@ -9,7 +9,9 @@ import './chess.css';
 const ChessGame = () => {
   const { language } = useLanguage();
   const { theme } = useTheme();
+  const [ mode, setMode ] = useState('S');
   const [isTimerMode, setIsTimerMode] = useState(false);
+  const [isCustomMode, setIsCustomMode] = useState(false);
   const [timeLimit, setTimeLimit] = useState(300);
   const [playerTimes, setPlayerTimes] = useState({
     WHITE: 300,
@@ -227,7 +229,7 @@ const ChessGame = () => {
 
   async function handleStartGame() {
     try {
-      const response = await startGuestGame();
+      const response = await startGuestGame(isCustomMode ? mode : 'S');
       setIsFirstMoveMade(false); // Reset first move state
       setGameState(prev => ({
         ...prev,
@@ -352,6 +354,12 @@ const ChessGame = () => {
             >
               {isTimerMode ? 'Disable Timer' : 'Enable Timer'}
             </button>
+            <button
+              className="chess-button"
+              onClick={() => setIsCustomMode(!isCustomMode)}
+            >
+              {isCustomMode ? 'Disable Custom' : 'Enable Custom'}
+            </button>
 
             {isTimerMode && (
               <select
@@ -363,6 +371,17 @@ const ChessGame = () => {
                 <option value={300}>5 minutes</option>
                 <option value={600}>10 minutes</option>
                 <option value={900}>15 minutes</option>
+              </select>
+            )}
+            {isCustomMode && (
+              <select
+                className="time-select"
+                value={mode}
+                onChange={(e) => setMode(e.target.value)}
+              >
+                <option value={'S'}>Standard</option>
+                <option value={'P'}>Pawns Game</option>
+                <option value={'N'}>No Pawns</option>
               </select>
             )}
           </div>

@@ -138,17 +138,17 @@ public class ChessBoardController {
         }
         final String id = userId;
         return service.getBoards().stream()
-                .filter(chessBoard -> id.equals(chessBoard.player1Id))
-                .filter(chessBoard -> id.equals(chessBoard.player2Id))
+                .filter(chessBoard -> id.equals(chessBoard.player1Id) || id.equals(chessBoard.player2Id))
                 .findFirst()
                 .map(ResponseEntity::ok)
-                .orElse(service.getBoards().stream()
+                .orElseGet(() -> service.getBoards().stream()
                         .filter(chessBoard -> chessBoard.player2Id == null)
                         .findFirst()
                         .map(chessBoard -> {
                             service.setPlayer2Id(chessBoard, id);
                             return ResponseEntity.ok(chessBoard);
-                        }).orElse(createChessBoard(id, null)));
+                        }).orElse(createChessBoard(id, null))
+                );
     }
 
     /**

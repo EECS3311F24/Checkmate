@@ -3,9 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { sha3_256 } from 'js-sha3';
 import { setUserPassword } from '../services/UserService';
 import { getTranslation, useLanguage } from './LanguageProvider';
+import { useTheme } from './ThemeProvider';
 
 const ChangePasswordComponent = () => {
     const { language, setLanguage } = useLanguage();
+    const { theme } = useTheme();
     const [oldPassword, setOldPassword] = useState('')
     const [password, setPassword] = useState('')
     const { id } = useParams();
@@ -58,10 +60,14 @@ const ChangePasswordComponent = () => {
         return valid;
     }
 
+    const headerStyle = theme === 'dark' ? { color: '#ffffff' } : theme === 'solarized' ? { color: '#00008b' } : { color: '#000000' };
+    const cardStyle = theme === 'dark' ? { backgroundColor: '#333333', color: '#ffffff' } : theme === 'solarized' ? { backgroundColor: '#f0f8ff', color: '#000000' } : { backgroundColor: '#ffffff', color: '#000000' };
+    const inputStyle = theme === 'dark' ? { backgroundColor: '#555555', color: '#ffffff' } : theme === 'solarized' ? { backgroundColor: '#e0ffff', color: '#000000' } : { backgroundColor: '#ffffff', color: '#000000' };
+
     return (
         <div className='container'>
-            <div className='card col-md-6 offset-md-3 offset-md-3'>
-                {<h2 className='text-center'>{getTranslation("ChangePasswordComponentChangePassword", language)}</h2>}
+            <div className='card col-md-6 offset-md-3 offset-md-3'  style={cardStyle}>
+                {<h2 className='text-center' style={headerStyle}>{getTranslation("ChangePasswordComponentChangePassword", language)}</h2>}
                 <div className='card-body'>
                     <form>
                         <div className='form-group mb-2'>
@@ -72,9 +78,9 @@ const ChangePasswordComponent = () => {
                                 name='oldPassword'
                                 value={oldPassword}
                                 className={`form-control ${errors.oldPassword ? 'is-invalid' : ''}`}
+                                style={inputStyle}
                                 onChange={(e) => setOldPassword(e.target.value)}
-                            >
-                            </input>
+                            />
                             {errors.oldPassword && <div className='invalid-feedback'> {errors.oldPassword} </div>}
                         </div>
                         <div className='form-group mb-2'>
@@ -85,9 +91,9 @@ const ChangePasswordComponent = () => {
                                 name='password'
                                 value={password}
                                 className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                                style={inputStyle}
                                 onChange={(e) => setPassword(e.target.value)}
-                            >
-                            </input>
+                            />
                             {errors.password && <div className='invalid-feedback'> {getTranslation(errors.password, language)} </div>}
                         </div>
                         <button className='btn btn-danger' onClick={changePassword}>{getTranslation("ChangePasswordComponentChangePassword", language)}</button>

@@ -43,7 +43,7 @@ public class ChessBoardService {
     }
 
     public void resetChessBoard(ChessBoardDB chessBoard) {
-        chessBoard.chess = new Chess();
+        chessBoard.chess = new Chess(chessBoard.mode);
         repository.save(chessBoard);
     }
 

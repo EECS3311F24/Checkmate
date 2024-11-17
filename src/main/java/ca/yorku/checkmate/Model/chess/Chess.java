@@ -26,6 +26,13 @@ public class Chess {
         this.whosTurn = this.playerWhite;
     }
 
+    public Chess(char mode) {
+        this.cb = new ChessBoard(mode);
+        this.playerWhite = new Player(ChessBoard.white);
+        this.playerBlack = new Player(ChessBoard.black);
+        this.whosTurn = this.playerWhite;
+    }
+
     public Chess(Player playerW, Player playerB) {
         this.cb = new ChessBoard();
         this.playerWhite = playerW;

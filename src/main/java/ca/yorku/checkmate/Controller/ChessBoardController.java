@@ -97,8 +97,8 @@ public class ChessBoardController {
      * with Http status 201 if created or 409 if not created.
      */
     @PostMapping
-    public ResponseEntity<ChessBoardDB> createChessBoard(@RequestParam(name = "id1") String player1Id, @RequestParam(name = "id2", required = false) String player2Id) {
-        ChessBoardDB chessBoard = new ChessBoardDB(new Chess(), player1Id, player2Id);
+    public ResponseEntity<ChessBoardDB> createChessBoard(@RequestParam(name = "id1") String player1Id, @RequestParam(name = "id2", required = false) String player2Id, @RequestParam(name = "mode") String mode) {
+        ChessBoardDB chessBoard = new ChessBoardDB(new Chess(mode.charAt(0)), player1Id, player2Id, mode.charAt(0));
         if (!service.createChessBoard(chessBoard)) return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(chessBoard, HttpStatus.CREATED);
     }
@@ -130,7 +130,7 @@ public class ChessBoardController {
      * with Http status 200 if joined or 409 if not joined or 404 if no user found.
      */
     @PutMapping
-    public ResponseEntity<ChessBoardDB> joinBoard(HttpServletResponse response, @CookieValue(name = "userId", required = false) String userId) {
+    public ResponseEntity<ChessBoardDB> joinBoard(HttpServletResponse response, @CookieValue(name = "userId", required = false) String userId, @RequestParam(name = "mode") String mode) {
         if (userId == null || !service.getUserController().getUserById(userId).getStatusCode().is2xxSuccessful()) {
             User user = service.getUserController().createUser(response, new User()).getBody();
             if (user == null) return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -138,6 +138,7 @@ public class ChessBoardController {
         }
         final String id = userId;
         return service.getBoards().stream()
+                .filter(chessBoard -> chessBoard.mode == mode.charAt(0))
                 .filter(chessBoard -> id.equals(chessBoard.player1Id) || id.equals(chessBoard.player2Id))
                 .findFirst()
                 .map(ResponseEntity::ok)
@@ -147,7 +148,7 @@ public class ChessBoardController {
                         .map(chessBoard -> {
                             service.setPlayer2Id(chessBoard, id);
                             return ResponseEntity.ok(chessBoard);
-                        }).orElse(createChessBoard(id, null))
+                        }).orElse(createChessBoard(id, null, mode))
                 );
     }
 

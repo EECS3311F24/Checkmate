@@ -237,9 +237,8 @@ const ChessGame = () => {
           await move(gameState.id, moves)
           .then(response => {
             if (!isFirstMoveMade && gameState.currentPlayer === 'WHITE') {
-              setIsFirstMoveMade(true);
-            }
-
+        setIsFirstMoveMade(true);
+      }
             const newBoard = convertBoard(response.data.chess.chessBoard.board);
             const selectedPiece = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col];
             const targetPiece = gameState.board[row][col];

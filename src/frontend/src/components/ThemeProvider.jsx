@@ -1,11 +1,18 @@
 // ThemeProvider.jsx
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 // Create a context for theme
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState(() => {
+        const savedTheme = localStorage.getItem('theme');
+        return savedTheme ? savedTheme : 'light';
+    });
+
+    useEffect(() => {
+        localStorage.setItem('theme', theme);
+    }, [theme]);
 
     // Styles for different themes
     const themes = {

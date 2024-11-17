@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import en from '../translations/en.json';
 import es from '../translations/es.json';
 import fn from '../translations/fn.json';
@@ -20,7 +20,14 @@ export const getTranslation = (key, currentLanguage = 'en') => {
 const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(() => {
+    const savedLanguage = localStorage.getItem('language');
+    return savedLanguage ? savedLanguage : 'en';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('language', language);
+  }, [language]);
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage }}>

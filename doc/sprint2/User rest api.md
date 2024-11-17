@@ -442,6 +442,26 @@ Content-Length: 66
 |200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
 |401|[Unauthorized](https://datatracker.ietf.org/doc/html/rfc7235#section-3.1)|
 |404|[Not Found](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4)|
+### Logout
+Logout a user by providing a userId cookie.
+
+`PUT /api/v1/users/logout`
+#### Examples
+Successful Response Example:
+> HTTP Request
+```HTTP
+PUT /api/v1/users/authenticate HTTP/1.1
+Host: {{HOST}}
+Content-Type: application/json
+Content-Length: 66
+```
+> Response
+
+> 200 Response
+#### Responses
+|HTTP Status Code |Meaning|
+|---|---|
+|200|[OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)|
 ## PATCH
 ### Set Password
 Set a users password by providing the old password and the new password.

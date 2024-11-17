@@ -86,6 +86,7 @@ public class UserService {
     public Cookie deleteCookie() {
         Cookie cookie = new Cookie("userId", null);
         cookie.setMaxAge(0);
+        cookie.setPath("/");
         return cookie;
     }
 

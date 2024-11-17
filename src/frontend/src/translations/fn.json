@@ -9,6 +9,8 @@
     "ChessGameComponentChessGame": "Jeu d'échecs",
     "ChessGameComponentPlayAsGuest": "Jouer en tant qu'invité",
     "ChessGameComponentCurrentPlayer": "Jouer en tant qu'invité",
+    "ChessGameComponentWhite": " Blanc",
+    "ChessGameComponentBlack": " Noir",
 
     "HeaderComponentUsers": "Utilisateurs",
     "HeaderComponentSignup": "S'inscrire",

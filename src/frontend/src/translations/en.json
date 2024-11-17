@@ -9,6 +9,8 @@
     "ChessGameComponentChessGame": "Chess Game",
     "ChessGameComponentPlayAsGuest": "Play as Guest",
     "ChessGameComponentCurrentPlayer": "Play as Guest",
+    "ChessGameComponentWhite": " White",
+    "ChessGameComponentBlack": " Black",
 
     "HeaderComponentUsers": "Users",
     "HeaderComponentSignup": "Signup",

@@ -60,13 +60,15 @@ public class UserData {
 
     public enum Theme {
         LIGHT,
-        DARK;
+        DARK,
+        SOLARIZED;
 
         @Override
         public String toString(){
             return switch (this) {
                 case LIGHT -> "Light";
                 case DARK -> "Dark";
+                case SOLARIZED -> "Solarized";
             };
         }
     }

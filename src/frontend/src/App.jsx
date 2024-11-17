@@ -6,11 +6,13 @@ import UserFormComponent from './components/UserFormComponent'
 import CheckmateHome from './components/CheckmateHome'
 import ChessGame from './components/ChessGameComponent'
 import { LanguageProvider } from './components/LanguageProvider'
+import { ThemeProvider } from './components/ThemeProvider'
 
 function App() {
   return (
     <>
     <BrowserRouter>
+    <ThemeProvider>
     <LanguageProvider>
       <HeaderComponent/>
       <Routes>
@@ -21,6 +23,7 @@ function App() {
         <Route path="/play" element={<ChessGame />}></Route>
       </Routes>
       </LanguageProvider>
+      </ThemeProvider>
     </BrowserRouter>
     </>
   )

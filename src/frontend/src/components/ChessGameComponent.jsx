@@ -13,7 +13,14 @@ const ChessGame = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-  
+
+  const [isTimerMode, setIsTimerMode] = useState(false);
+  const [timeLimit, setTimeLimit] = useState(300);
+  const [playerTimes, setPlayerTimes] = useState({
+    WHITE: 300,
+    BLACK: 300
+  });
+
   const { language, setLanguage } = useLanguage();
     // Piece image mapping
     const pieceImages = {
@@ -102,6 +109,26 @@ const ChessGame = () => {
           )))
           return b;
       }
+      const [isFirstMoveMade, setIsFirstMoveMade] = useState(false);
+      useEffect(() => {
+        let interval;
+        if (gameState.isGameStarted && isTimerMode && isFirstMoveMade) {
+          interval = setInterval(() => {
+            setPlayerTimes(prev => ({
+              ...prev,
+              [gameState.currentPlayer]: Math.max(0, prev[gameState.currentPlayer] - 1)
+            }));
+          }, 1000);
+        }
+        return () => clearInterval(interval);
+      }, [gameState.isGameStarted, isTimerMode, gameState.currentPlayer, isFirstMoveMade]);
+
+      useEffect(() => {
+        if (isTimerMode && playerTimes[gameState.currentPlayer] === 0) {
+          handleTimeUp();
+        }
+      }, [playerTimes, gameState.currentPlayer]);
+    
 
       function convertCapturedPieces(captured) {
         var white = [];
@@ -157,10 +184,22 @@ const ChessGame = () => {
           }));
         });
       }
-
+      const [gameStatus, setGameStatus] = useState(null); 
+      const handleTimeUp = () => {
+        const winner = gameState.currentPlayer === 'WHITE' ? 'BLACK' : 'WHITE';
+        const statusMessage = `Game Over - ${winner} wins! ${gameState.currentPlayer} ran out of time.`;
+        console.log(statusMessage); // Log to console
+        setGameStatus(statusMessage);
+        setGameState(prev => ({
+          ...prev,
+          status: statusMessage,
+          isGameStarted: false
+        }));
+      };
       const handleStartGame = async () => {
         try {
           const response = await startGuestGame();
+          setIsFirstMoveMade(false); // Reset first move state
           setGameState(prev => ({
               ...prev,
               id: response.data.id,
@@ -170,8 +209,15 @@ const ChessGame = () => {
               board: convertBoard(response.data.chess.chessBoard.board),
               isGameStarted: true,
               error: null,
-              currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
+              currentPlayer: convertColor(response.data.chess.whosTurn.playerColor),
+              
           }));
+          if (isTimerMode) {
+            setPlayerTimes({
+              WHITE: timeLimit,
+              BLACK: timeLimit
+            });
+          }
         } catch (error) {
           setGameState(prev => ({
               ...prev,
@@ -190,10 +236,13 @@ const ChessGame = () => {
           var moves = {start:{row:gameState.selectedPiece.row,col:gameState.selectedPiece.col},end:{row:row,col:col}};
           await move(gameState.id, moves)
           .then(response => {
+            if (!isFirstMoveMade && gameState.currentPlayer === 'WHITE') {
+        setIsFirstMoveMade(true);
+      }
             const newBoard = convertBoard(response.data.chess.chessBoard.board);
             const selectedPiece = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col];
             const targetPiece = gameState.board[row][col];
-            
+
             // If there's a piece at the target location, add it to captured pieces
             if (targetPiece) {
               const newCapturedPieces = {
@@ -241,7 +290,11 @@ const ChessGame = () => {
                 {gameState.error}
               </div>
             )}
-            
+            {gameStatus && (
+          <div className="game-status-message">
+            {gameStatus}
+          </div>
+        )}
             {!gameState.isGameStarted ? (
               <div className="chess-controls welcome-screen">
                
@@ -251,7 +304,25 @@ const ChessGame = () => {
                 >
                   {getTranslation("ChessGameComponentPlayAsGuest",language)}
                 </button>
-                
+                <button
+              className="chess-button"
+              onClick={() => setIsTimerMode(!isTimerMode)}
+            >
+              {isTimerMode ? 'Disable Timer' : 'Enable Timer'}
+            </button>
+
+            {isTimerMode && (
+              <select
+                className="time-select"
+                value={timeLimit}
+                onChange={(e) => setTimeLimit(parseInt(e.target.value))}
+              >
+                <option value={60}>1 minutes</option>
+                <option value={300}>5 minutes</option>
+                <option value={600}>10 minutes</option>
+                <option value={900}>15 minutes</option>
+              </select>
+            )}
               </div>
             ) : (
               <div>
@@ -261,6 +332,17 @@ const ChessGame = () => {
                 : getTranslation("ChessGameComponentBlack",language))}
                 </div>
                 
+                {isTimerMode && (
+                <div className="timers">
+                  <div className="player-timer">
+                    White: {Math.floor(playerTimes.WHITE / 60)}:{(playerTimes.WHITE % 60).toString().padStart(2, '0')}
+                  </div>
+                  <div className="player-timer">
+                    Black: {Math.floor(playerTimes.BLACK / 60)}:{(playerTimes.BLACK % 60).toString().padStart(2, '0')}
+                  </div>
+                </div>
+              )}
+            
                 {/*Captured pieces display*/}
 
                 <div className="chess-captured-pieces">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Nav, Navbar } from 'react-bootstrap';
-import { getTranslation, useLanguage } from './LanguageProvider';
 import { getAuthenticate } from '../services/UserService';
+import { getTranslation, useLanguage } from './LanguageProvider';
 import { useTheme } from './ThemeProvider';
 
 const HeaderComponent = () => {
@@ -18,6 +18,7 @@ const HeaderComponent = () => {
 
   useEffect(() => {
     getUser();
+    getData();
   }, [])
 
   function getUser() {
@@ -25,6 +26,32 @@ const HeaderComponent = () => {
       setUser(response.data)
     }).catch(e => {})
   }
+
+  function getData() {
+    const id = user?.id;
+    if (id) {
+      getUserData(id).then((response) => {
+        setLanguage(convertLanguage(response.data.language));
+        setTheme(convertTheme(response.data.theme));
+      }).catch(error => {
+        console.error(error);
+      })
+    }
+  }
+
+  function convertLanguage(language) {
+    if (language === "ENGLISH") return "en";
+    if (language === "FRENCH") return "fn";
+    if (language === "SPANISH") return "es";
+    return language;
+}
+
+function convertTheme(theme) {
+    if (theme === "LIGHT") return "light";
+    if (theme === "DARK") return "dark";
+    if (theme === "SOLARIZED") return "solarized";
+    return theme;
+}
 
   return (
     <Navbar className="navbar justify-content-between" style={{ backgroundColor: theme === 'dark' ? '#333333' : theme === 'solarized' ? '#20b2aa' : '#d3d3d3' }}>

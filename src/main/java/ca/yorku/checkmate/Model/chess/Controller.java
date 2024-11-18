@@ -1,7 +1,8 @@
 package ca.yorku.checkmate.Model.chess;
 
 import ca.yorku.checkmate.Model.chess.chesspieces.ChessPiece;
-
+import java.util.List;
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,8 +22,14 @@ public class Controller {
         this.chess = new Chess(pW, pB);
     }
 
-    public void play() {
+    public Controller(char mode, List<ChessPiece> removeBlack, List<ChessPiece> removeWhite) {
+        this.pW = new Player(ChessBoard.white);
+        this.pB = new Player(ChessBoard.black);
+        this.chess = new Chess(pW, pB, mode, removeBlack, removeWhite);
+    }
 
+    public void play() {
+        //note: TODO: after every move, if pawnPromoStatus reqs input, dont switch whosTurn
         while (!chess.isGameOver()) {
             this.report();
 
@@ -37,6 +44,10 @@ public class Controller {
             if(piece != null) {
                 if(piece.getColor() == whosTurn.playerColor()) {
                     chess.move(to.row(), to.col(), piece);
+                    if(chess.getPawnPromoStat() != null) {
+                        char promoChar = this.getPawnPromoChar("input upgrade piece \n");
+                        chess.promotePawn(promoChar);
+                    }
                 }
             }
         }
@@ -93,7 +104,33 @@ public class Controller {
         return -1;
     }
 
+    private char getPawnPromoChar(String message) {
+        char promoChar;
+        while (true) {
+            try {
+                System.out.print(message);
+                String line = stdin.readLine();
+                line = line.trim();
+                line = line.strip();
+                System.out.println(line);
+                promoChar = (char)line.charAt(0);
+                if (promoChar == 'Q' || promoChar == 'B' || promoChar == 'N' || promoChar == 'R') {
+                    return promoChar;
+                } else {
+                    System.out.println(INVALID_INPUT_MESSAGE);
+                }
+            } catch (IOException e) {
+                System.out.println(INVALID_INPUT_MESSAGE);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println(INVALID_INPUT_MESSAGE);
+            }
+        }
+        return ' ';
+    }
+
     public static void main(String[] args) {
+//        Controller c = new Controller('P', null, null);
         Controller c = new Controller();
         c.play();
     }

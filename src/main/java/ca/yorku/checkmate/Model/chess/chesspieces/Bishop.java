@@ -1,5 +1,6 @@
 package ca.yorku.checkmate.Model.chess.chesspieces;
 
+import ca.yorku.checkmate.Model.chess.ChessBoard;
 import ca.yorku.checkmate.Model.chess.Move;
 
 import java.util.ArrayList;
@@ -59,13 +60,49 @@ public class Bishop extends ChessPiece {
     }
 
     @Override
-    public List<Move> canThisMove() {
+    public List<Move> listOfShortestMoves() {
         List<Move> list = new ArrayList<>();
         Move lastMove = this.movesHistory.get(this.movesHistory.size() - 1);
         list.add(new Move(lastMove.row() - 1, lastMove.col()-1));
         list.add(new Move(lastMove.row() - 1, lastMove.col()+1));
         list.add(new Move(lastMove.row() + 1, lastMove.col()-1));
         list.add(new Move(lastMove.row() + 1, lastMove.col()+1));
+        return list;
+    }
+
+    @Override
+    public List<Move> listOfAllMoves() {
+        //4 diagonals, -1-1:-1+1:+1-1:+1+1
+        List<Move> list = new ArrayList<>();
+        Move lastMove = this.movesHistory.get(this.movesHistory.size() - 1);
+        int row0 = lastMove.row()-1;
+        int col0 = lastMove.col()-1;
+        while (row0>=0 && col0>=0) { //-1-1
+            list.add(new Move(row0, col0));
+            row0--;
+            col0--;
+        }
+        row0 = lastMove.row()-1;
+        col0 = lastMove.col()+1;
+        while (row0>=0 && col0 < ChessBoard.dimensions) { //-1+1
+            list.add(new Move(row0, col0));
+            row0--;
+            col0++;
+        }
+        row0 = lastMove.row()+1;
+        col0 = lastMove.col()-1;
+        while (row0<ChessBoard.dimensions && col0>=0) { //+1-1
+            list.add(new Move(row0, col0));
+            row0++;
+            col0--;
+        }
+        row0 = lastMove.row()+1;
+        col0 = lastMove.col()+1;
+        while (row0<ChessBoard.dimensions && col0<ChessBoard.dimensions) {   //+1+1
+            list.add(new Move(row0, col0));
+            row0++;
+            col0++;
+        }
         return list;
     }
 }

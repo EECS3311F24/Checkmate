@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
 public class CheckmateApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(CheckmateApplication.class, args);
 	}
 }

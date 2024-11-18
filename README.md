@@ -12,6 +12,8 @@ Checkmate is a website designed and focused on the beginner and casual players o
  
   * Themes and Local Customization
 
+  * Custom Games
+
 
 ## Guest Play
 
@@ -27,7 +29,16 @@ Checkmate is a website designed and focused on the beginner and casual players o
 ![Language](https://github.com/user-attachments/assets/1e59b5bf-c0c7-45ff-b211-7bc2452065d0)
 </p>
 
+## Timer Mode
+<p align="center"> 
+![TimerMode](https://github.com/user-attachments/assets/43ee03a0-eb02-4bad-96d1-172b67c63caf)
 
+</p>
+
+## Themes and Local Customization
+<p align="center"> 
+## Custom Games
+<p align="center"> 
 # Software Architecture 
 
 <p align="center"> 

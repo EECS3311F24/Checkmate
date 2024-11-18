@@ -31,6 +31,7 @@ Checkmate is a website designed and focused on the beginner and casual players o
 
 ## Timer Mode
 <p align="center"> 
+ 
 ![TimerMode](https://github.com/user-attachments/assets/43ee03a0-eb02-4bad-96d1-172b67c63caf)
 
 </p>

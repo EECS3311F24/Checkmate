@@ -38,13 +38,23 @@ Checkmate is a website designed and focused on the beginner and casual players o
 
 ## Themes and Local Customization
 <p align="center"> 
+
+ ![Themes](https://github.com/user-attachments/assets/84d401a4-d79c-489b-8e97-7c0f38b6b88e)
+
+</p>
+
 ## Custom Games
 <p align="center"> 
+
+ ![CustomGames](https://github.com/user-attachments/assets/46a3bf97-eeef-4f62-9993-1dd89997e4ed)
+ </p>
+
 # Software Architecture 
 
 <p align="center"> 
  
-![Software Architecture](https://github.com/user-attachments/assets/798ea7d6-c0c4-4bb4-ac47-dd8eb0cefe85)
+![System](https://github.com/user-attachments/assets/483849bd-377b-4b8a-a201-d41c899378c8)
+
 </p>
 
 ## Installation

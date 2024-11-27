@@ -83,16 +83,16 @@ public class ChatController {
      * <br>
      * Update a chat message by id in the database.
      * @param id The id of the chat message.
-     * @param chatMessage The chat message info to be updated.
+     * @param message The message to change to for the chat with given id.
      * @return A response entity with chat message, informing client
      * with Http status 200 if updated, 401 if not same chat message ids, 404 if not found.
      */
-    @PutMapping("{id}")
-    public ResponseEntity<ChatMessage> updateChatMessage(@PathVariable("id") String id, @RequestBody ChatMessage chatMessage) {
-        return service.getChatMessageById(id).map(chat -> {
-            if (!service.updateChatMessage(chat, chatMessage))
+    @PatchMapping("{id}")
+    public ResponseEntity<ChatMessage> updateChatMessage(@PathVariable("id") String id, @RequestBody String message) {
+        return service.getChatMessageById(id).map(chatMessage -> {
+            if (!service.changeChatMessage(chatMessage, message))
                 return new ResponseEntity<ChatMessage>(HttpStatus.UNAUTHORIZED);
-            return ResponseEntity.ok(chat);
+            return ResponseEntity.ok(chatMessage);
         }).orElse(ResponseEntity.notFound().build());
     }
 

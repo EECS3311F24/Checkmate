@@ -53,19 +53,15 @@ public class ChatService {
         return true;
     }
 
-    //TODO patch just message?????
-    public boolean updateChatMessage(ChatMessage chatMessage, ChatMessage placeholder) {
-        if (chatMessage == null || placeholder == null || !hasChatById(chatMessage.id)) return false;
-        chatMessage.setMessage(placeholder.message);
+    public boolean changeChatMessage(ChatMessage chatMessage, String message) {
+        if (chatMessage == null || !hasChatById(chatMessage.id)) return false;
+        chatMessage.setMessage(message);
         repository.save(chatMessage);
         return true;
     }
 
-    public boolean deleteChatMessage(String id) {
-        return getChatMessageById(id).map(chatMessage -> {
-            repository.delete(chatMessage);
-            return true;
-        }).orElse(false);
+    public void deleteChatMessage(String id) {
+        getChatMessageById(id).ifPresent(repository::delete);
     }
 
     public void deleteAll() {

@@ -44,7 +44,7 @@ public class ChatController {
      * @return The chat message associated with the id if it exists.
      */
     @GetMapping("{id}")
-    public ResponseEntity<ChatMessage> getUserById(@PathVariable("id") String id) {
+    public ResponseEntity<ChatMessage> getChatById(@PathVariable("id") String id) {
         return service.getChatMessageById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -58,7 +58,7 @@ public class ChatController {
      * @return The chat messages associated with the boardId if it exists.
      */
     @GetMapping(params = "boardId")
-    public ResponseEntity<List<ChatMessage>> getUsersByUsername(String boardId) {
+    public ResponseEntity<List<ChatMessage>> getChatByBoardId(String boardId) {
         List<ChatMessage> chatMessages = service.getChatMessageByBoardId(boardId);
         if (chatMessages.isEmpty()) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(chatMessages);
@@ -73,7 +73,7 @@ public class ChatController {
      * with Http status 201 if created or 409 if not created.
      */
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody ChatMessage chatMessage) {
+    public ResponseEntity<String> createChatMessage(@RequestBody ChatMessage chatMessage) {
         if (service.addChatMessage(chatMessage)) return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(chatMessage.message, HttpStatus.CREATED);
     }
@@ -88,7 +88,7 @@ public class ChatController {
      * with Http status 200 if updated, 401 if not same chat message ids, 404 if not found.
      */
     @PutMapping("{id}")
-    public ResponseEntity<ChatMessage> updateUser(@PathVariable("id") String id, @RequestBody ChatMessage chatMessage) {
+    public ResponseEntity<ChatMessage> updateChatMessage(@PathVariable("id") String id, @RequestBody ChatMessage chatMessage) {
         return service.getChatMessageById(id).map(chat -> {
             if (!service.updateChatMessage(chat, chatMessage))
                 return new ResponseEntity<ChatMessage>(HttpStatus.UNAUTHORIZED);
@@ -100,16 +100,33 @@ public class ChatController {
      * URL: api/v1/chats/{id}
      * <br>
      * Delete a chat message by id in the database.
-     * @param id The id of the user.
+     * @param id The id of the chat message.
      * @return A response entity with chat message, informing client
      * with Http status 200 if deleted or 404 if not found.
      */
     @DeleteMapping("{id}")
-    public ResponseEntity<ChatMessage> deleteChatMessage(@PathVariable("id") String id) {
+    public ResponseEntity<ChatMessage> deleteChatMessageById(@PathVariable("id") String id) {
         return service.getChatMessageById(id).map(chatMessage -> {
             service.deleteChatMessage(chatMessage.id);
             return ResponseEntity.ok(chatMessage);
         }).orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * URL: api/v1/chats?boardId={boardId}
+     * <br>
+     * Delete chat messages by boardId in the database.
+     * @param boardId The boardId of the chat messages.
+     * @return A response entity with chat message, informing client
+     * with Http status 200 if deleted or 404 if not found.
+     */
+    @DeleteMapping(params = "boardId")
+    public ResponseEntity<List<ChatMessage>> deleteChatMessageByBoardId(String boardId) {
+        List<ChatMessage> chatMessages = service.getChatMessageByBoardId(boardId);
+        if (chatMessages.isEmpty()) return ResponseEntity.notFound().build();
+        for (ChatMessage chatMessage : chatMessages)
+            service.deleteChatMessage(chatMessage.id);
+        return ResponseEntity.ok(chatMessages);
     }
 
     /**

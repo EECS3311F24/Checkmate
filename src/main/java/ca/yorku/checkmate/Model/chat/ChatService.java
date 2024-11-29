@@ -4,6 +4,7 @@ import ca.yorku.checkmate.Model.user.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +25,7 @@ public class ChatService {
     }
 
     public List<ChatMessage> getChatMessages() {
-        return repository.findAll();
+        return repository.findAll().stream().sorted(Comparator.comparing(msg -> msg.createdOn)).toList();
     }
 
     public Optional<ChatMessage> getChatMessageById(String id) {

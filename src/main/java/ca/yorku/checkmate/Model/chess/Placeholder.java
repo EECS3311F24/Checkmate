@@ -2,7 +2,7 @@ package ca.yorku.checkmate.Model.chess;
 
 import ca.yorku.checkmate.Model.chess.chesspieces.ChessPiece;
 
-public class Placeholder {
+public class Placeholder implements Cloneable {
     private char piece;
     private ChessPiece chessPiece;
 
@@ -26,4 +26,11 @@ public class Placeholder {
         this.chessPiece = null;
         this.piece = ' ';
     }
+
+    @Override
+    public Placeholder clone() {
+        if(this.chessPiece == null){return new Placeholder();}
+        else return new Placeholder(this.chessPiece.clone());
+    }
+
 }

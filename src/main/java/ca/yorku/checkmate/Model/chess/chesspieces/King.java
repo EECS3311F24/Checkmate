@@ -54,4 +54,9 @@ public class King extends ChessPiece {
     public List<Move> listOfAllMoves() {
         return this.listOfShortestMoves();
     }
+
+    @Override
+    public ChessPiece clone() {
+        return new King(color);
+    }
 }

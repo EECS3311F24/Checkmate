@@ -20,7 +20,6 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/boards")
 public class ChessBoardController {
-    // TODO need a getMoves possible for a chess pieces ?
     private final ChessBoardService service;
 
     @Autowired
@@ -97,7 +96,10 @@ public class ChessBoardController {
      * with Http status 201 if created or 409 if not created.
      */
     @PostMapping
-    public ResponseEntity<ChessBoardDB> createChessBoard(@RequestParam(name = "id1") String player1Id, @RequestParam(name = "id2", required = false) String player2Id, @RequestParam(name = "mode") String mode) {
+    public ResponseEntity<ChessBoardDB> createChessBoard(@RequestParam(name = "id1") String player1Id, @RequestParam(name = "id2", required = false) String player2Id, @RequestParam(name = "mode", required = false) String mode) {
+        if (mode == null) mode = String.valueOf(Chess.standard);
+        if (mode.charAt(0) != Chess.standard || mode.charAt(0) != Chess.noPawns || mode.charAt(0) != Chess.pawnsGame)
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         ChessBoardDB chessBoard = new ChessBoardDB(new Chess(mode.charAt(0)), player1Id, player2Id, mode.charAt(0));
         if (!service.createChessBoard(chessBoard)) return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(chessBoard, HttpStatus.CREATED);

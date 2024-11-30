@@ -39,12 +39,22 @@ public class ChessBoard {
         }
         for(ChessPiece cp: removeWhite) {
             if(this.whitePieces.contains(cp)) {
+
+
                 this.whitePieces.remove(cp);
                 this.board[cp.getMovesHistory().get(0).row()][cp.getMovesHistory().get(0).col()] = new Placeholder();
             }
         }
     }
-
+    public Placeholder[][] cloneBoard(){
+        Placeholder[][] res = new Placeholder[dimensions][dimensions];
+        for(int i = 0; i < dimensions; i++) {
+            for(int j = 0; j < dimensions; j++) {
+                res[i][j] = this.board[i][j].clone();
+            }
+        }
+        return res;
+    }
     private void initializeBoard(char mode) {
         if(mode == Chess.standard || mode == Chess.noPawns) {
             //place blank spaces
@@ -526,5 +536,12 @@ public class ChessBoard {
         ChessPiece p = cb.board[6][4].getChessPiece();
         Move to0 = new Move(4, 4);
         cb.move(p, to0, 'W', false);
+    }
+
+    public void rewind() {
+
+    }
+
+    public void fastForward() {
     }
 }

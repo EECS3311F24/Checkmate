@@ -105,4 +105,9 @@ public class Bishop extends ChessPiece {
         }
         return list;
     }
+
+    @Override
+    public ChessPiece clone() {
+        return new Bishop(this.color);
+    }
 }

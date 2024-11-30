@@ -51,5 +51,10 @@ public class Knight extends ChessPiece {
         return this.listOfShortestMoves();
     }
 
+    @Override
+    public ChessPiece clone() {
+        return new Knight(color);
+    }
+
 
 }

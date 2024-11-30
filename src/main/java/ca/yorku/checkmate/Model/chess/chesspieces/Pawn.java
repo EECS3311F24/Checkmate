@@ -103,4 +103,9 @@ public class Pawn extends ChessPiece {
         }
         return list;
     }
+
+    @Override
+    public ChessPiece clone() {
+        return new Pawn(color);
+    }
 }

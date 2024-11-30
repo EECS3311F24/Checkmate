@@ -11,6 +11,7 @@ public class Chess {
     private Player playerWhite;
     private Player playerBlack;
     private int numMoves = 0;
+    private List<Placeholder[][]>gameHistory = new ArrayList<>();
     private ChessBoard cb;
     private boolean draw;
     public static final char custom = 'C';
@@ -24,6 +25,7 @@ public class Chess {
         this.playerWhite = new Player(ChessBoard.white);
         this.playerBlack = new Player(ChessBoard.black);
         this.whosTurn = this.playerWhite;
+        this.gameHistory.add(this.cb.cloneBoard());
     }
 
     public Chess(char mode) {
@@ -31,6 +33,7 @@ public class Chess {
         this.playerWhite = new Player(ChessBoard.white);
         this.playerBlack = new Player(ChessBoard.black);
         this.whosTurn = this.playerWhite;
+        this.gameHistory.add(this.cb.cloneBoard());
     }
 
     public Chess(Player playerW, Player playerB) {
@@ -38,25 +41,38 @@ public class Chess {
         this.playerWhite = playerW;
         this.playerBlack = playerB;
         this.whosTurn = this.playerWhite;
+        this.gameHistory.add(this.cb.cloneBoard());
     }
 
     public Chess(Player playerW, Player playerB, char mode, List<ChessPiece> removeBlacks, List<ChessPiece> removeWhites) {
         this.playerWhite = playerW;
         this.playerBlack = playerB;
         this.whosTurn = this.playerWhite;
-        if(mode==Chess.custom) this.cb = new ChessBoard(removeBlacks, removeWhites);
-        else this.cb = new ChessBoard(mode);
+        if(mode==Chess.custom) {
+            this.cb = new ChessBoard(removeBlacks, removeWhites);
+            this.gameHistory.add(this.cb.cloneBoard());
+        }
+        else {
+            this.cb = new ChessBoard(mode);
+            this.gameHistory.add(this.cb.cloneBoard());
+        }
     }
 
     public boolean move(int row, int col, ChessPiece cp) {
         boolean moved = false;
-        if(this.cb.move(cp, new Move(row, col), this.whosTurn.playerColor(), false)) {
+        Move move = new Move(row, col);
+        if(this.cb.move(cp, move, this.whosTurn.playerColor(), false)) {
             moved = true;
             this.numMoves++;
+            this.gameHistory.add(this.cb.cloneBoard());
             this.whosTurn = this.getOtherPlayer(this.whosTurn);
         }
         return moved;
     }
+    public Placeholder[][] getGameState(int n) {
+        return this.gameHistory.get(n);
+    }
+
     private Player getOtherPlayer(Player p) {
         if(p.equals(this.playerWhite)) return this.playerBlack;
         else return this.playerWhite;
@@ -101,4 +117,66 @@ public class Chess {
             return this.cb.getBoard()[row][col].getChessPiece();
         }
     }
+
+//    public static void main(String args[]) {
+//        Chess c = new Chess();
+//        Move move0 = new Move(6, 0);
+//        Move move1 = new Move(4, 0);
+//        c.move(move1.row(), move1.col(), c.cb.getBoard()[move0.row()][move0.col()].getChessPiece());
+//        System.out.println("Current game state: /n");
+//        System.out.println(c.getChessBoard().toString());
+//        System.out.println("Game history state1: /n");
+//        c.printHelper(c.getGameState(1));
+//        System.out.println("Game history state0: /n");
+//        c.printHelper(c.getGameState(0));
+//
+//        Move move2 = new Move(1, 1);
+//        Move move3 = new Move(3, 1);
+//        c.move(move3.row(), move3.col(), c.cb.getBoard()[move2.row()][move2.col()].getChessPiece());
+//        System.out.println("Current game state: /n");
+//        System.out.println(c.getChessBoard().toString());
+//        System.out.println("Game history state2: /n");
+//        c.printHelper(c.getGameState(2));
+//        System.out.println("Game history state1: /n");
+//        c.printHelper(c.getGameState(1));
+//        System.out.println("Game history state0: /n");
+//        c.printHelper(c.getGameState(0));
+//
+//        System.out.println("Current game state: /n");
+//        System.out.println(c.getChessBoard().toString());    }
+//
+//    private void printHelper(Placeholder[][]board){
+//        String s = "";
+//        s += "  ";
+//        for (int col = 0; col < 8; col++) {
+//            s += col + " ";
+//        }
+//        s += '\n';
+//
+//        s += " +";
+//        for (int col = 0; col < 8; col++) {
+//            s += "-+";
+//        }
+//        s += '\n';
+//
+//        for (int row = 0; row < 8; row++) {
+//            s += row + "|";
+//            for (int col = 0; col < 8; col++) {
+//                s += board[row][col].getChar() + "|";
+//            }
+//            s += row + "\n";
+//
+//            s += " +";
+//            for (int col = 0; col < 8; col++) {
+//                s += "-+";
+//            }
+//            s += '\n';
+//        }
+//        s += "  ";
+//        for (int col = 0; col < 8; col++) {
+//            s += col + " ";
+//        }
+//        s += '\n';
+//        System.out.println(s);
+//    }
 }

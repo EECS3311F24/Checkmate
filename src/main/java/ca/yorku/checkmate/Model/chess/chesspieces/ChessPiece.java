@@ -5,7 +5,7 @@ import ca.yorku.checkmate.Model.chess.Move;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ChessPiece {
+public abstract class ChessPiece implements Cloneable {
     char color;
     char symbol;
     List<Move> movesHistory;
@@ -32,4 +32,7 @@ public abstract class ChessPiece {
     public abstract List<Move> listOfShortestMoves();
 
     public abstract List<Move> listOfAllMoves();
+
+    @Override
+    public abstract ChessPiece clone();
 }

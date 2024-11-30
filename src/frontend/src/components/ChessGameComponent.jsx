@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { startGuestGame, move, getBoard, deleteBoard } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 import { useTheme } from './ThemeProvider';
+
 import './chess.css';
 
 const ChessGame = () => {
@@ -204,6 +205,15 @@ const ChessGame = () => {
   const navigator = useNavigate();
   async function quitGame(id) {
     try {
+
+      // Save game result before deleting
+    await saveGameResult({
+      id: gameState.id,
+      endTime: new Date(),
+      result: gameStatus || 'Quit',
+      winner: gameState.status ? gameState.status.includes('BLACK') ? 'BLACK' : 'WHITE' : null
+    });
+
       const response = await deleteBoard(id);
     } catch (error) { console.error(error) }
     setGameState(prev => ({
@@ -230,6 +240,14 @@ const ChessGame = () => {
   async function handleStartGame() {
     try {
       const response = await startGuestGame(isCustomMode ? mode : 'S');
+    
+      await saveGameResult({
+        id: response.data.id,
+        mode: isCustomMode ? mode : 'S',
+        startTime: new Date(),
+        timerMode: isTimerMode
+      });
+
       setIsFirstMoveMade(false); // Reset first move state
       setGameState(prev => ({
         ...prev,

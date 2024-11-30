@@ -537,11 +537,4 @@ public class ChessBoard {
         Move to0 = new Move(4, 4);
         cb.move(p, to0, 'W', false);
     }
-
-    public void rewind() {
-
-    }
-
-    public void fastForward() {
-    }
 }

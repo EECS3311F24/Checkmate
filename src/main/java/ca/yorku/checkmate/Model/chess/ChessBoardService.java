@@ -101,8 +101,20 @@ public class ChessBoardService {
         if (piece == null) return false;
         if (whosTurn.playerColor() != piece.getColor()) return false;
         boolean moved = chessBoard.chess.move(moves.end().row(), moves.end().col(), piece);
+        if (moved) updatePlayerPieces(chessBoard.chess.getChessBoard(), piece);
         repository.save(chessBoard);
         return moved;
+    }
+
+    private void updatePlayerPieces(ChessBoard chessBoard, ChessPiece piece) {
+        List<ChessPiece> pieces = piece.getColor() == ChessBoard.white ? chessBoard.getWhitePieces() : chessBoard.getBlackPieces();
+        pieces.forEach(chessPiece -> {
+            List<Move> history = chessPiece.getMovesHistory();
+            if (history.isEmpty())return;
+            if (history.get(0).equals(piece.getMovesHistory().get(0))) {
+                history.addAll(piece.getMovesHistory().stream().filter(move -> !history.contains(move)).toList());
+            }
+        });
     }
 
     public void deleteChessBoard(ChessBoardDB chessBoard) {

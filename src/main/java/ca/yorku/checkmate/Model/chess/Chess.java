@@ -50,12 +50,11 @@ public class Chess {
         this.whosTurn = this.playerWhite;
         if(mode==Chess.custom) {
             this.cb = new ChessBoard(removeBlacks, removeWhites);
-            this.addGameHistory(this.cb.cloneBoard());
         }
         else {
             this.cb = new ChessBoard(mode);
-            this.addGameHistory(this.cb.cloneBoard());
         }
+        this.addGameHistory(this.cb.cloneBoard());
     }
 
     public boolean move(int row, int col, ChessPiece cp) {

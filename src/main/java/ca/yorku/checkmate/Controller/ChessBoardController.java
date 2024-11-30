@@ -98,7 +98,7 @@ public class ChessBoardController {
     @PostMapping
     public ResponseEntity<ChessBoardDB> createChessBoard(@RequestParam(name = "id1") String player1Id, @RequestParam(name = "id2", required = false) String player2Id, @RequestParam(name = "mode", required = false) String mode) {
         if (mode == null) mode = String.valueOf(Chess.standard);
-        if (mode.charAt(0) != Chess.standard || mode.charAt(0) != Chess.noPawns || mode.charAt(0) != Chess.pawnsGame)
+        if (mode.charAt(0) != Chess.standard && mode.charAt(0) != Chess.noPawns && mode.charAt(0) != Chess.pawnsGame)
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         ChessBoardDB chessBoard = new ChessBoardDB(new Chess(mode.charAt(0)), player1Id, player2Id, mode.charAt(0));
         if (!service.createChessBoard(chessBoard)) return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -132,7 +132,7 @@ public class ChessBoardController {
      * with Http status 200 if joined or 409 if not joined or 404 if no user found.
      */
     @PutMapping
-    public ResponseEntity<ChessBoardDB> joinBoard(HttpServletResponse response, @CookieValue(name = "userId", required = false) String userId, @RequestParam(name = "mode") String mode) {
+    public ResponseEntity<ChessBoardDB> joinBoard(HttpServletResponse response, @CookieValue(name = "userId", required = false) String userId, @RequestParam(name = "mode", required = false) String mode) {
         if (userId == null || !service.getUserController().getUserById(userId).getStatusCode().is2xxSuccessful()) {
             User user = service.getUserController().createUser(response, new User()).getBody();
             if (user == null) return new ResponseEntity<>(HttpStatus.CONFLICT);

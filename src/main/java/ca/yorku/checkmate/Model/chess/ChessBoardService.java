@@ -73,7 +73,6 @@ public class ChessBoardService {
 
     public boolean moveChessPiece(ChessBoardDB chessBoard, String userId, Moves moves) {
         if (chessBoard.chess.isGameOver()) {
-            // TODO check for draw?
             String id = chessBoard.chess.getWinner().playerColor() == ChessBoard.white ? chessBoard.player1Id : chessBoard.player2Id;
             if (id != null) {
                 ResponseEntity<UserData> response = userController.getUserData(id);

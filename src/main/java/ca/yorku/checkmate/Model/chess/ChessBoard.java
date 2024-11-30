@@ -285,7 +285,7 @@ public class ChessBoard {
         return result;
     }
 
-    private void checkCheckMate(char playerColor) {
+    public void checkCheckMate(char playerColor) {
         List<ChessPiece> pieces = playerColor == ChessBoard.white ? this.whitePieces : this.blackPieces;
         for (ChessPiece cp : pieces) {
             for (Move move : cp.listOfAllMoves()) {

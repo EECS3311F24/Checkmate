@@ -117,6 +117,7 @@ public class ChessBoardService {
                 otherPieces.removeIf(otherPiece -> otherPiece.getMovesHistory().get(otherPiece.getMovesHistory().size() - 1).equals(piece.getMovesHistory().get(piece.getMovesHistory().size() - 1)));
             }
         });
+        chessBoard.checkCheckMate(ChessBoard.getOtherPlayerColor(piece.getColor()));
     }
 
     public void deleteChessBoard(ChessBoardDB chessBoard) {

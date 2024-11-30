@@ -113,6 +113,8 @@ public class ChessBoardService {
             if (history.isEmpty())return;
             if (history.get(0).equals(piece.getMovesHistory().get(0))) {
                 history.addAll(piece.getMovesHistory().stream().filter(move -> !history.contains(move)).toList());
+                List<ChessPiece> otherPieces = piece.getColor() == ChessBoard.black ? chessBoard.getWhitePieces() : chessBoard.getBlackPieces();
+                otherPieces.removeIf(otherPiece -> otherPiece.getMovesHistory().get(otherPiece.getMovesHistory().size() - 1).equals(piece.getMovesHistory().get(piece.getMovesHistory().size() - 1)));
             }
         });
     }

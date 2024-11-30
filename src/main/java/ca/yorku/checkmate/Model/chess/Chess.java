@@ -33,7 +33,7 @@ public class Chess {
         this.playerWhite = new Player(ChessBoard.white);
         this.playerBlack = new Player(ChessBoard.black);
         this.whosTurn = this.playerWhite;
-        this.gameHistory.add(this.cb.cloneBoard());
+        this.addGameHistory(this.cb.cloneBoard());
     }
 
     public Chess(Player playerW, Player playerB) {
@@ -41,7 +41,7 @@ public class Chess {
         this.playerWhite = playerW;
         this.playerBlack = playerB;
         this.whosTurn = this.playerWhite;
-        this.gameHistory.add(this.cb.cloneBoard());
+        this.addGameHistory(this.cb.cloneBoard());
     }
 
     public Chess(Player playerW, Player playerB, char mode, List<ChessPiece> removeBlacks, List<ChessPiece> removeWhites) {
@@ -50,11 +50,11 @@ public class Chess {
         this.whosTurn = this.playerWhite;
         if(mode==Chess.custom) {
             this.cb = new ChessBoard(removeBlacks, removeWhites);
-            this.gameHistory.add(this.cb.cloneBoard());
+            this.addGameHistory(this.cb.cloneBoard());
         }
         else {
             this.cb = new ChessBoard(mode);
-            this.gameHistory.add(this.cb.cloneBoard());
+            this.addGameHistory(this.cb.cloneBoard());
         }
     }
 
@@ -64,7 +64,7 @@ public class Chess {
         if(this.cb.move(cp, move, this.whosTurn.playerColor(), false)) {
             moved = true;
             this.numMoves++;
-            this.gameHistory.add(this.cb.cloneBoard());
+            this.addGameHistory(this.cb.cloneBoard());
             this.whosTurn = this.getOtherPlayer(this.whosTurn);
         }
         return moved;

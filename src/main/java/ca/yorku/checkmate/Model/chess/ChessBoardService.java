@@ -73,7 +73,6 @@ public class ChessBoardService {
 
     public boolean moveChessPiece(ChessBoardDB chessBoard, String userId, Moves moves) {
         if (chessBoard.chess.isGameOver()) {
-            // TODO check for draw?
             String id = chessBoard.chess.getWinner().playerColor() == ChessBoard.white ? chessBoard.player1Id : chessBoard.player2Id;
             if (id != null) {
                 ResponseEntity<UserData> response = userController.getUserData(id);
@@ -102,8 +101,23 @@ public class ChessBoardService {
         if (piece == null) return false;
         if (whosTurn.playerColor() != piece.getColor()) return false;
         boolean moved = chessBoard.chess.move(moves.end().row(), moves.end().col(), piece);
+        if (moved) updatePlayerPieces(chessBoard.chess.getChessBoard(), piece);
         repository.save(chessBoard);
         return moved;
+    }
+
+    private void updatePlayerPieces(ChessBoard chessBoard, ChessPiece piece) {
+        List<ChessPiece> pieces = piece.getColor() == ChessBoard.white ? chessBoard.getWhitePieces() : chessBoard.getBlackPieces();
+        pieces.forEach(chessPiece -> {
+            List<Move> history = chessPiece.getMovesHistory();
+            if (history.isEmpty())return;
+            if (history.get(0).equals(piece.getMovesHistory().get(0))) {
+                history.addAll(piece.getMovesHistory().stream().filter(move -> !history.contains(move)).toList());
+                List<ChessPiece> otherPieces = piece.getColor() == ChessBoard.black ? chessBoard.getWhitePieces() : chessBoard.getBlackPieces();
+                otherPieces.removeIf(otherPiece -> otherPiece.getMovesHistory().get(otherPiece.getMovesHistory().size() - 1).equals(piece.getMovesHistory().get(piece.getMovesHistory().size() - 1)));
+            }
+        });
+        chessBoard.checkCheckMate(ChessBoard.getOtherPlayerColor(piece.getColor()));
     }
 
     public void deleteChessBoard(ChessBoardDB chessBoard) {

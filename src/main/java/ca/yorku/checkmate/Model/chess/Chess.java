@@ -120,65 +120,65 @@ public class Chess {
         }
     }
 
-//    public static void main(String args[]) {
-//        Chess c = new Chess();
-//        Move move0 = new Move(6, 0);
-//        Move move1 = new Move(4, 0);
-//        c.move(move1.row(), move1.col(), c.cb.getBoard()[move0.row()][move0.col()].getChessPiece());
-//        System.out.println("Current game state: /n");
-//        System.out.println(c.getChessBoard().toString());
-//        System.out.println("Game history state1: /n");
-//        c.printHelper(c.getGameState(1));
-//        System.out.println("Game history state0: /n");
-//        c.printHelper(c.getGameState(0));
-//
-//        Move move2 = new Move(1, 1);
-//        Move move3 = new Move(3, 1);
-//        c.move(move3.row(), move3.col(), c.cb.getBoard()[move2.row()][move2.col()].getChessPiece());
-//        System.out.println("Current game state: /n");
-//        System.out.println(c.getChessBoard().toString());
-//        System.out.println("Game history state2: /n");
-//        c.printHelper(c.getGameState(2));
-//        System.out.println("Game history state1: /n");
-//        c.printHelper(c.getGameState(1));
-//        System.out.println("Game history state0: /n");
-//        c.printHelper(c.getGameState(0));
-//
-//        System.out.println("Current game state: /n");
-//        System.out.println(c.getChessBoard().toString());    }
-//
-//    private void printHelper(Placeholder[][]board){
-//        String s = "";
-//        s += "  ";
-//        for (int col = 0; col < 8; col++) {
-//            s += col + " ";
-//        }
-//        s += '\n';
-//
-//        s += " +";
-//        for (int col = 0; col < 8; col++) {
-//            s += "-+";
-//        }
-//        s += '\n';
-//
-//        for (int row = 0; row < 8; row++) {
-//            s += row + "|";
-//            for (int col = 0; col < 8; col++) {
-//                s += board[row][col].getChar() + "|";
-//            }
-//            s += row + "\n";
-//
-//            s += " +";
-//            for (int col = 0; col < 8; col++) {
-//                s += "-+";
-//            }
-//            s += '\n';
-//        }
-//        s += "  ";
-//        for (int col = 0; col < 8; col++) {
-//            s += col + " ";
-//        }
-//        s += '\n';
-//        System.out.println(s);
-//    }
+    public static void main(String args[]) {
+        Chess c = new Chess();
+        Move move0 = new Move(6, 0);
+        Move move1 = new Move(4, 0);
+        c.move(move1.row(), move1.col(), c.cb.getBoard()[move0.row()][move0.col()].getChessPiece());
+        System.out.println("Current game state: /n");
+        System.out.println(c.getChessBoard().toString());
+        System.out.println("Game history state1: /n");
+        c.printHelper(c.getGameState(1));
+        System.out.println("Game history state0: /n");
+        c.printHelper(c.getGameState(0));
+
+        Move move2 = new Move(1, 1);
+        Move move3 = new Move(3, 1);
+        c.move(move3.row(), move3.col(), c.cb.getBoard()[move2.row()][move2.col()].getChessPiece());
+        System.out.println("Current game state: /n");
+        System.out.println(c.getChessBoard().toString());
+        System.out.println("Game history state2: /n");
+        c.printHelper(c.getGameState(2));
+        System.out.println("Game history state1: /n");
+        c.printHelper(c.getGameState(1));
+        System.out.println("Game history state0: /n");
+        c.printHelper(c.getGameState(0));
+
+        System.out.println("Current game state: /n");
+        System.out.println(c.getChessBoard().toString());    }
+
+    private void printHelper(Placeholder[][]board){
+        String s = "";
+        s += "  ";
+        for (int col = 0; col < 8; col++) {
+            s += col + " ";
+        }
+        s += '\n';
+
+        s += " +";
+        for (int col = 0; col < 8; col++) {
+            s += "-+";
+        }
+        s += '\n';
+
+        for (int row = 0; row < 8; row++) {
+            s += row + "|";
+            for (int col = 0; col < 8; col++) {
+                s += board[row][col].getChar() + "|";
+            }
+            s += row + "\n";
+
+            s += " +";
+            for (int col = 0; col < 8; col++) {
+                s += "-+";
+            }
+            s += '\n';
+        }
+        s += "  ";
+        for (int col = 0; col < 8; col++) {
+            s += col + " ";
+        }
+        s += '\n';
+        System.out.println(s);
+    }
 }

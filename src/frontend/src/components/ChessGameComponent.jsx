@@ -9,7 +9,7 @@ import './chess.css';
 const ChessGame = () => {
   const { language } = useLanguage();
   const { theme } = useTheme();
-  const [ mode, setMode ] = useState('S');
+  const [mode, setMode] = useState('S');
   const [isTimerMode, setIsTimerMode] = useState(false);
   const [isCustomMode, setIsCustomMode] = useState(false);
   const [timeLimit, setTimeLimit] = useState(300);
@@ -24,7 +24,7 @@ const ChessGame = () => {
   const [isReplaying, setIsReplaying] = useState(false);
 
   const fetchChessBoard = async () => {
-    if (gameState !== null && !gameState.isGameStarted) return;
+    if (gameState !== null && (!gameState.isGameStarted || gameState.isGameOver)) return;
     const res = await getBoard(gameState.id);
     updateBoard(res?.data);
     return res?.data;
@@ -59,8 +59,9 @@ const ChessGame = () => {
     chess: null,
     board: initializeBoard(),
     isGameStarted: false,
+    isGameOver: false,
+    winner: null,
     selectedPiece: null,
-    possibleMoves: [],
     error: null,
     currentPlayer: 'WHITE',
     capturedPieces: {
@@ -144,9 +145,11 @@ const ChessGame = () => {
     const fetchGameHistory = async () => {
       try {
         const response = await getGameHistory();
-        setGameHistory(response.data || []);
+        // Ensure response.data is an array, or default to an empty array
+        setGameHistory(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error('Error fetching game history:', error);
+        setGameHistory([]); // Set to empty array on error
       }
     };
     fetchGameHistory();
@@ -199,7 +202,9 @@ const ChessGame = () => {
         ...prev,
         chess: data.chess,
         board: convertBoard(data.chess.chessBoard.board),
-        currentPlayer: convertColor(data.chess.whosTurn.playerColor)
+        currentPlayer: convertColor(data.chess.whosTurn.playerColor),
+        isGameOver: data.chess.gameOver,
+        winner: data.chess.gameOver ? convertColor(data.chess.winner.playerColor) : null,
         //capturedPieces: convertCapturedPieces(response.data.chess.chessBoard.capturedPieces)
       }));
     }
@@ -219,8 +224,15 @@ const ChessGame = () => {
   };
 
   const navigator = useNavigate();
+
   async function quitGame(id) {
     try {
+      await saveGameResult({
+        id: gameState.id,
+        endTime: new Date(),
+        result: gameStatus || 'Quit',
+        winner: gameState.status ? gameState.status.includes('BLACK') ? 'BLACK' : 'WHITE' : null
+      });
       const response = await deleteBoard(id);
     } catch (error) { console.error(error) }
     setGameState(prev => ({
@@ -231,8 +243,9 @@ const ChessGame = () => {
       chess: null,
       board: initializeBoard(),
       isGameStarted: false,
+      isGameOver: false,
+      winner: null,
       selectedPiece: null,
-      possibleMoves: [],
       error: null,
       currentPlayer: 'WHITE',
       capturedPieces: {
@@ -247,6 +260,14 @@ const ChessGame = () => {
   async function handleStartGame() {
     try {
       const response = await startGuestGame(isCustomMode ? mode : 'S');
+
+      await saveGameResult({
+        id: response.data.id,
+        mode: isCustomMode ? mode : 'S',
+        startTime: new Date(),
+        timerMode: isTimerMode
+      });
+      
       setIsFirstMoveMade(false); // Reset first move state
       setGameState(prev => ({
         ...prev,
@@ -275,7 +296,7 @@ const ChessGame = () => {
 
   async function handleSquareClick(row, col) {
     // TODO start game when there are two players, eg id1 and id2 are not null
-    if (!gameState.isGameStarted) return;
+    if (!(gameState.isGameStarted && !gameState.isGameOver)) return;
     const piece = gameState.board[row][col];
     if (piece && gameState.currentPlayer === piece.color) {
       setGameState(prev => ({
@@ -283,7 +304,6 @@ const ChessGame = () => {
         selectedPiece: { row, col }
       }));
     } else if (gameState.selectedPiece) {
-      // TODO request list of possible moves, rather then calling move each time and seeing if it works
       var moves = { start: { row: gameState.selectedPiece.row, col: gameState.selectedPiece.col }, end: { row: row, col: col } };
       await move(gameState.id, moves)
         .then(response => {
@@ -436,12 +456,14 @@ const ChessGame = () => {
         ) : (
           <div>
             <div className="container text-center">
-              {<button className='btn btn-danger' onClick={() => quitGame(gameState.id)}>{getTranslation("ChessGameComponentQuit", language)}</button>}
             </div>
             <div className="chess-current-player" style={cardStyle}>
               {getTranslation("ChessGameComponentCurrentPlayer", language)}
               {(gameState.currentPlayer === 'WHITE' ? getTranslation("ChessGameComponentWhite", language)
                 : getTranslation("ChessGameComponentBlack", language))}
+              {gameState.isGameOver && <div className="chess-status-banner">
+                {gameState.winner + " is the winner!"}
+              </div>}
             </div>
 
             {isTimerMode && (
@@ -562,6 +584,7 @@ const ChessGame = () => {
               ))}
             </div>
           </div>
+          
         )}
       </div>
     </div>

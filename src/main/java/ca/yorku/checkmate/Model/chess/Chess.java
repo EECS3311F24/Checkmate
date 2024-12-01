@@ -81,6 +81,12 @@ public class Chess {
         return this.whosTurn;
     }
 
+<<<<<<< Updated upstream
+=======
+    public void addGameHistory(Placeholder[][] board) {
+        this.gameHistory.add(board);
+    }
+>>>>>>> Stashed changes
     public ChessBoard getChessBoard() {
         return this.cb;
     }

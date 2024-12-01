@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { startGuestGame, move, getBoard, deleteBoard } from '../services/ChessService';
+import { startGuestGame, move, getBoard, deleteBoard, getGameReplay, getGameHistory } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 import { useTheme } from './ThemeProvider';
 import './chess.css';
@@ -23,6 +23,7 @@ const ChessGame = () => {
   const [selectedGame, setSelectedGame] = useState(null);
   const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
   const [isReplaying, setIsReplaying] = useState(false);
+  const [replayBoard, setReplayBoard] = useState(null);
 
   const fetchChessBoard = async () => {
     if (gameState !== null && (!gameState.isGameStarted || gameState.isGameOver)) return;
@@ -142,20 +143,6 @@ const ChessGame = () => {
     }
   }, [playerTimes, gameState.currentPlayer]);
 
-/*
-// This endpoints does not exist
-  useEffect(() => {
-    const fetchGameHistory = async () => {
-      try {
-        const response = await getGameHistory();
-        setGameHistory(response.data || []);
-      } catch (error) {
-        console.error('Error fetching game history:', error);
-      }
-    };
-    fetchGameHistory();
-  }, []); */
-
   function convertCapturedPieces(captured) {
     var white = [];
     var black = [];
@@ -226,17 +213,9 @@ const ChessGame = () => {
 
   const navigator = useNavigate();
   async function quitGame(id) {
-    /*
-    // End point does not exist
     try {
-      await saveGameResult({
-        id: gameState.id,
-        endTime: new Date(),
-        result: gameStatus || 'Quit',
-        winner: gameState.status ? gameState.status.includes('BLACK') ? 'BLACK' : 'WHITE' : null
-      });
-    } catch (error) { console.error(error) } */
-    const response = await deleteBoard(id);
+      const response = await deleteBoard(id);
+    } catch (error) { console.error(error) }
     setGameState(prev => ({
       ...prev,
       id: null,
@@ -262,15 +241,6 @@ const ChessGame = () => {
   async function handleStartGame() {
     try {
       const response = await startGuestGame(isCustomMode ? mode : 'S');
-
-/*
-      await saveGameResult({
-        id: response.data.id,
-        mode: isCustomMode ? mode : 'S',
-        startTime: new Date(),
-        timerMode: isTimerMode
-      });*/
-
       setIsFirstMoveMade(false); // Reset first move state
       setGameState(prev => ({
         ...prev,
@@ -296,6 +266,81 @@ const ChessGame = () => {
       }));
     }
   };
+  // Updated replay functionality
+  const handleSelectGame = async (gameId) => {
+    try {
+      const response = await getGameReplay(gameId);
+      const moves = response.data.moves || [];
+      setReplayMoves(moves);
+      setSelectedGame(gameId);
+      setCurrentMoveIndex(0);
+      setIsReplaying(true);
+
+      // Initialize replay board with the starting board configuration
+      const initialBoard = initializeBoard();
+      setReplayBoard(initialBoard);
+    } catch (error) {
+      console.error('Error fetching replay moves:', error);
+    }
+  };
+
+  const handleNextMove = () => {
+    if (currentMoveIndex < replayMoves.length - 1) {
+      const nextMove = replayMoves[currentMoveIndex + 1];
+      updateBoardForReplay(nextMove);
+      setCurrentMoveIndex(currentMoveIndex + 1);
+    }
+  };
+
+  const handlePreviousMove = () => {
+    if (currentMoveIndex > 0) {
+      const previousMove = replayMoves[currentMoveIndex - 1];
+      updateBoardForReplay(previousMove, true);
+      setCurrentMoveIndex(currentMoveIndex - 1);
+    }
+  };
+
+  const updateBoardForReplay = (move, isReversing = false) => {
+    if (!move) return;
+
+    // Create a copy of the current replay board
+    const newBoard = replayBoard.map(row => [...row]);
+
+    // Determine start and end positions
+    const startRow = move.start.row;
+    const startCol = move.start.col;
+    const endRow = move.end.row;
+    const endCol = move.end.col;
+
+    // Move the piece
+    const piece = newBoard[startRow][startCol];
+    newBoard[startRow][startCol] = null;
+
+    if (isReversing) {
+      // If reversing, restore the board to previous state
+      newBoard[startRow][startCol] = piece;
+      if (move.capturedPiece) {
+        newBoard[endRow][endCol] = move.capturedPiece;
+      }
+    } else {
+      // If moving forward, update the board
+      newBoard[endRow][endCol] = piece;
+    }
+
+    setReplayBoard(newBoard);
+  };
+  // Fetch game history on component mount
+  useEffect(() => {
+    const fetchGameHistory = async () => {
+      try {
+        const response = await getGameHistory();
+        setGameHistory(response.data);
+      } catch (error) {
+        console.error('Error fetching game history:', error);
+      }
+    };
+    fetchGameHistory();
+  }, []);
 
   async function handleSquareClick(row, col) {
     // TODO start game when there are two players, eg id1 and id2 are not null
@@ -359,38 +404,6 @@ const ChessGame = () => {
     }
   };
 
-// Replay Functionality
-  const handleSelectGame = async (gameId) => {
-    try {
-      const response = await getGameReplay(gameId);
-      setReplayMoves(response.data.moves || []);
-      setSelectedGame(gameId);
-      setCurrentMoveIndex(0);
-      setIsReplaying(true);
-    } catch (error) {
-      console.error('Error fetching replay moves:', error);
-    }
-  };
-
-  const handleNextMove = () => {
-    if (currentMoveIndex < replayMoves.length - 1) {
-      setCurrentMoveIndex(currentMoveIndex + 1);
-      updateBoardForReplay(replayMoves[currentMoveIndex + 1]);
-    }
-  };
-
-  const handlePreviousMove = () => {
-    if (currentMoveIndex > 0) {
-      setCurrentMoveIndex(currentMoveIndex - 1);
-      updateBoardForReplay(replayMoves[currentMoveIndex - 1]);
-    }
-  };
-
-  const updateBoardForReplay = (move) => {
-    // Logic to update the board for the replay
-    console.log('Replaying move:', move);
-  };
-
   const headerStyle = theme === 'dark' ? { color: '#ffffff' } : theme === 'solarized' ? { color: '#00008b' } : { color: '#000000' };
   const cardStyle = theme === 'dark' ? { backgroundColor: '#333333', color: '#ffffff' } : theme === 'solarized' ? { backgroundColor: '#f0f8ff', color: '#000000' } : { backgroundColor: '#ffffff', color: '#000000' };
 
@@ -412,7 +425,6 @@ const ChessGame = () => {
         )}
         {!gameState.isGameStarted ? (
           <div className="chess-controls welcome-screen">
-
             <button
               className="chess-button"
               onClick={handleStartGame}
@@ -461,70 +473,10 @@ const ChessGame = () => {
             <div className="container text-center">
               {<button className='btn btn-danger' onClick={() => quitGame(gameState.id)}>{getTranslation("ChessGameComponentQuit", language)}</button>}
             </div>
-            <div className="chess-container">
-               <div className="chess-header">
-                 <h2>{getTranslation('ChessGameComponentChessGame', language)}</h2>
-               </div>
-               <div className="chess-content">
-                 {!gameState.isGameStarted ? (
-                   <div className="chess-controls">
-                     <button onClick={handleStartGame}>Start Game</button>
-                     <button onClick={() => setIsTimerMode(!isTimerMode)}>
-                       {isTimerMode ? 'Disable Timer' : 'Enable Timer'}
-                     </button>
-                     {isTimerMode && (
-                       <select onChange={(e) => setTimeLimit(Number(e.target.value))} value={timeLimit}>
-                         <option value={60}>1 Minute</option>
-                         <option value={300}>5 Minutes</option>
-                       </select>
-                     )}
-                   </div>
-                 ) : (
-                   <>
-                     <div>
-                       <h3>Game in Progress</h3>
-                       <button onClick={quitGame}>Quit Game</button>
-                     </div>
-                     <div className="game-history">
-                       {!isReplaying ? (
-                         <>
-                           <h3>Game History</h3>
-                           <ul>
-                             {gameHistory.map((game, index) => (
-                               <li key={game.id}>
-                                 <button onClick={() => handleSelectGame(game.id)}>
-                                   Game {index + 1} - {game.date}
-                                 </button>
-                               </li>
-                             ))}
-                           </ul>
-                         </>
-                       ) : (
-                         <div>
-                           <h3>Replay Game</h3>
-                           <button onClick={handlePreviousMove} disabled={currentMoveIndex === 0}>
-                             Previous
-                           </button>
-                           <button
-                             onClick={handleNextMove}
-                             disabled={currentMoveIndex === replayMoves.length - 1}
-                           >
-                             Next
-                           </button>
-                         </div>
-                       )}
-                     </div>
-                   </>
-                 )}
-               </div>
-             </div>
             <div className="chess-current-player" style={cardStyle}>
               {getTranslation("ChessGameComponentCurrentPlayer", language)}
               {(gameState.currentPlayer === 'WHITE' ? getTranslation("ChessGameComponentWhite", language)
                 : getTranslation("ChessGameComponentBlack", language))}
-              {gameState.isGameOver && <div className="chess-status-banner">
-                {gameState.winner + " is the winner!"}
-              </div>}
             </div>
 
             {isTimerMode && (
@@ -537,61 +489,132 @@ const ChessGame = () => {
                 </div>
               </div>
             )}
-            {/*Captured pieces display*/}
+            {gameState.isGameStarted && (
+              <div className="game-history-section" style={cardStyle}>
+                {!isReplaying ? (
+                  <div className="game-history">
+                    <h3>{getTranslation("Game History", language)}</h3>
+                    {gameHistory.length > 0 ? (
+                      <ul>
+                        {gameHistory.map((game, index) => (
+                          <li key={game.id}>
+                            <button onClick={() => handleSelectGame(game.id)}>
+                              Game {index + 1} - {new Date(game.date).toLocaleString()}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>No game history available</p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="game-replay">
+                    <h3>{getTranslation("Game Replay", language)}</h3>
+                    <div className="replay-controls">
+                      <button
+                        onClick={handlePreviousMove}
+                        disabled={currentMoveIndex === 0}
+                      >
+                        Previous Move
+                      </button>
+                      <button
+                        onClick={handleNextMove}
+                        disabled={currentMoveIndex === replayMoves.length - 1}
+                      >
+                        Next Move
+                      </button>
+                      <button onClick={() => setIsReplaying(false)}>
+                        Exit Replay
+                      </button>
+                    </div>
 
-            <div className="chess-captured-pieces" style={cardStyle}>
-              <div className="captured-white">
-                {gameState.capturedPieces.WHITE.map((piece, index) => (
-                  <img
-                    key={index}
-                    src={pieceImages[piece.color][piece.type]}
-                    alt={`Captured ${piece.color} ${piece.type}`}
-                    className="captured-piece"
-                  />
-                ))}
-              </div>
-              <div className="captured-black">
-                {gameState.capturedPieces.BLACK.map((piece, index) => (
-                  <img
-                    key={index}
-                    src={pieceImages[piece.color][piece.type]}
-                    alt={`Captured ${piece.color} ${piece.type}`}
-                    className="captured-piece"
-                  />
-                ))}
-              </div>
-            </div>
+                    {replayBoard && (
+                      <div className="replay-board">
+                        {replayBoard.map((row, rowIndex) => (
+                          row.map((piece, colIndex) => (
+                            <div
+                              key={`${rowIndex}-${colIndex}`}
+                              className={`
+                          chess-square
+                          ${(rowIndex + colIndex) % 2 === 0 ? 'light' : 'dark'}
+                        `}
+                            >
+                              {piece && (
+                                <img
+                                  src={pieceImages[piece.color][piece.type]}
+                                  alt={`${piece.color} ${piece.type}`}
+                                  className="chess-piece"
+                                />
+                              )}
+                            </div>
+                          ))
+                        ))}
+                      </div>
+                    )}
+                    {/*Captured pieces display*/}
 
-            <div className="chess-board">
-              {gameState.board.map((row, rowIndex) => (
-                row.map((piece, colIndex) => (
-                  <div
-                    key={`${rowIndex}-${colIndex}`}
-                    onClick={() => handleSquareClick(rowIndex, colIndex)}
-                    className={`
+                    <div className="chess-captured-pieces" style={cardStyle}>
+                      <div className="captured-white">
+                        {gameState.capturedPieces.WHITE.map((piece, index) => (
+                          <img
+                            key={index}
+                            src={pieceImages[piece.color][piece.type]}
+                            alt={`Captured ${piece.color} ${piece.type}`}
+                            className="captured-piece"
+                          />
+                        ))}
+                      </div>
+                      <div className="captured-black">
+                        {gameState.capturedPieces.BLACK.map((piece, index) => (
+                          <img
+                            key={index}
+                            src={pieceImages[piece.color][piece.type]}
+                            alt={`Captured ${piece.color} ${piece.type}`}
+                            className="captured-piece"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div className="chess-board">
+                  {gameState.board.map((row, rowIndex) => (
+                    row.map((piece, colIndex) => (
+                      <div
+                        key={`${rowIndex}-${colIndex}`}
+                        onClick={() => handleSquareClick(rowIndex, colIndex)}
+                        className={`
                           chess-square
                           ${(rowIndex + colIndex) % 2 === 0 ? 'light' : 'dark'}
                           ${gameState.selectedPiece?.row === rowIndex &&
-                        gameState.selectedPiece?.col === colIndex ? 'selected' : ''}
+                            gameState.selectedPiece?.col === colIndex ? 'selected' : ''}
                         `}
-                  >
-                    {piece && (
-                      <img
-                        src={pieceImages[piece.color][piece.type]}
-                        alt={`${piece.color} ${piece.type}`}
-                        className="chess-piece"
-                      />
-                    )}
-                  </div>
-                ))
-              ))}
-            </div>
+                      >
+                        {piece && (
+                          <img
+                            src={pieceImages[piece.color][piece.type]}
+                            alt={`${piece.color} ${piece.type}`}
+                            className="chess-piece"
+                          />
+                        )}
+                      </div>
+                    ))
+                  ))}
+                </div>
+              </div>
+
+            )
+            }
+
+            {gameState.isGameStarted && <ChatBox boardId={gameState.id} />}
           </div>
+
         )}
       </div>
-      { gameState.isGameStarted && <ChatBox boardId={gameState.id} /> }
     </div>
-  );
+  )
+
 };
 
 export default ChessGame;

@@ -1,80 +1,99 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from 'react';
+import './historyReplay.css';
 
-const HistoryReplayComponent = ({ boardId, apiEndpoint }) => {
-  const [history, setHistory] = useState([]);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
+const HistoryReplayComponent = ({ fetchGameHistory }) => {
+  const [gameHistory, setGameHistory] = useState([]);
+  const [selectedGame, setSelectedGame] = useState(null);
+  const [replayIndex, setReplayIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
 
+  // Fetch game history from the database on component mount
   useEffect(() => {
-    // Fetch game history
-    const fetchHistory = async () => {
+    const loadGameHistory = async () => {
       try {
-        setIsLoading(true);
-        const response = await fetch(`${apiEndpoint}/chats?boardId=${boardId}`);
-        if (!response.ok) {
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
-        }
-        const data = await response.json();
-        setHistory(data.history || []); // Assume `data.history` contains moves
-        setIsLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setIsLoading(false);
+        const history = await fetchGameHistory(); // Fetch data from the database
+        setGameHistory(history);
+      } catch (error) {
+        console.error('Failed to fetch game history:', error);
       }
     };
 
-    fetchHistory();
-  }, [boardId, apiEndpoint]);
+    loadGameHistory();
+  }, [fetchGameHistory]);
 
-  const handleReplay = (index) => {
-    setCurrentMoveIndex(index);
+  // Replay logic
+  useEffect(() => {
+    let replayInterval;
+    if (isPlaying && selectedGame) {
+      replayInterval = setInterval(() => {
+        setReplayIndex((prevIndex) => {
+          if (prevIndex < selectedGame.moves.length - 1) {
+            return prevIndex + 1;
+          } else {
+            setIsPlaying(false);
+            return prevIndex;
+          }
+        });
+      }, 1000);
+    }
+    return () => clearInterval(replayInterval);
+  }, [isPlaying, selectedGame]);
+
+  const handleSelectGame = (game) => {
+    setSelectedGame(game);
+    setReplayIndex(0);
+    setIsPlaying(false);
   };
 
-  const renderBoard = (move) => {
-    return (
-      <div className="chess-board">
-        {move.board.map((row, rowIndex) => (
-          <div key={rowIndex} className="chess-row">
-            {row.map((cell, cellIndex) => (
-              <div key={cellIndex} className={`chess-cell ${cell.color}`}>
-                {cell.piece}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    );
+  const handleReplayControl = (action) => {
+    if (action === 'play') setIsPlaying(true);
+    if (action === 'pause') setIsPlaying(false);
+    if (action === 'rewind') setReplayIndex((prev) => Math.max(prev - 1, 0));
+    if (action === 'forward')
+      setReplayIndex((prev) => Math.min(prev + 1, selectedGame.moves.length - 1));
   };
-
-  if (isLoading) return <div>Loading game history...</div>;
-  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="history-replay-component">
+    <div className="history-replay-container">
       <h2>Game History</h2>
-      {history.length === 0 ? (
-        <p>No moves found.</p>
-      ) : (
-        <div className="replay-container">
-          <div className="move-list">
-            <h3>Moves</h3>
-            {history.map((move, index) => (
-              <button
-                key={index}
-                onClick={() => handleReplay(index)}
-                className={`move-button ${
-                  currentMoveIndex === index ? "active" : ""
-                }`}
-              >
-                Move {index + 1}: {move.description}
-              </button>
-            ))}
-          </div>
-          <div className="board-display">
-            <h3>Move {currentMoveIndex + 1}</h3>
-            {renderBoard(history[currentMoveIndex])}
-          </div>
+      <div className="game-history-list">
+        {gameHistory.length > 0 ? (
+          gameHistory.map((game, index) => (
+            <div
+              key={index}
+              className={`game-item ${selectedGame === game ? 'selected' : ''}`}
+              onClick={() => handleSelectGame(game)}
+            >
+              <p><strong>Game ID:</strong> {game.id}</p>
+              <p><strong>Date:</strong> {game.date}</p>
+              <p><strong>Opponent:</strong> {game.opponent}</p>
+            </div>
+          ))
+        ) : (
+          <p>No games available.</p>
+        )}
+      </div>
+      {selectedGame && (
+        <div className="replay-section">
+          <h3>Replay Game</h3>
+          {selectedGame.moves.length > 0 ? (
+            <>
+              <div className="replay-board">
+                <p>
+                  <strong>Move {replayIndex + 1}:</strong>{' '}
+                  {selectedGame.moves[replayIndex]}
+                </p>
+              </div>
+              <div className="replay-controls">
+                <button onClick={() => handleReplayControl('rewind')}>Rewind</button>
+                <button onClick={() => handleReplayControl('pause')}>Pause</button>
+                <button onClick={() => handleReplayControl('play')}>Play</button>
+                <button onClick={() => handleReplayControl('forward')}>Forward</button>
+              </div>
+            </>
+          ) : (
+            <p>No moves available for this game.</p>
+          )}
         </div>
       )}
     </div>

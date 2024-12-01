@@ -9,12 +9,19 @@ const ChatBox = ({ boardId }) => {
   const [newMessage, setNewMessage] = useState('');
   const [user, setUser] = useState();
 
-  getUser();
-
   const fetchChatMessages = async () => {
     if (!boardId) return;
-    const res = await getChatMessagesByBoardId(boardId);
-    updateChat(res?.data);
+    try {
+      const res = await getChatMessagesByBoardId(boardId);
+      updateChat(res?.data);
+      return res?.data;
+    } catch(e) {}
+  };
+
+  const fetchUser = async () => {
+    if (!boardId) return;
+    const res = await getAuthenticate();
+    updateUser(res?.data);
     return res?.data;
   };
 
@@ -24,24 +31,23 @@ const ChatBox = ({ boardId }) => {
     }
   }
 
-  function getUser() {
-    getAuthenticate().then(response => {
-      setUser(response?.data)
-    }).catch(e => { })
+  function updateUser(data) {
+    if (data) {
+      setUser(data);
+    }
   }
 
-  useQuery('chatMessages', fetchChatMessages, { refetchInterval: 1000})
+  useQuery('chatMessages', fetchChatMessages, { refetchInterval: 1000 })
+  useQuery('users', fetchUser, { refetchInterval: 5000 })
 
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
-    getUser();
-    console.log(user)
     const chatMessage = {
       userId: user?.id,
       boardId,
       message: newMessage,
     };
-    createChatMessage(chatMessage).catch(e => {})
+    createChatMessage(chatMessage).catch(e => { })
     setMessages((prevMessages) => [...prevMessages, chatMessage]);
     setNewMessage('');
   };

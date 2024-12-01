@@ -199,7 +199,6 @@ const ChessGame = () => {
 
   function updateBoard(data) {
     if (data) {
-      console.log(data);
       setGameState(prev => ({
         ...prev,
         chess: data.chess,
@@ -227,6 +226,8 @@ const ChessGame = () => {
 
   const navigator = useNavigate();
   async function quitGame(id) {
+    /*
+    // End point does not exist
     try {
       await saveGameResult({
         id: gameState.id,
@@ -234,8 +235,8 @@ const ChessGame = () => {
         result: gameStatus || 'Quit',
         winner: gameState.status ? gameState.status.includes('BLACK') ? 'BLACK' : 'WHITE' : null
       });
-      const response = await deleteBoard(id);
-    } catch (error) { console.error(error) }
+    } catch (error) { console.error(error) } */
+    const response = await deleteBoard(id);
     setGameState(prev => ({
       ...prev,
       id: null,

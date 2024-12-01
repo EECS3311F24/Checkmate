@@ -71,6 +71,7 @@ public class ChessBoardService {
     }
 
     public boolean updateGamesPlayed(ChessBoardDB chessBoard) {
+        if (chessBoard.chess.isGameOver()) return false;
         if (chessBoard.player1Id != null && chessBoard.player1Id.equals(chessBoard.player2Id)) return false;
         String id = chessBoard.player2Id == null ? chessBoard.player1Id : chessBoard.player2Id;
         ResponseEntity<UserData> response = userController.getUserData(id);

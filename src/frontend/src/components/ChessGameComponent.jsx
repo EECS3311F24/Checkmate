@@ -459,6 +459,63 @@ const ChessGame = () => {
             <div className="container text-center">
               {<button className='btn btn-danger' onClick={() => quitGame(gameState.id)}>{getTranslation("ChessGameComponentQuit", language)}</button>}
             </div>
+            <div className="chess-container">
+               <div className="chess-header">
+                 <h2>{getTranslation('ChessGameComponentChessGame', language)}</h2>
+               </div>
+               <div className="chess-content">
+                 {!gameState.isGameStarted ? (
+                   <div className="chess-controls">
+                     <button onClick={handleStartGame}>Start Game</button>
+                     <button onClick={() => setIsTimerMode(!isTimerMode)}>
+                       {isTimerMode ? 'Disable Timer' : 'Enable Timer'}
+                     </button>
+                     {isTimerMode && (
+                       <select onChange={(e) => setTimeLimit(Number(e.target.value))} value={timeLimit}>
+                         <option value={60}>1 Minute</option>
+                         <option value={300}>5 Minutes</option>
+                       </select>
+                     )}
+                   </div>
+                 ) : (
+                   <>
+                     <div>
+                       <h3>Game in Progress</h3>
+                       <button onClick={quitGame}>Quit Game</button>
+                     </div>
+                     <div className="game-history">
+                       {!isReplaying ? (
+                         <>
+                           <h3>Game History</h3>
+                           <ul>
+                             {gameHistory.map((game, index) => (
+                               <li key={game.id}>
+                                 <button onClick={() => handleSelectGame(game.id)}>
+                                   Game {index + 1} - {game.date}
+                                 </button>
+                               </li>
+                             ))}
+                           </ul>
+                         </>
+                       ) : (
+                         <div>
+                           <h3>Replay Game</h3>
+                           <button onClick={handlePreviousMove} disabled={currentMoveIndex === 0}>
+                             Previous
+                           </button>
+                           <button
+                             onClick={handleNextMove}
+                             disabled={currentMoveIndex === replayMoves.length - 1}
+                           >
+                             Next
+                           </button>
+                         </div>
+                       )}
+                     </div>
+                   </>
+                 )}
+               </div>
+             </div>
             <div className="chess-current-player" style={cardStyle}>
               {getTranslation("ChessGameComponentCurrentPlayer", language)}
               {(gameState.currentPlayer === 'WHITE' ? getTranslation("ChessGameComponentWhite", language)

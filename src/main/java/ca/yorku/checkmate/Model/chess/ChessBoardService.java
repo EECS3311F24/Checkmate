@@ -27,11 +27,27 @@ public class ChessBoardService {
     }
 
     public List<ChessBoardDB> getBoards() {
-        return repository.findAll();
+        return repository.findAll().stream().map(this::fixChessBoardData).toList();
     }
 
     public Optional<ChessBoardDB> getBoardById(String id) {
-        return repository.findById(id);
+        return repository.findById(id).map(this::fixChessBoardData);
+    }
+
+    private ChessBoardDB fixChessBoardData(ChessBoardDB chessBoard) {
+        ChessBoard cb = chessBoard.chess.getChessBoard();
+        cb.getWhitePieces().clear();
+        cb.getBlackPieces().clear();
+        for (int row = 0; row < cb.getBoard().length; row++) {
+            for (int col = 0; col < cb.getBoard().length; col++) {
+                Placeholder p = cb.getBoard()[row][col];
+                if (p == null || p.getChessPiece() == null) continue;
+                if (p.getChessPiece().getColor() == ChessBoard.white) {
+                    cb.getWhitePieces().add(p.getChessPiece());
+                } else cb.getBlackPieces().add(p.getChessPiece());
+            }
+        }
+        return chessBoard;
     }
 
     public UserController getUserController() {
@@ -101,7 +117,6 @@ public class ChessBoardService {
         if (piece == null) return false;
         if (whosTurn.playerColor() != piece.getColor()) return false;
         boolean moved = chessBoard.chess.move(moves.end().row(), moves.end().col(), piece);
-        if (moved) updatePlayerPieces(chessBoard.chess.getChessBoard(), piece);
         repository.save(chessBoard);
         return moved;
     }

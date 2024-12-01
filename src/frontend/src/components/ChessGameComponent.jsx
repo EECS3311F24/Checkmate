@@ -5,6 +5,7 @@ import { startGuestGame, move, getBoard, deleteBoard } from '../services/ChessSe
 import { getTranslation, useLanguage } from './LanguageProvider';
 import { useTheme } from './ThemeProvider';
 import './chess.css';
+import ChatBox from './ChatBox';
 
 const ChessGame = () => {
   const { language } = useLanguage();
@@ -465,6 +466,7 @@ const ChessGame = () => {
           </div>
         )}
       </div>
+      <ChatBox boardId={gameState.id} />
     </div>
   );
 };

@@ -11,7 +11,7 @@ public class Chess {
     private Player playerWhite;
     private Player playerBlack;
     private int numMoves = 0;
-    private List<Placeholder[][]>gameHistory = new ArrayList<>();
+    public List<Placeholder[][]>gameHistory = new ArrayList<>();
     private ChessBoard cb;
     private boolean draw;
     public static final char custom = 'C';

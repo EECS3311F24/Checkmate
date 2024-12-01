@@ -18,7 +18,7 @@ const ChessGame = () => {
   const [playerTimes, setPlayerTimes] = useState({
     WHITE: 300,
     BLACK: 300
-  });;
+  });
   const fetchChessBoard = async () => {
     if (gameState !== null && (!gameState.isGameStarted || gameState.isGameOver)) return;
     const res = await getBoard(gameState.id);
@@ -469,7 +469,7 @@ const ChessGame = () => {
         )}
       </div>
       {gameState.isGameStarted &&<div className="history-replay-section">
-        <HistoryReplayComponent gameHistory={gameState.gameHistory} />
+        <HistoryReplayComponent gameHistory={gameState.gameHistory} boardId={gameState.id} />
       </div>}
       {gameState.isGameStarted && <ChatBox boardId={gameState.id} />}
     </div>

@@ -1,27 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useTheme } from './ThemeProvider';
 import './historyReplay.css';
 
-const HistoryReplayComponent = ({ fetchGameHistory }) => {
-  const [gameHistory, setGameHistory] = useState([]);
+const HistoryReplayComponent = ({ gameHistory, boardId }) => {
+  const { theme } = useTheme();
   const [selectedGame, setSelectedGame] = useState(null);
   const [replayIndex, setReplayIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // Fetch game history from the database on component mount
-  useEffect(() => {
-    const loadGameHistory = async () => {
-      try {
-        const history = await fetchGameHistory(); // Fetch data from the database
-        setGameHistory(history);
-      } catch (error) {
-        console.error('Failed to fetch game history:', error);
-      }
-    };
-
-    loadGameHistory();
-  }, [fetchGameHistory]);
-
   // Replay logic
+  // TODO selectedGame.moves does not exist.
+  // TODO use the replayIndex to select which board in gameHistory
+  // TODO display that board at replayIndex but make it not like a real game just to view!
   useEffect(() => {
     let replayInterval;
     if (isPlaying && selectedGame) {
@@ -39,9 +29,9 @@ const HistoryReplayComponent = ({ fetchGameHistory }) => {
     return () => clearInterval(replayInterval);
   }, [isPlaying, selectedGame]);
 
-  const handleSelectGame = (game) => {
+  const handleSelectGame = (game, index) => {
     setSelectedGame(game);
-    setReplayIndex(0);
+    setReplayIndex(index);
     setIsPlaying(false);
   };
 
@@ -50,11 +40,12 @@ const HistoryReplayComponent = ({ fetchGameHistory }) => {
     if (action === 'pause') setIsPlaying(false);
     if (action === 'rewind') setReplayIndex((prev) => Math.max(prev - 1, 0));
     if (action === 'forward')
-      setReplayIndex((prev) => Math.min(prev + 1, selectedGame.moves.length - 1));
+      setReplayIndex((prev) => Math.min(prev + 1, gameHistory.length - 1));
   };
 
+  const cardStyle = theme === 'dark' ? { backgroundColor: '#333333', color: '#ffffff' } : theme === 'solarized' ? { backgroundColor: '#f0f8ff', color: '#000000' } : { backgroundColor: '#ffffff', color: '#000000' };
   return (
-    <div className="history-replay-container">
+    <div className="history-replay-container" style={cardStyle}>
       <h2>Game History</h2>
       <div className="game-history-list">
         {gameHistory.length > 0 ? (
@@ -62,11 +53,10 @@ const HistoryReplayComponent = ({ fetchGameHistory }) => {
             <div
               key={index}
               className={`game-item ${selectedGame === game ? 'selected' : ''}`}
-              onClick={() => handleSelectGame(game)}
+              onClick={() => handleSelectGame(game, index)}
             >
-              <p><strong>Game ID:</strong> {game.id}</p>
-              <p><strong>Date:</strong> {game.date}</p>
-              <p><strong>Opponent:</strong> {game.opponent}</p>
+              <p><strong>Board Id:</strong> {boardId}</p>
+              <p><strong>Move:</strong> {index}</p>
             </div>
           ))
         ) : (
@@ -76,12 +66,11 @@ const HistoryReplayComponent = ({ fetchGameHistory }) => {
       {selectedGame && (
         <div className="replay-section">
           <h3>Replay Game</h3>
-          {selectedGame.moves.length > 0 ? (
+          {replayIndex >= 0 && replayIndex < gameHistory.length ? (
             <>
               <div className="replay-board">
                 <p>
-                  <strong>Move {replayIndex + 1}:</strong>{' '}
-                  {selectedGame.moves[replayIndex]}
+                  <strong>Move {replayIndex}:</strong>{' '}
                 </p>
               </div>
               <div className="replay-controls">

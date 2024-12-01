@@ -18,21 +18,7 @@ const ChessGame = () => {
   const [playerTimes, setPlayerTimes] = useState({
     WHITE: 300,
     BLACK: 300
-  });
-  const [gameHistory, setGameHistory] = useState([
-    {
-      id: '1',
-      date: '2024-12-01',
-      opponent: 'Player1',
-      moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5'],
-    },
-    {
-      id: '2',
-      date: '2024-11-28',
-      opponent: 'Player2',
-      moves: ['d4', 'd5', 'c4', 'c6', 'Nc3'],
-    },
-  ]);
+  });;
   const fetchChessBoard = async () => {
     if (gameState !== null && (!gameState.isGameStarted || gameState.isGameOver)) return;
     const res = await getBoard(gameState.id);

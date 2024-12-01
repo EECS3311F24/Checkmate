@@ -42,6 +42,7 @@ const HistoryReplayComponent = ({ gameHistory }) => {
     setSortKey(key);
   };
 
+  /*
   const sortedHistory = [...gameHistory].sort((a, b) => {
     if (sortKey === 'date') {
       return new Date(a.date) - new Date(b.date);
@@ -49,7 +50,7 @@ const HistoryReplayComponent = ({ gameHistory }) => {
       return a.opponent.localeCompare(b.opponent);
     }
     return 0;
-  });
+  });*/
 
   return (
     <div className="history-replay-container">
@@ -62,8 +63,8 @@ const HistoryReplayComponent = ({ gameHistory }) => {
         </select>
       </div>
       <div className="game-history-list">
-        {sortedHistory.length > 0 ? (
-          sortedHistory.map((game, index) => (
+        {gameHistory.length > 0 ? (
+          gameHistory.map((game, index) => (
             <div
               key={index}
               className={`game-item ${selectedGame === game ? 'selected' : ''}`}

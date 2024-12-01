@@ -71,6 +71,7 @@ const ChessGame = () => {
     isGameStarted: false,
     isGameOver: false,
     winner: null,
+    gameHistory: [],
     selectedPiece: null,
     error: null,
     currentPlayer: 'WHITE',
@@ -144,7 +145,7 @@ const ChessGame = () => {
     }
     return () => clearInterval(interval);
   }, [gameState.isGameStarted, isTimerMode, gameState.currentPlayer, isFirstMoveMade, gameState.isGameOver]);
-  
+
   useEffect(() => {
     if (isTimerMode && playerTimes[gameState.currentPlayer] === 0) {
       handleTimeUp();
@@ -193,7 +194,6 @@ const ChessGame = () => {
   }
 
   function updateBoard(data) {
-    console.log(data);
     if (data) {
       setGameState(prev => ({
         ...prev,
@@ -202,6 +202,7 @@ const ChessGame = () => {
         currentPlayer: convertColor(data.chess.whosTurn.playerColor),
         isGameOver: data.chess.gameOver,
         winner: data.chess.gameOver ? convertColor(data.chess.winner.playerColor) : null,
+        gameHistory: data.chess.gameHistory,
         //capturedPieces: convertCapturedPieces(response.data.chess.chessBoard.capturedPieces)
       }));
     }
@@ -478,14 +479,13 @@ const ChessGame = () => {
                 ))
               ))}
             </div>
-          </div>   
+          </div>
         )}
       </div>
-      
-      <div className="history-replay-section">
-        <HistoryReplayComponent gameHistory={gameHistory} />
-      </div>
-      { gameState.isGameStarted && <ChatBox boardId={gameState.id} /> }
+      {gameState.isGameStarted &&<div className="history-replay-section">
+        <HistoryReplayComponent gameHistory={gameState.gameHistory} />
+      </div>}
+      {gameState.isGameStarted && <ChatBox boardId={gameState.id} />}
     </div>
   );
 };

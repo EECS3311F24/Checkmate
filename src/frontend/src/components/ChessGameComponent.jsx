@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { startGuestGame, move, getBoard, deleteBoard } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
+import HistoryReplayComponent from './HistoryReplayComponent';
 import { useTheme } from './ThemeProvider';
 import './chess.css';
 import ChatBox from './ChatBox';
@@ -18,7 +19,20 @@ const ChessGame = () => {
     WHITE: 300,
     BLACK: 300
   });
-
+  const [gameHistory, setGameHistory] = useState([
+    {
+      id: '1',
+      date: '2024-12-01',
+      opponent: 'Player1',
+      moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bb5'],
+    },
+    {
+      id: '2',
+      date: '2024-11-28',
+      opponent: 'Player2',
+      moves: ['d4', 'd5', 'c4', 'c6', 'Nc3'],
+    },
+  ]);
   const fetchChessBoard = async () => {
     if (gameState !== null && (!gameState.isGameStarted || gameState.isGameOver)) return;
     const res = await getBoard(gameState.id);
@@ -465,6 +479,10 @@ const ChessGame = () => {
             </div>
           </div>   
         )}
+      </div>
+      
+      <div className="history-replay-section">
+        <HistoryReplayComponent gameHistory={gameHistory} />
       </div>
       { gameState.isGameStarted && <ChatBox boardId={gameState.id} /> }
     </div>

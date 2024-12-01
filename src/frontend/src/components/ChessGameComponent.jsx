@@ -463,10 +463,10 @@ const ChessGame = () => {
                 ))
               ))}
             </div>
-          </div>
+          </div>   
         )}
       </div>
-      <ChatBox boardId={gameState.id} />
+      { gameState.isGameStarted && <ChatBox boardId={gameState.id} /> }
     </div>
   );
 };

@@ -98,4 +98,9 @@ public class Rook extends ChessPiece {
         }
         return list;
     }
+
+    @Override
+    public ChessPiece clone() {
+        return new Rook(color);
+    }
 }

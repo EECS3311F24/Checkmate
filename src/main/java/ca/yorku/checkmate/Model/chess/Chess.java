@@ -96,7 +96,7 @@ public class Chess {
         return this.whosTurn;
     }
 
-    public void addGameHistory(Placeholder[][] board) {
+    private void addGameHistory(Placeholder[][] board) {
         this.gameHistory.add(board);
     }
     public ChessBoard getChessBoard() {

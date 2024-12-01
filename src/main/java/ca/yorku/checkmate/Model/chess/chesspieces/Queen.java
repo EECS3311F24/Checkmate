@@ -60,4 +60,9 @@ public class Queen extends ChessPiece {
         list.addAll(fakeBishop.listOfAllMoves());
         return list;
     }
+
+    @Override
+    public ChessPiece clone() {
+        return new Queen(color);
+    }
 }

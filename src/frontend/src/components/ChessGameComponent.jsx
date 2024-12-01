@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { startGuestGame, move, getBoard, deleteBoard, getGameHistory, getGameReplay } from '../services/ChessService';
+import { startGuestGame, move, getBoard, deleteBoard } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 import { useTheme } from './ThemeProvider';
 import './chess.css';
+import ChatBox from './ChatBox';
 
 const ChessGame = () => {
   const { language } = useLanguage();
@@ -141,19 +142,19 @@ const ChessGame = () => {
     }
   }, [playerTimes, gameState.currentPlayer]);
 
+/*
+// This endpoints does not exist
   useEffect(() => {
     const fetchGameHistory = async () => {
       try {
         const response = await getGameHistory();
-        // Ensure response.data is an array, or default to an empty array
-        setGameHistory(Array.isArray(response.data) ? response.data : []);
+        setGameHistory(response.data || []);
       } catch (error) {
         console.error('Error fetching game history:', error);
-        setGameHistory([]); // Set to empty array on error
       }
     };
     fetchGameHistory();
-  }, []); 
+  }, []); */
 
   function convertCapturedPieces(captured) {
     var white = [];
@@ -224,7 +225,6 @@ const ChessGame = () => {
   };
 
   const navigator = useNavigate();
-
   async function quitGame(id) {
     try {
       await saveGameResult({
@@ -261,13 +261,14 @@ const ChessGame = () => {
     try {
       const response = await startGuestGame(isCustomMode ? mode : 'S');
 
+/*
       await saveGameResult({
         id: response.data.id,
         mode: isCustomMode ? mode : 'S',
         startTime: new Date(),
         timerMode: isTimerMode
-      });
-      
+      });*/
+
       setIsFirstMoveMade(false); // Reset first move state
       setGameState(prev => ({
         ...prev,
@@ -456,6 +457,7 @@ const ChessGame = () => {
         ) : (
           <div>
             <div className="container text-center">
+              {<button className='btn btn-danger' onClick={() => quitGame(gameState.id)}>{getTranslation("ChessGameComponentQuit", language)}</button>}
             </div>
             <div className="chess-current-player" style={cardStyle}>
               {getTranslation("ChessGameComponentCurrentPlayer", language)}
@@ -476,64 +478,7 @@ const ChessGame = () => {
                 </div>
               </div>
             )}
-        <div className="chess-container">
-              <div className="chess-header">
-                <h2>{getTranslation('ChessGameComponentChessGame', language)}</h2>
-              </div>
-              <div className="chess-content">
-                {!gameState.isGameStarted ? (
-                  <div className="chess-controls">
-                    <button onClick={handleStartGame}>Start Game</button>
-                    <button onClick={() => setIsTimerMode(!isTimerMode)}>
-                      {isTimerMode ? 'Disable Timer' : 'Enable Timer'}
-                    </button>
-                    {isTimerMode && (
-                      <select onChange={(e) => setTimeLimit(Number(e.target.value))} value={timeLimit}>
-                        <option value={60}>1 Minute</option>
-                        <option value={300}>5 Minutes</option>
-                      </select>
-                    )}
-                  </div>
-                ) : (
-                  <>
-                    <div>
-                      <h3>Game in Progress</h3>
-                      <button onClick={quitGame}>Quit Game</button>
-                    </div>
-                    <div className="game-history">
-                      {!isReplaying ? (
-                        <>
-                          <h3>Game History</h3>
-                          <ul>
-                            {gameHistory.map((game, index) => (
-                              <li key={game.id}>
-                                <button onClick={() => handleSelectGame(game.id)}>
-                                  Game {index + 1} - {game.date}
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
-                        </>
-                      ) : (
-                        <div>
-                          <h3>Replay Game</h3>
-                          <button onClick={handlePreviousMove} disabled={currentMoveIndex === 0}>
-                            Previous
-                          </button>
-                          <button
-                            onClick={handleNextMove}
-                            disabled={currentMoveIndex === replayMoves.length - 1}
-                          >
-                            Next
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-            
+
             {/*Captured pieces display*/}
 
             <div className="chess-captured-pieces" style={cardStyle}>
@@ -584,9 +529,9 @@ const ChessGame = () => {
               ))}
             </div>
           </div>
-          
         )}
       </div>
+      { gameState.isGameStarted && <ChatBox boardId={gameState.id} /> }
     </div>
   );
 };

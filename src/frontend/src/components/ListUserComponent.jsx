@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteUser, listUsers, deleteAllUsers } from '../services/UserService';
 import { deleteAllBoards } from '../services/ChessService';
+import { deleteAllChatMessages } from '../services/ChatService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 import { useTheme } from './ThemeProvider';
 
@@ -31,6 +32,7 @@ const ListUserComponent = () => {
     const clearDatabase = () => {
         deleteAllUsers();
         deleteAllBoards();
+        deleteAllChatMessages();
         navigator("/");
     }
 

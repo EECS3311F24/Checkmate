@@ -71,7 +71,7 @@ public class ChessBoardService {
     }
 
     public boolean updateGamesPlayed(ChessBoardDB chessBoard) {
-        if (chessBoard.player1Id.equals(chessBoard.player2Id)) return false;
+        if (chessBoard.player1Id != null && chessBoard.player1Id.equals(chessBoard.player2Id)) return false;
         String id = chessBoard.player2Id == null ? chessBoard.player1Id : chessBoard.player2Id;
         ResponseEntity<UserData> response = userController.getUserData(id);
         if (!response.getStatusCode().is2xxSuccessful()) return false;
@@ -88,37 +88,38 @@ public class ChessBoardService {
     }
 
     public boolean moveChessPiece(ChessBoardDB chessBoard, String userId, Moves moves) {
-        if (chessBoard.chess.isGameOver()) {
-            String id = chessBoard.chess.getWinner().playerColor() == ChessBoard.white ? chessBoard.player1Id : chessBoard.player2Id;
-            if (id != null) {
-                ResponseEntity<UserData> response = userController.getUserData(id);
-                UserData userData = response.getBody();
-                if (userData != null) userController.updateUserData(id, id, userData.setWins(userData.wins + 1));
-            }
-            id = chessBoard.chess.getWinner().playerColor() == ChessBoard.white ? chessBoard.player2Id : chessBoard.player1Id;
-            if (id != null) {
-                ResponseEntity<UserData> response = userController.getUserData(id);
-                UserData userData = response.getBody();
-                if (userData != null) userController.updateUserData(id, id, userData.setLoses(userData.loses + 1));
-            }
-            chessBoard.player1Id = null;
-            chessBoard.player2Id = null;
-            repository.save(chessBoard);
-            return false;
-        }
+        if (chessBoard.chess.isGameOver()) return false;
         Player whosTurn = chessBoard.chess.getWhosTurn();
         if (whosTurn.playerColor() == ChessBoard.white) {
            if (chessBoard.player1Id != null && !chessBoard.player1Id.equals(userId)) return false;
         } else if (whosTurn.playerColor() == ChessBoard.black) {
            if (chessBoard.player2Id != null && !chessBoard.player2Id.equals(userId)) return false;
         } else return false;
-
         ChessPiece piece = chessBoard.chess.getChessPiece(moves.start().row(), moves.start().col());
         if (piece == null) return false;
         if (whosTurn.playerColor() != piece.getColor()) return false;
         boolean moved = chessBoard.chess.move(moves.end().row(), moves.end().col(), piece);
+        updateWinnerData(chessBoard);
         repository.save(chessBoard);
         return moved;
+    }
+
+    private void updateWinnerData(ChessBoardDB chessBoard) {
+        if (!chessBoard.chess.isGameOver()) return;
+        String id = chessBoard.chess.getWinner().playerColor() == ChessBoard.white ? chessBoard.player1Id : chessBoard.player2Id;
+        if (id != null) {
+            ResponseEntity<UserData> response = userController.getUserData(id);
+            UserData userData = response.getBody();
+            if (userData != null) userController.updateUserData(id, id, userData.setWins(userData.wins + 1));
+        }
+        id = chessBoard.chess.getWinner().playerColor() == ChessBoard.white ? chessBoard.player2Id : chessBoard.player1Id;
+        if (id != null) {
+            ResponseEntity<UserData> response = userController.getUserData(id);
+            UserData userData = response.getBody();
+            if (userData != null) userController.updateUserData(id, id, userData.setLoses(userData.loses + 1));
+        }
+        chessBoard.player1Id = null;
+        chessBoard.player2Id = null;
     }
 
     private void updatePlayerPieces(ChessBoard chessBoard, ChessPiece piece) {

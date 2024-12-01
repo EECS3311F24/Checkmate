@@ -1,22 +1,47 @@
 import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { getChatMessagesByBoardId, createChatMessage } from '../services/ChatService';
+import { getAuthenticate } from '../services/UserService';
 import './ChatBox.css';
 
 const ChatBox = ({ boardId }) => {
-  const [messages, setMessages] = useState([
-    { userId: 'player1', message: 'Hello, welcome to the game!' },
-    { userId: 'player2', message: 'Good luck everyone!' },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [user, setUser] = useState();
+
+  getUser();
+
+  const fetchChatMessages = async () => {
+    if (!boardId) return;
+    const res = await getChatMessagesByBoardId(boardId);
+    updateChat(res?.data);
+    return res?.data;
+  };
+
+  function updateChat(data) {
+    if (data) {
+      setMessages(data);
+    }
+  }
+
+  function getUser() {
+    getAuthenticate().then(response => {
+      setUser(response?.data)
+    }).catch(e => { })
+  }
+
+  useQuery('chatMessages', fetchChatMessages, { refetchInterval: 1000})
 
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
-
+    getUser();
+    console.log(user)
     const chatMessage = {
-      userId: 'player1', // Replace with actual user ID from context/session
+      userId: user?.id,
       boardId,
       message: newMessage,
     };
-
+    createChatMessage(chatMessage).catch(e => {})
     setMessages((prevMessages) => [...prevMessages, chatMessage]);
     setNewMessage('');
   };

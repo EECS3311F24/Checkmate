@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { startGuestGame, move, getBoard, deleteBoard, getGameHistory, getGameReplay } from '../services/ChessService';
+import { startGuestGame, move, getBoard, deleteBoard } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 import { useTheme } from './ThemeProvider';
 import './chess.css';
@@ -18,11 +18,6 @@ const ChessGame = () => {
     WHITE: 300,
     BLACK: 300
   });
-  const [gameHistory, setGameHistory] = useState([]);
-  const [replayMoves, setReplayMoves] = useState([]);
-  const [selectedGame, setSelectedGame] = useState(null);
-  const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
-  const [isReplaying, setIsReplaying] = useState(false);
 
   const fetchChessBoard = async () => {
     if (gameState !== null && (!gameState.isGameStarted || gameState.isGameOver)) return;
@@ -141,18 +136,6 @@ const ChessGame = () => {
       handleTimeUp();
     }
   }, [playerTimes, gameState.currentPlayer]);
-
-  useEffect(() => {
-    const fetchGameHistory = async () => {
-      try {
-        const response = await getGameHistory();
-        setGameHistory(response.data || []);
-      } catch (error) {
-        console.error('Error fetching game history:', error);
-      }
-    };
-    fetchGameHistory();
-  }, []); 
 
   function convertCapturedPieces(captured) {
     var white = [];
@@ -340,37 +323,6 @@ const ChessGame = () => {
     }
   };
 
-// Replay Functionality
-  const handleSelectGame = async (gameId) => {
-    try {
-      const response = await getGameReplay(gameId);
-      setReplayMoves(response.data.moves || []);
-      setSelectedGame(gameId);
-      setCurrentMoveIndex(0);
-      setIsReplaying(true);
-    } catch (error) {
-      console.error('Error fetching replay moves:', error);
-    }
-  };
-
-  const handleNextMove = () => {
-    if (currentMoveIndex < replayMoves.length - 1) {
-      setCurrentMoveIndex(currentMoveIndex + 1);
-      updateBoardForReplay(replayMoves[currentMoveIndex + 1]);
-    }
-  };
-
-  const handlePreviousMove = () => {
-    if (currentMoveIndex > 0) {
-      setCurrentMoveIndex(currentMoveIndex - 1);
-      updateBoardForReplay(replayMoves[currentMoveIndex - 1]);
-    }
-  };
-
-  const updateBoardForReplay = (move) => {
-    // Logic to update the board for the replay
-    console.log('Replaying move:', move);
-  };
 
   const headerStyle = theme === 'dark' ? { color: '#ffffff' } : theme === 'solarized' ? { color: '#00008b' } : { color: '#000000' };
   const cardStyle = theme === 'dark' ? { backgroundColor: '#333333', color: '#ffffff' } : theme === 'solarized' ? { backgroundColor: '#f0f8ff', color: '#000000' } : { backgroundColor: '#ffffff', color: '#000000' };
@@ -461,64 +413,7 @@ const ChessGame = () => {
                 </div>
               </div>
             )}
-        <div className="chess-container">
-              <div className="chess-header">
-                <h2>{getTranslation('ChessGameComponentChessGame', language)}</h2>
-              </div>
-              <div className="chess-content">
-                {!gameState.isGameStarted ? (
-                  <div className="chess-controls">
-                    <button onClick={handleStartGame}>Start Game</button>
-                    <button onClick={() => setIsTimerMode(!isTimerMode)}>
-                      {isTimerMode ? 'Disable Timer' : 'Enable Timer'}
-                    </button>
-                    {isTimerMode && (
-                      <select onChange={(e) => setTimeLimit(Number(e.target.value))} value={timeLimit}>
-                        <option value={60}>1 Minute</option>
-                        <option value={300}>5 Minutes</option>
-                      </select>
-                    )}
-                  </div>
-                ) : (
-                  <>
-                    <div>
-                      <h3>Game in Progress</h3>
-                      <button onClick={quitGame}>Quit Game</button>
-                    </div>
-                    <div className="game-history">
-                      {!isReplaying ? (
-                        <>
-                          <h3>Game History</h3>
-                          <ul>
-                            {gameHistory.map((game, index) => (
-                              <li key={game.id}>
-                                <button onClick={() => handleSelectGame(game.id)}>
-                                  Game {index + 1} - {game.date}
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
-                        </>
-                      ) : (
-                        <div>
-                          <h3>Replay Game</h3>
-                          <button onClick={handlePreviousMove} disabled={currentMoveIndex === 0}>
-                            Previous
-                          </button>
-                          <button
-                            onClick={handleNextMove}
-                            disabled={currentMoveIndex === replayMoves.length - 1}
-                          >
-                            Next
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-            
+
             {/*Captured pieces display*/}
 
             <div className="chess-captured-pieces" style={cardStyle}>
@@ -568,10 +463,10 @@ const ChessGame = () => {
                 ))
               ))}
             </div>
-          </div>
+          </div>   
         )}
       </div>
-      <ChatBox boardId={gameState.id} />
+      { gameState.isGameStarted && <ChatBox boardId={gameState.id} /> }
     </div>
   );
 };

@@ -37,7 +37,7 @@ public class ChatService {
     }
 
     public List<ChatMessage> getChatMessageByBoardId(String boardId) {
-        return getChatMessages().stream().filter(chatMessage -> chatMessage.userId.equals(boardId)).toList();
+        return getChatMessages().stream().filter(chatMessage -> chatMessage.boardId.equals(boardId)).toList();
     }
 
     public UserDataService getUserDataService() {
@@ -50,6 +50,7 @@ public class ChatService {
 
     public boolean addChatMessage(ChatMessage chatMessage) {
         if (chatMessage.message == null || chatMessage.message.isEmpty()) return false;
+        if (chatMessage.boardId == null || chatMessage.userId == null) return false;
         repository.save(chatMessage);
         return true;
     }

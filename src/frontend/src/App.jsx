@@ -13,7 +13,6 @@ import ChangePasswordComponent from './components/ChangePasswordComponent';
 import { ThemeProvider } from './components/ThemeProvider';
 import ChatBox from './components/ChatBox';
 
-
 function App() {
   const queryClient = new QueryClient();
   return (

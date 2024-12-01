@@ -73,9 +73,9 @@ public class ChatController {
      * with Http status 201 if created or 409 if not created.
      */
     @PostMapping
-    public ResponseEntity<String> createChatMessage(@RequestBody ChatMessage chatMessage) {
-        if (service.addChatMessage(chatMessage)) return new ResponseEntity<>(HttpStatus.CONFLICT);
-        return new ResponseEntity<>(chatMessage.message, HttpStatus.CREATED);
+    public ResponseEntity<ChatMessage> createChatMessage(@RequestBody ChatMessage chatMessage) {
+        if (!service.addChatMessage(chatMessage)) return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(chatMessage, HttpStatus.CREATED);
     }
 
     /**

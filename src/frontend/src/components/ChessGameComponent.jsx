@@ -198,6 +198,7 @@ const ChessGame = () => {
 
   function updateBoard(data) {
     if (data) {
+      console.log(data);
       setGameState(prev => ({
         ...prev,
         chess: data.chess,
@@ -498,7 +499,6 @@ const ChessGame = () => {
                   <>
                     <div>
                       <h3>Game in Progress</h3>
-                      <button onClick={quitGame}>Quit Game</button>
                     </div>
                     <div className="game-history">
                       {!isReplaying ? (

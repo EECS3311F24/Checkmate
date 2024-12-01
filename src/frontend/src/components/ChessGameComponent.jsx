@@ -134,7 +134,7 @@ const ChessGame = () => {
   const [isFirstMoveMade, setIsFirstMoveMade] = useState(false);
   useEffect(() => {
     let interval;
-    if (gameState.isGameStarted && isTimerMode && isFirstMoveMade) {
+    if (gameState.isGameStarted && isTimerMode && isFirstMoveMade && !gameState.isGameOver) {
       interval = setInterval(() => {
         setPlayerTimes(prev => ({
           ...prev,
@@ -143,8 +143,8 @@ const ChessGame = () => {
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [gameState.isGameStarted, isTimerMode, gameState.currentPlayer, isFirstMoveMade]);
-
+  }, [gameState.isGameStarted, isTimerMode, gameState.currentPlayer, isFirstMoveMade, gameState.isGameOver]);
+  
   useEffect(() => {
     if (isTimerMode && playerTimes[gameState.currentPlayer] === 0) {
       handleTimeUp();
@@ -193,6 +193,7 @@ const ChessGame = () => {
   }
 
   function updateBoard(data) {
+    console.log(data);
     if (data) {
       setGameState(prev => ({
         ...prev,
@@ -285,7 +286,7 @@ const ChessGame = () => {
         selectedPiece: { row, col }
       }));
     } else if (gameState.selectedPiece) {
-      var moves = { start: { row: gameState.selectedPiece.row, col: gameState.selectedPiece.col }, end: { row: row, col: col } };
+      const moves = { start: { row: gameState.selectedPiece.row, col: gameState.selectedPiece.col }, end: { row: row, col: col } };
       await move(gameState.id, moves)
         .then(response => {
           if (!isFirstMoveMade && gameState.currentPlayer === 'WHITE') {

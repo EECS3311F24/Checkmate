@@ -1,6 +1,6 @@
-# ![Checkmate icon](/src/main/resources/static/images/favicon.png) Checkmate 
- 
-Checkmate is a website designed and focused on the beginner and casual players of chess. Checkmate wants players to learn in a friendly environment and not feel frustrated or intimidated by the more competitive sides of chess. Checkmate wants players to have fun playing the game of chess!
+ # ![Checkmate icon](/src/main/resources/static/images/favicon.png) Checkmate 
+  
+ Checkmate is a website designed and focused on the beginner and casual players of chess. Checkmate wants players to learn in a friendly environment and not feel frustrated or intimidated by the more competitive sides of chess. Checkmate wants players to have fun playing the game of chess!
 
  # Features
  
@@ -13,6 +13,10 @@ Checkmate is a website designed and focused on the beginner and casual players o
   * Themes and Local Customization
 
   * Custom Games
+
+  * Game History/Replay
+
+  * Lobby Chat
 
 
 ## Guest Play
@@ -49,6 +53,17 @@ Checkmate is a website designed and focused on the beginner and casual players o
  ![CustomGames](https://github.com/user-attachments/assets/46a3bf97-eeef-4f62-9993-1dd89997e4ed)
  </p>
 
+## Game History/Replay
+<p align ="center">
+
+![Game History](https://github.com/user-attachments/assets/4d36d5b3-f8a2-4e8d-92a0-992bd8647623)
+</p>
+
+## Lobby Chat
+<p align ="center">
+
+![Lobby Chat](https://github.com/user-attachments/assets/9fbf2e92-0d67-4345-9a3e-878c0d24a964)
+</p>
 # Software Architecture 
 
 <p align="center"> 
@@ -56,6 +71,8 @@ Checkmate is a website designed and focused on the beginner and casual players o
 ![System](https://github.com/user-attachments/assets/483849bd-377b-4b8a-a201-d41c899378c8)
 
 </p>
+
+
 
 ## Installation
 No installation required to use Checkmate. Users may create an account or play as a guest. Players can use any browser to join and play! 

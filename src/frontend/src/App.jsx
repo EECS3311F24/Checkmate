@@ -12,6 +12,7 @@ import { LanguageProvider } from './components/LanguageProvider'
 import ChangePasswordComponent from './components/ChangePasswordComponent'
 import { ThemeProvider } from './components/ThemeProvider'
 
+
 function App() {
   const queryClient = new QueryClient()
   return (

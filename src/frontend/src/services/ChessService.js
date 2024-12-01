@@ -14,3 +14,4 @@ export const getChessPiece = (row, col) => axios.get(CHESS_API_BASE_URL + '/' + 
 export const deleteBoard = (id) => axios.delete(CHESS_API_BASE_URL + '/' + id);
 
 export const deleteAllBoards = () => axios.delete(CHESS_API_BASE_URL);
+

@@ -9,8 +9,6 @@ const ChatBox = ({ boardId }) => {
   const [newMessage, setNewMessage] = useState('');
   const [user, setUser] = useState();
 
-  getUser();
-
   const fetchChatMessages = async () => {
     if (!boardId) return;
     const res = await getChatMessagesByBoardId(boardId);
@@ -35,7 +33,6 @@ const ChatBox = ({ boardId }) => {
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
     getUser();
-    console.log(user)
     const chatMessage = {
       userId: user?.id,
       boardId,

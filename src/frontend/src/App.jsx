@@ -11,6 +11,7 @@ import ChessGame from './components/ChessGameComponent'
 import { LanguageProvider } from './components/LanguageProvider'
 import ChangePasswordComponent from './components/ChangePasswordComponent'
 import { ThemeProvider } from './components/ThemeProvider'
+import GameHistory from './components/GameHistoryComponent'
 
 function App() {
   const queryClient = new QueryClient()
@@ -30,6 +31,7 @@ function App() {
         <Route path='/change-password/:id' element = {<ChangePasswordComponent/>}></Route>
         <Route path='/account/:id' element = {<UserDataFormComponent/>}></Route>
         <Route path="/play" element={<ChessGame />}></Route>
+        <Route path="/history" element={<GameHistory/>}></Route>
       </Routes>
       </LanguageProvider>
       </ThemeProvider>

@@ -1,0 +1,65 @@
+.history-replay-container {
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .history-replay-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .game-history-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  
+  .game-item {
+    padding: 10px;
+    margin: 5px 0;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .game-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .game-item.selected {
+    background-color: #d1e7ff;
+    border-color: #007bff;
+  }
+  
+  .replay-section {
+    margin-top: 20px;
+  }
+  
+  .replay-board {
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  .replay-controls button {
+    margin: 5px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .replay-controls button:hover {
+    background-color: #0056b3;
+  }
+ 

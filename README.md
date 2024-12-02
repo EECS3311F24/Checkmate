@@ -1,6 +1,6 @@
-# ![Checkmate icon](/src/main/resources/static/images/favicon.png) Checkmate 
- 
-Checkmate is a website designed and focused on the beginner and casual players of chess. Checkmate wants players to learn in a friendly environment and not feel frustrated or intimidated by the more competitive sides of chess. Checkmate wants players to have fun playing the game of chess!
+ # ![Checkmate icon](/src/main/resources/static/images/favicon.png) Checkmate 
+  
+ Checkmate is a website designed and focused on the beginner and casual players of chess. Checkmate wants players to learn in a friendly environment and not feel frustrated or intimidated by the more competitive sides of chess. Checkmate wants players to have fun playing the game of chess!
 
  # Features
  
@@ -13,6 +13,10 @@ Checkmate is a website designed and focused on the beginner and casual players o
   * Themes and Local Customization
 
   * Custom Games
+
+  * Game History/Replay
+
+  * Lobby Chat
 
 
 ## Guest Play
@@ -38,24 +42,40 @@ Checkmate is a website designed and focused on the beginner and casual players o
 
 ## Themes and Local Customization
 <p align="center"> 
-
- ![Themes](https://github.com/user-attachments/assets/84d401a4-d79c-489b-8e97-7c0f38b6b88e)
+ 
+ ![Themes](https://github.com/user-attachments/assets/48090c0a-8ab3-41ad-b45d-123731c7b18a)
 
 </p>
 
 ## Custom Games
 <p align="center"> 
+ 
+ ![Custom Games](https://github.com/user-attachments/assets/33e9768d-6536-424d-ac60-821dde13563f)
 
- ![CustomGames](https://github.com/user-attachments/assets/46a3bf97-eeef-4f62-9993-1dd89997e4ed)
  </p>
 
+## Game History/Replay
+<p align ="center">
+
+![Game History](https://github.com/user-attachments/assets/947eca3a-cedf-4c44-aaf9-5e758635900b)
+
+</p>
+
+## Lobby Chat
+<p align ="center">
+ 
+![Lobby Chat](https://github.com/user-attachments/assets/71972af2-ab12-435f-abcd-4179d83459a4)
+
+</p>
 # Software Architecture 
 
 <p align="center"> 
  
-![System](https://github.com/user-attachments/assets/483849bd-377b-4b8a-a201-d41c899378c8)
+![System](https://github.com/user-attachments/assets/bc32b8d8-2426-4cc0-8b7a-f7c6a0eef67a)
 
 </p>
+
+
 
 ## Installation
 No installation required to use Checkmate. Users may create an account or play as a guest. Players can use any browser to join and play! 

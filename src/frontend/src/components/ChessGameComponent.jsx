@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { startGuestGame, move, getBoard, deleteBoard } from '../services/ChessService';
+import { startGuestGame, move, getBoard, deleteBoard, getAllBoards } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
+import HistoryReplayComponent from './HistoryReplayComponent';
 import { useTheme } from './ThemeProvider';
 import './chess.css';
+import './activeChessboards.css'; // Create a new CSS file for styling the active boards
+import ChatBox from './ChatBox';
 
 const ChessGame = () => {
   const { language } = useLanguage();
   const { theme } = useTheme();
-  const [ mode, setMode ] = useState('S');
+  const [mode, setMode] = useState('S');
   const [isTimerMode, setIsTimerMode] = useState(false);
   const [isCustomMode, setIsCustomMode] = useState(false);
   const [timeLimit, setTimeLimit] = useState(300);
@@ -18,8 +21,15 @@ const ChessGame = () => {
     BLACK: 300
   });
 
+    // Fetch all active chessboards
+    const { data: activeChessboards, refetch: refetchActiveBoards } = useQuery(
+      'activeChessBoards',
+      getAllBoards,
+      { refetchInterval: 5000 } // Update every 5 seconds
+    );
+
   const fetchChessBoard = async () => {
-    if (gameState !== null && !gameState.isGameStarted) return;
+    if (gameState !== null && (!gameState.isGameStarted || gameState.isGameOver)) return;
     const res = await getBoard(gameState.id);
     updateBoard(res?.data);
     return res?.data;
@@ -54,8 +64,10 @@ const ChessGame = () => {
     chess: null,
     board: initializeBoard(),
     isGameStarted: false,
+    isGameOver: false,
+    winner: null,
+    gameHistory: [],
     selectedPiece: null,
-    possibleMoves: [],
     error: null,
     currentPlayer: 'WHITE',
     capturedPieces: {
@@ -102,6 +114,43 @@ const ChessGame = () => {
     return board;
   }
 
+   // Join an existing chessboard
+const joinChessboard = async (boardId) => {
+  try {
+    // Fetch the board data by its ID
+    const response = await getBoard(boardId);
+    const data = response?.data;
+
+    // Set the game state to join the selected chessboard
+    setGameState(prev => ({
+      ...prev,
+      id: boardId, // Update gameState.id with the selected board ID
+      chess: data.chess,
+      board: convertBoard(data.chess.chessBoard.board),
+      isGameStarted: true,
+      currentPlayer: convertColor(data.chess.whosTurn.playerColor),
+      isGameOver: data.chess.gameOver,
+      winner: data.chess.gameOver ? convertColor(data.chess.winner.playerColor) : null,
+      error: null,
+      capturedPieces: convertCapturedPieces(data.chess.chessBoard.capturedPieces) // Update captured pieces if available
+    }));
+
+    // If the timer mode is enabled, set the initial time limits
+    if (isTimerMode) {
+      setPlayerTimes({
+        WHITE: timeLimit,
+        BLACK: timeLimit
+      });
+    }
+  } catch (error) {
+    console.error('Error joining the chessboard:', error);
+    setGameState(prev => ({
+      ...prev,
+      error: "Failed to join board. Please try again."
+    }));
+  }
+};
+
   function convertBoard(board) {
     const b = Array(8).fill(null).map(() => Array(8).fill(null));
     board.forEach((row, rowIndex) => (
@@ -118,7 +167,7 @@ const ChessGame = () => {
   const [isFirstMoveMade, setIsFirstMoveMade] = useState(false);
   useEffect(() => {
     let interval;
-    if (gameState.isGameStarted && isTimerMode && isFirstMoveMade) {
+    if (gameState.isGameStarted && isTimerMode && isFirstMoveMade && !gameState.isGameOver) {
       interval = setInterval(() => {
         setPlayerTimes(prev => ({
           ...prev,
@@ -127,7 +176,7 @@ const ChessGame = () => {
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [gameState.isGameStarted, isTimerMode, gameState.currentPlayer, isFirstMoveMade]);
+  }, [gameState.isGameStarted, isTimerMode, gameState.currentPlayer, isFirstMoveMade, gameState.isGameOver]);
 
   useEffect(() => {
     if (isTimerMode && playerTimes[gameState.currentPlayer] === 0) {
@@ -182,7 +231,10 @@ const ChessGame = () => {
         ...prev,
         chess: data.chess,
         board: convertBoard(data.chess.chessBoard.board),
-        currentPlayer: convertColor(data.chess.whosTurn.playerColor)
+        currentPlayer: convertColor(data.chess.whosTurn.playerColor),
+        isGameOver: data.chess.gameOver,
+        winner: data.chess.gameOver ? convertColor(data.chess.winner.playerColor) : null,
+        gameHistory: data.chess.gameHistory,
         //capturedPieces: convertCapturedPieces(response.data.chess.chessBoard.capturedPieces)
       }));
     }
@@ -214,8 +266,9 @@ const ChessGame = () => {
       chess: null,
       board: initializeBoard(),
       isGameStarted: false,
+      isGameOver: false,
+      winner: null,
       selectedPiece: null,
-      possibleMoves: [],
       error: null,
       currentPlayer: 'WHITE',
       capturedPieces: {
@@ -258,7 +311,7 @@ const ChessGame = () => {
 
   async function handleSquareClick(row, col) {
     // TODO start game when there are two players, eg id1 and id2 are not null
-    if (!gameState.isGameStarted) return;
+    if (!(gameState.isGameStarted && !gameState.isGameOver)) return;
     const piece = gameState.board[row][col];
     if (piece && gameState.currentPlayer === piece.color) {
       setGameState(prev => ({
@@ -266,8 +319,7 @@ const ChessGame = () => {
         selectedPiece: { row, col }
       }));
     } else if (gameState.selectedPiece) {
-      // TODO request list of possible moves, rather then calling move each time and seeing if it works
-      var moves = { start: { row: gameState.selectedPiece.row, col: gameState.selectedPiece.col }, end: { row: row, col: col } };
+      const moves = { start: { row: gameState.selectedPiece.row, col: gameState.selectedPiece.col }, end: { row: row, col: col } };
       await move(gameState.id, moves)
         .then(response => {
           if (!isFirstMoveMade && gameState.currentPlayer === 'WHITE') {
@@ -320,13 +372,16 @@ const ChessGame = () => {
   };
 
 
-  const headerStyle = theme === 'dark' ? { color: '#ffffff' } : theme === 'solarized' ? { color: '#00008b' } : { color: '#000000' };
   const cardStyle = theme === 'dark' ? { backgroundColor: '#333333', color: '#ffffff' } : theme === 'solarized' ? { backgroundColor: '#f0f8ff', color: '#000000' } : { backgroundColor: '#ffffff', color: '#000000' };
 
   return (
     <div className="chess-container">
-      <div className="chess-header">
-        <h2>{getTranslation("ChessGameComponentChessGame", language)}</h2>
+      <div className="chess-header style={cardStyle}">
+      <h2>{getTranslation("ChessGameComponentChessGame", language)}
+          {gameState.isGameStarted && gameState.id && (
+            <span> - Lobby ID: {gameState.id}</span>
+          )}
+        </h2>
       </div>
       <div className="chess-content" style={cardStyle}>
         {gameState.error && (
@@ -394,6 +449,9 @@ const ChessGame = () => {
               {getTranslation("ChessGameComponentCurrentPlayer", language)}
               {(gameState.currentPlayer === 'WHITE' ? getTranslation("ChessGameComponentWhite", language)
                 : getTranslation("ChessGameComponentBlack", language))}
+              {gameState.isGameOver && <div className="chess-status-banner">
+                {gameState.winner + " is the winner!"}
+              </div>}
             </div>
 
             {isTimerMode && (
@@ -456,9 +514,35 @@ const ChessGame = () => {
                 ))
               ))}
             </div>
-          </div>
+          </div>   
         )}
       </div>
+      { gameState.isGameStarted && <ChatBox boardId={gameState.id} /> }
+      {gameState.isGameStarted &&<div className="history-replay-section">
+        <HistoryReplayComponent gameHistory={gameState.gameHistory} boardId={gameState.id} />
+      </div>}
+      {/* Display list of all active chessboards */}
+      <div className="active-chessboards" style={cardStyle}>
+          <h3>Active Chessboards</h3>
+          <div className="chessboard-list">
+            {activeChessboards && activeChessboards.length > 0 ? (
+              activeChessboards.map((board, index) => (
+                <div
+                  key={index}
+                  className="chessboard-card" style={cardStyle}
+                  onClick={() => joinChessboard(board.id)}
+                  disabled={gameState.id === board.id} // Disable button if already joined
+                >
+                  <h4>Board ID: {board.id}</h4>
+                  <p>Status: {board.isGameOver ? 'Game Over' : 'In Progress'}</p>
+                  <button className="view-board-button">{gameState.id === board.id ? 'Currently Joined' : 'Join Board'}</button>
+                </div>
+              ))
+            ) : (
+              <p>No active chessboards at the moment.</p>
+            )}
+          </div>
+        </div>
     </div>
   );
 };

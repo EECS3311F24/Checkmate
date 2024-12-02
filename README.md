@@ -42,15 +42,16 @@
 
 ## Themes and Local Customization
 <p align="center"> 
-
- ![Themes](https://github.com/user-attachments/assets/84d401a4-d79c-489b-8e97-7c0f38b6b88e)
+ 
+ ![Themes](https://github.com/user-attachments/assets/48090c0a-8ab3-41ad-b45d-123731c7b18a)
 
 </p>
 
 ## Custom Games
 <p align="center"> 
+ 
+ ![Custom Games](https://github.com/user-attachments/assets/33e9768d-6536-424d-ac60-821dde13563f)
 
- ![CustomGames](https://github.com/user-attachments/assets/46a3bf97-eeef-4f62-9993-1dd89997e4ed)
  </p>
 
 ## Game History/Replay

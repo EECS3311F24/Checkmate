@@ -175,19 +175,6 @@ const ChessGame = () => {
     return null;
   }
 
-  function updateBoard(data) {
-    if (data) {
-      setGameState(prev => ({
-        ...prev,
-        chess: data.chess,
-        board: convertBoard(data.chess.chessBoard.board),
-        currentPlayer: convertColor(data.chess.whosTurn.playerColor),
-        isGameOver: data.chess.gameOver,
-        winner: data.chess.gameOver ? convertColor(data.chess.winner.playerColor) : null,
-        gameHistory: data.chess.gameHistory,
-      }));
-    }
-  }
 
   const handleTimeUp = () => {
     const winner = gameState.currentPlayer === 'WHITE' ? 'BLACK' : 'WHITE';
@@ -226,102 +213,127 @@ const ChessGame = () => {
     navigator(`/play/`);
   }
 
-  async function handleStartGame() {
-    try {
-      const response = await startGuestGame(isCustomMode ? mode : 'S');
-      setIsFirstMoveMade(false);
-      setGameState(prev => ({
-        ...prev,
-        id: response.data.id,
-        chess: response.data.chess,
-        board: convertBoard(response.data.chess.chessBoard.board),
-        isGameStarted: true,
-        error: null,
-        currentPlayer: convertColor(response.data.chess.whosTurn.playerColor),
-        gameHistory: [] // Clear history for a new game
-      }));
-      if (isTimerMode) {
-        setPlayerTimes({
-          WHITE: timeLimit,
-          BLACK: timeLimit
-        });
-      }
-    } catch (error) {
-      setGameState(prev => ({
-        ...prev,
-        error: "Failed to start game. Please try again."
-      }));
-    }
-  };
-
   async function handleSquareClick(row, col) {
+
+    // Ensure the game is started and is not over
     if (!(gameState.isGameStarted && !gameState.isGameOver)) return;
+
     const piece = gameState.board[row][col];
+
     if (piece && gameState.currentPlayer === piece.color) {
-      setGameState(prev => ({
-        ...prev,
-        selectedPiece: { row, col }
-      }));
+        // Select a piece to move
+        setGameState(prev => ({
+            ...prev,
+            selectedPiece: { row, col }
+        }));
     } else if (gameState.selectedPiece) {
-      const startRow = gameState.selectedPiece.row;
-      const startCol = gameState.selectedPiece.col;
+        const startRow = gameState.selectedPiece.row;
+        const startCol = gameState.selectedPiece.col;
 
-      const moves = { start: { row: startRow, col: startCol }, end: { row, col } };
-      await move(gameState.id, moves)
-        .then(response => {
-          if (!isFirstMoveMade && gameState.currentPlayer === 'WHITE') {
-            setIsFirstMoveMade(true);
-          }
+        // Define the move
+        const moves = { start: { row: startRow, col: startCol }, end: { row, col } };
 
-          const newBoard = convertBoard(response.data.chess.chessBoard.board);
-          const selectedPiece = gameState.board[startRow][startCol];
-          const targetPiece = gameState.board[row][col];
+        try {
+            const response = await move(gameState.id, moves);
 
-          // Update captured pieces if a piece is captured
-          if (targetPiece) {
-            const newCapturedPieces = {
-              ...gameState.capturedPieces,
-              [selectedPiece.color]: [
-                ...gameState.capturedPieces[selectedPiece.color],
-                targetPiece
-              ]
-            };
-            setGameState(prev => ({
-              ...prev,
-              capturedPieces: newCapturedPieces,
-              status: `${selectedPiece.color} captured ${targetPiece.color} ${targetPiece.type}`
-            }));
-          }
-
-          // Record move in game history
-          const moveDescription = `${selectedPiece.color} ${selectedPiece.type} moved from (${startRow}, ${startCol}) to (${row}, ${col})`;
-          const updatedGameHistory = [
-            ...gameState.gameHistory,
-            {
-              description: moveDescription,
-              boardState: newBoard // Save board state after each move
+            // Update first move state
+            if (!isFirstMoveMade && gameState.currentPlayer === 'WHITE') {
+                setIsFirstMoveMade(true);
             }
-          ];
 
-          // Update game state
-          setGameState(prev => ({
-            ...prev,
-            chess: response.data.chess,
-            board: newBoard,
-            selectedPiece: null,
-            currentPlayer: convertColor(response.data.chess.whosTurn.playerColor),
-            gameHistory: updatedGameHistory
-          }));
-        })
-        .catch(e => {
-          setGameState(prev => ({
-            ...prev,
-            selectedPiece: null,
-            status: null
-          }));
-        });
+            const newBoard = convertBoard(response.data.chess.chessBoard.board);
+            const selectedPiece = gameState.board[startRow][startCol];
+            const targetPiece = gameState.board[row][col];
+
+            // Update captured pieces if there's a capture
+            let newCapturedPieces = JSON.parse(JSON.stringify(gameState.capturedPieces)); // Deep copy to avoid reference issues
+            if (targetPiece) {
+                newCapturedPieces[selectedPiece.color] = [
+                    ...newCapturedPieces[selectedPiece.color],
+                    targetPiece
+                ];
+            }
+
+            // Record move in game history with a proper description
+            const moveDescription = `${selectedPiece.color} ${selectedPiece.type} moved from (${startRow}, ${startCol}) to (${row}, ${col})`;
+            const updatedGameHistory = [
+                ...gameState.gameHistory,
+                {
+                    description: moveDescription,
+                    boardState: JSON.parse(JSON.stringify(newBoard)) // Ensure deep copy of board state
+                }
+            ];
+
+            // Update game state
+            setGameState(prev => ({
+                ...prev,
+                chess: response.data.chess,
+                board: newBoard,
+                selectedPiece: null,
+                currentPlayer: convertColor(response.data.chess.whosTurn.playerColor),
+                capturedPieces: newCapturedPieces,
+                gameHistory: updatedGameHistory, // Ensure the new move is added to the existing history
+                status: targetPiece ? `${selectedPiece.color} captured ${targetPiece.color} ${targetPiece.type}` : null
+            }));
+        } catch (error) {
+            console.error("Failed to move piece:", error);
+            setGameState(prev => ({
+                ...prev,
+                selectedPiece: null,
+                status: "Failed to make the move. Please try again."
+            }));
+        }
     }
-  }
+}
+
+function updateBoard(data) {
+    if (data) {
+
+        setGameState(prev => ({
+            ...prev,
+            chess: data.chess,
+            board: convertBoard(data.chess.chessBoard.board),
+            currentPlayer: convertColor(data.chess.whosTurn.playerColor),
+            isGameOver: data.chess.gameOver,
+            winner: data.chess.gameOver ? convertColor(data.chess.winner.playerColor) : null,
+            gameHistory: prev.gameHistory, // Preserve gameHistory to avoid being reset
+        }));
+    }
+}
+
+async function handleStartGame() {
+    try {
+        const response = await startGuestGame(isCustomMode ? mode : 'S');
+        setIsFirstMoveMade(false);
+
+        setGameState(prev => ({
+            ...prev,
+            id: response.data.id,
+            chess: response.data.chess,
+            board: convertBoard(response.data.chess.chessBoard.board),
+            isGameStarted: true,
+            error: null,
+            currentPlayer: convertColor(response.data.chess.whosTurn.playerColor),
+            gameHistory: [], // Clear history for a new game
+        }));
+
+        if (isTimerMode) {
+            setPlayerTimes({
+                WHITE: timeLimit,
+                BLACK: timeLimit
+            });
+        }
+
+        console.log("Started new game. Game history reset.");
+    } catch (error) {
+        setGameState(prev => ({
+            ...prev,
+            error: "Failed to start game. Please try again."
+        }));
+    }
+}
+
+
 
   const headerStyle = theme === 'dark' ? { color: '#ffffff' } : theme === 'solarized' ? { color: '#00008b' } : { color: '#000000' };
   const cardStyle = theme === 'dark' ? { backgroundColor: '#333333', color: '#ffffff' } : theme === 'solarized' ? { backgroundColor: '#f0f8ff', color: '#000000' } : { backgroundColor: '#ffffff', color: '#000000' };

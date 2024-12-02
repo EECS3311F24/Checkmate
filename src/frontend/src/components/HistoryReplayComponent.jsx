@@ -26,7 +26,7 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
     return () => clearInterval(replayInterval);
   }, [isPlaying, selectedGame]);
 
-  const handleSelectGame = (game, index) => {
+  const handleSelectGame = (game) => {
     if (game && game.boardStates) {
       setSelectedGame(game);
       setReplayIndex(0);
@@ -47,7 +47,7 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
 
   const renderReplayBoard = () => {
     if (selectedGame?.boardStates) {
-      const currentBoard = selectedGame.boardStates[replayIndex];
+      const currentBoard = selectedGame.boardStates[replayIndex].boardState;
       return (
         <div className="chess-board">
           {currentBoard.map((row, rowIndex) =>
@@ -83,10 +83,10 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
             <div
               key={index}
               className={`game-item ${selectedGame === game ? 'selected' : ''}`}
-              onClick={() => handleSelectGame(game, index)}
+              onClick={() => handleSelectGame(game)}
             >
-              <p><strong>Board Id:</strong> {boardId}</p>
-              <p><strong>Move:</strong> {index}</p>
+              <p><strong>Game:</strong> {`Board ID: ${boardId.slice(0, 5)}...${boardId.slice(-3)}`}</p>
+              <p><strong>Move {index + 1}:</strong> {game.description}</p>
             </div>
           ))
         ) : (
@@ -98,13 +98,16 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
           <h3>Replay Game</h3>
           <div className="replay-board">{renderReplayBoard()}</div>
           <div className="replay-controls">
-            <button onClick={() => handleReplayControl('rewind')}>Rewind</button>
-            <button onClick={() => handleReplayControl('pause')}>Pause</button>
-            <button onClick={() => handleReplayControl('play')}>Play</button>
-            <button onClick={() => handleReplayControl('forward')}>Forward</button>
+            <button onClick={() => handleReplayControl('rewind')} disabled={replayIndex === 0}>Rewind</button>
+            <button onClick={() => handleReplayControl('pause')} disabled={!isPlaying}>Pause</button>
+            <button onClick={() => handleReplayControl('play')} disabled={isPlaying || replayIndex === selectedGame?.boardStates.length - 1}>Play</button>
+            <button onClick={() => handleReplayControl('forward')} disabled={replayIndex === selectedGame?.boardStates.length - 1}>Forward</button>
           </div>
           <p>
-            <strong>Move {replayIndex + 1} of {selectedGame.boardStates?.length}</strong>
+            <strong>Move {replayIndex + 1} of {selectedGame.boardStates?.length}</strong><br />
+            {selectedGame?.boardStates[replayIndex]?.description && (
+              <span><strong>Move Description:</strong> {selectedGame.boardStates[replayIndex].description}</span>
+            )}
           </p>
         </div>
       )}

@@ -19,6 +19,7 @@ const ChessGame = () => {
     WHITE: 300,
     BLACK: 300
   });
+
   const fetchChessBoard = async () => {
     if (gameState !== null && (!gameState.isGameStarted || gameState.isGameOver)) return;
     const res = await getBoard(gameState.id);
@@ -50,8 +51,6 @@ const ChessGame = () => {
 
   const [gameState, setGameState] = useState({
     id: null,
-    id1: null,
-    id2: null,
     chess: null,
     board: initializeBoard(),
     isGameStarted: false,
@@ -65,7 +64,7 @@ const ChessGame = () => {
       WHITE: [],
       BLACK: []
     },
-    status: null // New state for game status messages
+    status: null
   });
 
   // Initialize the board with starting positions
@@ -113,8 +112,8 @@ const ChessGame = () => {
           var p = convertPiece(piece)
           b[rowIndex][colIndex] = p;
         }
-      }
-      )))
+      })
+    ));
     return b;
   }
 
@@ -141,12 +140,9 @@ const ChessGame = () => {
   function convertCapturedPieces(captured) {
     var white = [];
     var black = [];
-    // TODO piece is somehow null sometimes
     captured.forEach(piece => {
-      console.log(piece);
       if (piece !== null && piece.chessPiece !== null) {
         var p = convertPiece(piece);
-        console.log(p);
         if (p.color === 'BLACK') black.push(p);
         if (p.color === 'WHITE') white.push(p);
       }
@@ -179,27 +175,10 @@ const ChessGame = () => {
     return null;
   }
 
-  function updateBoard(data) {
-    if (data) {
-      setGameState(prev => ({
-        ...prev,
-        chess: data.chess,
-        board: convertBoard(data.chess.chessBoard.board),
-        currentPlayer: convertColor(data.chess.whosTurn.playerColor),
-        isGameOver: data.chess.gameOver,
-        winner: data.chess.gameOver ? convertColor(data.chess.winner.playerColor) : null,
-        gameHistory: data.chess.gameHistory,
-        //capturedPieces: convertCapturedPieces(response.data.chess.chessBoard.capturedPieces)
-      }));
-    }
-  }
 
-  const [gameStatus, setGameStatus] = useState(null);
   const handleTimeUp = () => {
     const winner = gameState.currentPlayer === 'WHITE' ? 'BLACK' : 'WHITE';
     const statusMessage = `Game Over - ${winner} wins! ${gameState.currentPlayer} ran out of time.`;
-    console.log(statusMessage); // Log to console
-    setGameStatus(statusMessage);
     setGameState(prev => ({
       ...prev,
       status: statusMessage,
@@ -210,13 +189,13 @@ const ChessGame = () => {
   const navigator = useNavigate();
   async function quitGame(id) {
     try {
-      const response = await deleteBoard(id);
-    } catch (error) { console.error(error) }
+      await deleteBoard(id);
+    } catch (error) {
+      console.error(error);
+    }
     setGameState(prev => ({
       ...prev,
       id: null,
-      id1: null,
-      id2: null,
       chess: null,
       board: initializeBoard(),
       isGameStarted: false,
@@ -234,96 +213,126 @@ const ChessGame = () => {
     navigator(`/play/`);
   }
 
-  async function handleStartGame() {
-    try {
-      const response = await startGuestGame(isCustomMode ? mode : 'S');
-      setIsFirstMoveMade(false); // Reset first move state
-      setGameState(prev => ({
-        ...prev,
-        id: response.data.id,
-        id1: response.data.id1,
-        id2: response.data.id2,
-        chess: response.data.chess,
-        board: convertBoard(response.data.chess.chessBoard.board),
-        isGameStarted: true,
-        error: null,
-        currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
-      }));
-      if (isTimerMode) {
-        setPlayerTimes({
-          WHITE: timeLimit,
-          BLACK: timeLimit
-        });
-      }
-    } catch (error) {
-      setGameState(prev => ({
-        ...prev,
-        error: "Failed to start game. Please try again."
-      }));
-    }
-  };
-
   async function handleSquareClick(row, col) {
-    // TODO start game when there are two players, eg id1 and id2 are not null
+
+    // Ensure the game is started and is not over
     if (!(gameState.isGameStarted && !gameState.isGameOver)) return;
+
     const piece = gameState.board[row][col];
+
     if (piece && gameState.currentPlayer === piece.color) {
-      setGameState(prev => ({
-        ...prev,
-        selectedPiece: { row, col }
-      }));
+        // Select a piece to move
+        setGameState(prev => ({
+            ...prev,
+            selectedPiece: { row, col }
+        }));
     } else if (gameState.selectedPiece) {
-      const moves = { start: { row: gameState.selectedPiece.row, col: gameState.selectedPiece.col }, end: { row: row, col: col } };
-      await move(gameState.id, moves)
-        .then(response => {
-          if (!isFirstMoveMade && gameState.currentPlayer === 'WHITE') {
-            setIsFirstMoveMade(true);
-          }
-          const newBoard = convertBoard(response.data.chess.chessBoard.board);
-          const selectedPiece = gameState.board[gameState.selectedPiece.row][gameState.selectedPiece.col];
-          const targetPiece = gameState.board[row][col];
+        const startRow = gameState.selectedPiece.row;
+        const startCol = gameState.selectedPiece.col;
 
-          // If there's a piece at the target location, add it to captured pieces
-          if (targetPiece) {
-            const newCapturedPieces = {
-              ...gameState.capturedPieces,
-              [selectedPiece.color]: [
-                ...gameState.capturedPieces[selectedPiece.color],
-                targetPiece
-              ]
-            };
+        // Define the move
+        const moves = { start: { row: startRow, col: startCol }, end: { row, col } };
+
+        try {
+            const response = await move(gameState.id, moves);
+
+            // Update first move state
+            if (!isFirstMoveMade && gameState.currentPlayer === 'WHITE') {
+                setIsFirstMoveMade(true);
+            }
+
+            const newBoard = convertBoard(response.data.chess.chessBoard.board);
+            const selectedPiece = gameState.board[startRow][startCol];
+            const targetPiece = gameState.board[row][col];
+
+            // Update captured pieces if there's a capture
+            let newCapturedPieces = JSON.parse(JSON.stringify(gameState.capturedPieces)); // Deep copy to avoid reference issues
+            if (targetPiece) {
+                newCapturedPieces[selectedPiece.color] = [
+                    ...newCapturedPieces[selectedPiece.color],
+                    targetPiece
+                ];
+            }
+
+            // Record move in game history with a proper description
+            const moveDescription = `${selectedPiece.color} ${selectedPiece.type} moved from (${startRow}, ${startCol}) to (${row}, ${col})`;
+            const updatedGameHistory = [
+                ...gameState.gameHistory,
+                {
+                    description: moveDescription,
+                    boardState: JSON.parse(JSON.stringify(newBoard)) // Ensure deep copy of board state
+                }
+            ];
+
+            // Update game state
             setGameState(prev => ({
-              ...prev,
-              capturedPieces: newCapturedPieces,
-              status: `${selectedPiece.color} captured ${targetPiece.color} ${targetPiece.type}`
+                ...prev,
+                chess: response.data.chess,
+                board: newBoard,
+                selectedPiece: null,
+                currentPlayer: convertColor(response.data.chess.whosTurn.playerColor),
+                capturedPieces: newCapturedPieces,
+                gameHistory: updatedGameHistory, // Ensure the new move is added to the existing history
+                status: targetPiece ? `${selectedPiece.color} captured ${targetPiece.color} ${targetPiece.type}` : null
             }));
-          }
-          newBoard[gameState.selectedPiece.row][gameState.selectedPiece.col] = null;
-          newBoard[row][col] = selectedPiece;
+        } catch (error) {
+            console.error("Failed to move piece:", error);
+            setGameState(prev => ({
+                ...prev,
+                selectedPiece: null,
+                status: "Failed to make the move. Please try again."
+            }));
+        }
+    }
+}
 
-          setGameState(prev => ({
+function updateBoard(data) {
+    if (data) {
+
+        setGameState(prev => ({
             ...prev,
+            chess: data.chess,
+            board: convertBoard(data.chess.chessBoard.board),
+            currentPlayer: convertColor(data.chess.whosTurn.playerColor),
+            isGameOver: data.chess.gameOver,
+            winner: data.chess.gameOver ? convertColor(data.chess.winner.playerColor) : null,
+            gameHistory: prev.gameHistory, // Preserve gameHistory to avoid being reset
+        }));
+    }
+}
+
+async function handleStartGame() {
+    try {
+        const response = await startGuestGame(isCustomMode ? mode : 'S');
+        setIsFirstMoveMade(false);
+
+        setGameState(prev => ({
+            ...prev,
+            id: response.data.id,
             chess: response.data.chess,
-            board: newBoard,
-            selectedPiece: null,
-            currentPlayer: convertColor(response.data.chess.whosTurn.playerColor)
-          }));
-        })
-        .catch(e => {
-          setGameState(prev => ({
+            board: convertBoard(response.data.chess.chessBoard.board),
+            isGameStarted: true,
+            error: null,
+            currentPlayer: convertColor(response.data.chess.whosTurn.playerColor),
+            gameHistory: [], // Clear history for a new game
+        }));
+
+        if (isTimerMode) {
+            setPlayerTimes({
+                WHITE: timeLimit,
+                BLACK: timeLimit
+            });
+        }
+
+        console.log("Started new game. Game history reset.");
+    } catch (error) {
+        setGameState(prev => ({
             ...prev,
-            selectedPiece: null,
-            status: null
-          }));
-        })
+            error: "Failed to start game. Please try again."
+        }));
     }
-    else if (piece && piece.color === gameState.currentPlayer) {
-      setGameState(prev => ({
-        ...prev,
-        selectedPiece: { row, col }
-      }));
-    }
-  };
+}
+
 
 
   const headerStyle = theme === 'dark' ? { color: '#ffffff' } : theme === 'solarized' ? { color: '#00008b' } : { color: '#000000' };
@@ -340,51 +349,32 @@ const ChessGame = () => {
             {gameState.error}
           </div>
         )}
-        {gameStatus && (
+        {gameState.status && (
           <div className="game-status-message">
-            {gameStatus}
+            {gameState.status}
           </div>
         )}
         {!gameState.isGameStarted ? (
           <div className="chess-controls welcome-screen">
-
-            <button
-              className="chess-button"
-              onClick={handleStartGame}
-            >
+            <button className="chess-button" onClick={handleStartGame}>
               {getTranslation("ChessGameComponentPlayAsGuest", language)}
             </button>
-            <button
-              className="chess-button"
-              onClick={() => setIsTimerMode(!isTimerMode)}
-            >
+            <button className="chess-button" onClick={() => setIsTimerMode(!isTimerMode)}>
               {isTimerMode ? 'Disable Timer' : 'Enable Timer'}
             </button>
-            <button
-              className="chess-button"
-              onClick={() => setIsCustomMode(!isCustomMode)}
-            >
+            <button className="chess-button" onClick={() => setIsCustomMode(!isCustomMode)}>
               {isCustomMode ? 'Disable Custom' : 'Enable Custom'}
             </button>
-
             {isTimerMode && (
-              <select
-                className="time-select"
-                value={timeLimit}
-                onChange={(e) => setTimeLimit(parseInt(e.target.value))}
-              >
-                <option value={60}>1 minutes</option>
+              <select className="time-select" value={timeLimit} onChange={(e) => setTimeLimit(parseInt(e.target.value))}>
+                <option value={60}>1 minute</option>
                 <option value={300}>5 minutes</option>
                 <option value={600}>10 minutes</option>
                 <option value={900}>15 minutes</option>
               </select>
             )}
             {isCustomMode && (
-              <select
-                className="time-select"
-                value={mode}
-                onChange={(e) => setMode(e.target.value)}
-              >
+              <select className="time-select" value={mode} onChange={(e) => setMode(e.target.value)}>
                 <option value={'S'}>Standard</option>
                 <option value={'P'}>Pawns Game</option>
                 <option value={'N'}>No Pawns</option>
@@ -394,15 +384,20 @@ const ChessGame = () => {
         ) : (
           <div>
             <div className="container text-center">
-              {<button className='btn btn-danger' onClick={() => quitGame(gameState.id)}>{getTranslation("ChessGameComponentQuit", language)}</button>}
+              <button className='btn btn-danger' onClick={() => quitGame(gameState.id)}>
+                {getTranslation("ChessGameComponentQuit", language)}
+              </button>
             </div>
             <div className="chess-current-player" style={cardStyle}>
-              {getTranslation("ChessGameComponentCurrentPlayer", language)}
-              {(gameState.currentPlayer === 'WHITE' ? getTranslation("ChessGameComponentWhite", language)
-                : getTranslation("ChessGameComponentBlack", language))}
-              {gameState.isGameOver && <div className="chess-status-banner">
-                {gameState.winner + " is the winner!"}
-              </div>}
+              {getTranslation("ChessGameComponentCurrentPlayer", language)}{' '}
+              {gameState.currentPlayer === 'WHITE'
+                ? getTranslation("ChessGameComponentWhite", language)
+                : getTranslation("ChessGameComponentBlack", language)}
+              {gameState.isGameOver && (
+                <div className="chess-status-banner">
+                  {gameState.winner + " is the winner!"}
+                </div>
+              )}
             </div>
 
             {isTimerMode && (
@@ -416,8 +411,7 @@ const ChessGame = () => {
               </div>
             )}
 
-            {/*Captured pieces display*/}
-
+            {/* Captured pieces display */}
             <div className="chess-captured-pieces" style={cardStyle}>
               <div className="captured-white">
                 {gameState.capturedPieces.WHITE.map((piece, index) => (
@@ -442,7 +436,7 @@ const ChessGame = () => {
             </div>
 
             <div className="chess-board">
-              {gameState.board.map((row, rowIndex) => (
+              {gameState.board.map((row, rowIndex) =>
                 row.map((piece, colIndex) => (
                   <div
                     key={`${rowIndex}-${colIndex}`}
@@ -451,7 +445,9 @@ const ChessGame = () => {
                           chess-square
                           ${(rowIndex + colIndex) % 2 === 0 ? 'light' : 'dark'}
                           ${gameState.selectedPiece?.row === rowIndex &&
-                        gameState.selectedPiece?.col === colIndex ? 'selected' : ''}
+                            gameState.selectedPiece?.col === colIndex
+                            ? 'selected'
+                            : ''}
                         `}
                   >
                     {piece && (
@@ -463,14 +459,16 @@ const ChessGame = () => {
                     )}
                   </div>
                 ))
-              ))}
+              )}
             </div>
           </div>
         )}
       </div>
-      {gameState.isGameStarted &&<div className="history-replay-section">
-        <HistoryReplayComponent gameHistory={gameState.gameHistory} boardId={gameState.id} />
-      </div>}
+      {gameState.isGameStarted && (
+        <div className="history-replay-section">
+          <HistoryReplayComponent gameHistory={gameState.gameHistory} boardId={gameState.id} />
+        </div>
+      )}
       {gameState.isGameStarted && <ChatBox boardId={gameState.id} />}
     </div>
   );

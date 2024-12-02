@@ -42,6 +42,23 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
     if (action === 'forward')
       setReplayIndex((prev) => Math.min(prev + 1, gameHistory.length - 1));
   };
+  const renderRecentMove = () => {
+    if (gameHistory && gameHistory.length > 0) {
+      return (
+        <div className="move-list">
+          <h3>Move History</h3>
+          <ul>
+            {gameHistory.map((move, index) => (
+              <li key={index}>
+                Move {index + 1}: ({move.start.row},{move.start.col}) → ({move.end.row},{move.end.col})
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+    return <p>No moves recorded yet.</p>;
+  };
 
   const cardStyle = theme === 'dark' ? { backgroundColor: '#333333', color: '#ffffff' } : theme === 'solarized' ? { backgroundColor: '#f0f8ff', color: '#000000' } : { backgroundColor: '#ffffff', color: '#000000' };
   return (
@@ -73,6 +90,7 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
                   <strong>Move {replayIndex}:</strong>{' '}
                 </p>
               </div>
+              {renderRecentMove()}
               <div className="replay-controls">
                 <button onClick={() => handleReplayControl('rewind')}>Rewind</button>
                 <button onClick={() => handleReplayControl('pause')}>Pause</button>

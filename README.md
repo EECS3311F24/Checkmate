@@ -56,19 +56,21 @@
 ## Game History/Replay
 <p align ="center">
 
-![Game History](https://github.com/user-attachments/assets/4d36d5b3-f8a2-4e8d-92a0-992bd8647623)
+![Game History](https://github.com/user-attachments/assets/947eca3a-cedf-4c44-aaf9-5e758635900b)
+
 </p>
 
 ## Lobby Chat
 <p align ="center">
+ 
+![Lobby Chat](https://github.com/user-attachments/assets/71972af2-ab12-435f-abcd-4179d83459a4)
 
-![Lobby Chat](https://github.com/user-attachments/assets/9fbf2e92-0d67-4345-9a3e-878c0d24a964)
 </p>
 # Software Architecture 
 
 <p align="center"> 
  
-![System](https://github.com/user-attachments/assets/483849bd-377b-4b8a-a201-d41c899378c8)
+![System](https://github.com/user-attachments/assets/bc32b8d8-2426-4cc0-8b7a-f7c6a0eef67a)
 
 </p>
 

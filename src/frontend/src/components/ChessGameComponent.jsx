@@ -381,28 +381,6 @@ const joinChessboard = async (boardId) => {
         </h2>
       </div>
       <div className="chess-content" style={cardStyle}>
-        {/* Display list of all active chessboards */}
-        <div className="active-chessboards" style={cardStyle}>
-          <h3>Active Chessboards</h3>
-          <div className="chessboard-list">
-            {activeChessboards && activeChessboards.length > 0 ? (
-              activeChessboards.map((board, index) => (
-                <div 
-                  key={index} 
-                  className="chessboard-card" style={cardStyle} 
-                  onClick={() => joinChessboard(board.id)}
-                  disabled={gameState.id === board.id} // Disable button if already joined
-                >
-                  <h4>Board ID: {board.id}</h4>
-                  <p>Status: {board.isGameOver ? 'Game Over' : 'In Progress'}</p>
-                  <button className="view-board-button">{gameState.id === board.id ? 'Currently Joined' : 'Join Board'}</button>
-                </div>
-              ))
-            ) : (
-              <p>No active chessboards at the moment.</p>
-            )}
-          </div>
-        </div>
         {gameState.error && (
           <div className="chess-error">
             {gameState.error}
@@ -537,6 +515,28 @@ const joinChessboard = async (boardId) => {
         )}
       </div>
       { gameState.isGameStarted && <ChatBox boardId={gameState.id} /> }
+      {/* Display list of all active chessboards */}
+      <div className="active-chessboards" style={cardStyle}>
+          <h3>Active Chessboards</h3>
+          <div className="chessboard-list">
+            {activeChessboards && activeChessboards.length > 0 ? (
+              activeChessboards.map((board, index) => (
+                <div 
+                  key={index} 
+                  className="chessboard-card" style={cardStyle} 
+                  onClick={() => joinChessboard(board.id)}
+                  disabled={gameState.id === board.id} // Disable button if already joined
+                >
+                  <h4>Board ID: {board.id}</h4>
+                  <p>Status: {board.isGameOver ? 'Game Over' : 'In Progress'}</p>
+                  <button className="view-board-button">{gameState.id === board.id ? 'Currently Joined' : 'Join Board'}</button>
+                </div>
+              ))
+            ) : (
+              <p>No active chessboards at the moment.</p>
+            )}
+          </div>
+        </div>
     </div>
   );
 };

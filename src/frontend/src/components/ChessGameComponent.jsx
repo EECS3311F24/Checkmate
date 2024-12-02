@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { startGuestGame, move, getBoard, deleteBoard } from '../services/ChessService';
+import { startGuestGame, move, getBoard, deleteBoard, getAllBoards } from '../services/ChessService';
 import { getTranslation, useLanguage } from './LanguageProvider';
 import { useTheme } from './ThemeProvider';
 import './chess.css';
+import './activeChessboards.css'; // Create a new CSS file for styling the active boards
 import ChatBox from './ChatBox';
 
 const ChessGame = () => {
@@ -18,6 +19,13 @@ const ChessGame = () => {
     WHITE: 300,
     BLACK: 300
   });
+
+    // Fetch all active chessboards
+    const { data: activeChessboards, refetch: refetchActiveBoards } = useQuery(
+      'activeChessBoards',
+      getAllBoards,
+      { refetchInterval: 5000 } // Update every 5 seconds
+    );
 
   const fetchChessBoard = async () => {
     if (gameState !== null && (!gameState.isGameStarted || gameState.isGameOver)) return;
@@ -103,6 +111,43 @@ const ChessGame = () => {
     setupPieces();
     return board;
   }
+
+   // Join an existing chessboard
+const joinChessboard = async (boardId) => {
+  try {
+    // Fetch the board data by its ID
+    const response = await getBoard(boardId);
+    const data = response?.data;
+
+    // Set the game state to join the selected chessboard
+    setGameState(prev => ({
+      ...prev,
+      id: boardId, // Update gameState.id with the selected board ID
+      chess: data.chess,
+      board: convertBoard(data.chess.chessBoard.board),
+      isGameStarted: true,
+      currentPlayer: convertColor(data.chess.whosTurn.playerColor),
+      isGameOver: data.chess.gameOver,
+      winner: data.chess.gameOver ? convertColor(data.chess.winner.playerColor) : null,
+      error: null,
+      capturedPieces: convertCapturedPieces(data.chess.chessBoard.capturedPieces) // Update captured pieces if available
+    }));
+
+    // If the timer mode is enabled, set the initial time limits
+    if (isTimerMode) {
+      setPlayerTimes({
+        WHITE: timeLimit,
+        BLACK: timeLimit
+      });
+    }
+  } catch (error) {
+    console.error('Error joining the chessboard:', error);
+    setGameState(prev => ({
+      ...prev,
+      error: "Failed to join board. Please try again."
+    }));
+  }
+};
 
   function convertBoard(board) {
     const b = Array(8).fill(null).map(() => Array(8).fill(null));
@@ -324,13 +369,16 @@ const ChessGame = () => {
   };
 
 
-  const headerStyle = theme === 'dark' ? { color: '#ffffff' } : theme === 'solarized' ? { color: '#00008b' } : { color: '#000000' };
   const cardStyle = theme === 'dark' ? { backgroundColor: '#333333', color: '#ffffff' } : theme === 'solarized' ? { backgroundColor: '#f0f8ff', color: '#000000' } : { backgroundColor: '#ffffff', color: '#000000' };
 
   return (
     <div className="chess-container">
-      <div className="chess-header">
-        <h2>{getTranslation("ChessGameComponentChessGame", language)}</h2>
+      <div className="chess-header style={cardStyle}">
+      <h2>{getTranslation("ChessGameComponentChessGame", language)}
+          {gameState.isGameStarted && gameState.id && (
+            <span> - Lobby ID: {gameState.id}</span>
+          )}
+        </h2>
       </div>
       <div className="chess-content" style={cardStyle}>
         {gameState.error && (
@@ -467,6 +515,28 @@ const ChessGame = () => {
         )}
       </div>
       { gameState.isGameStarted && <ChatBox boardId={gameState.id} /> }
+      {/* Display list of all active chessboards */}
+      <div className="active-chessboards" style={cardStyle}>
+          <h3>Active Chessboards</h3>
+          <div className="chessboard-list">
+            {activeChessboards && activeChessboards.length > 0 ? (
+              activeChessboards.map((board, index) => (
+                <div 
+                  key={index} 
+                  className="chessboard-card" style={cardStyle} 
+                  onClick={() => joinChessboard(board.id)}
+                  disabled={gameState.id === board.id} // Disable button if already joined
+                >
+                  <h4>Board ID: {board.id}</h4>
+                  <p>Status: {board.isGameOver ? 'Game Over' : 'In Progress'}</p>
+                  <button className="view-board-button">{gameState.id === board.id ? 'Currently Joined' : 'Join Board'}</button>
+                </div>
+              ))
+            ) : (
+              <p>No active chessboards at the moment.</p>
+            )}
+          </div>
+        </div>
     </div>
   );
 };

@@ -517,11 +517,10 @@ const joinChessboard = async (boardId) => {
           </div>   
         )}
       </div>
+      { gameState.isGameStarted && <ChatBox boardId={gameState.id} /> }
       {gameState.isGameStarted &&<div className="history-replay-section">
         <HistoryReplayComponent gameHistory={gameState.gameHistory} boardId={gameState.id} />
       </div>}
-      {gameState.isGameStarted && <ChatBox boardId={gameState.id} />}
-      { gameState.isGameStarted && <ChatBox boardId={gameState.id} /> }
       {/* Display list of all active chessboards */}
       <div className="active-chessboards" style={cardStyle}>
           <h3>Active Chessboards</h3>

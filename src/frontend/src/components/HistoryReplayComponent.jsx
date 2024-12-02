@@ -9,15 +9,12 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   // Replay logic
-  // TODO selectedGame.moves does not exist.
-  // TODO use the replayIndex to select which board in gameHistory
-  // TODO display that board at replayIndex but make it not like a real game just to view!
   useEffect(() => {
     let replayInterval;
     if (isPlaying && selectedGame) {
       replayInterval = setInterval(() => {
         setReplayIndex((prevIndex) => {
-          if (prevIndex < selectedGame.moves.length - 1) {
+          if (prevIndex < selectedGame.boardStates.length - 1) {
             return prevIndex + 1;
           } else {
             setIsPlaying(false);
@@ -40,24 +37,34 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
     if (action === 'pause') setIsPlaying(false);
     if (action === 'rewind') setReplayIndex((prev) => Math.max(prev - 1, 0));
     if (action === 'forward')
-      setReplayIndex((prev) => Math.min(prev + 1, gameHistory.length - 1));
+      setReplayIndex((prev) => Math.min(prev + 1, selectedGame.boardStates.length - 1));
   };
-  const renderRecentMove = () => {
-    if (gameHistory && gameHistory.length > 0) {
+
+  const renderReplayBoard = () => {
+    if (selectedGame && selectedGame.boardStates) {
+      const currentBoard = selectedGame.boardStates[replayIndex];
       return (
-        <div className="move-list">
-          <h3>Move History</h3>
-          <ul>
-            {gameHistory.map((move, index) => (
-              <li key={index}>
-                Move {index + 1}: ({move.start.row},{move.start.col}) → ({move.end.row},{move.end.col})
-              </li>
-            ))}
-          </ul>
+        <div className="chess-board">
+          {currentBoard.map((row, rowIndex) =>
+            row.map((piece, colIndex) => (
+              <div
+                key={`${rowIndex}-${colIndex}`}
+                className={`chess-square ${(rowIndex + colIndex) % 2 === 0 ? 'light' : 'dark'}`}
+              >
+                {piece && (
+                  <img
+                    src={pieceImages[piece.color][piece.type]}
+                    alt={`${piece.color} ${piece.type}`}
+                    className="chess-piece"
+                  />
+                )}
+              </div>
+            ))
+          )}
         </div>
       );
     }
-    return <p>No moves recorded yet.</p>;
+    return <p>No replay data available.</p>;
   };
 
   const cardStyle = theme === 'dark' ? { backgroundColor: '#333333', color: '#ffffff' } : theme === 'solarized' ? { backgroundColor: '#f0f8ff', color: '#000000' } : { backgroundColor: '#ffffff', color: '#000000' };
@@ -83,24 +90,16 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
       {selectedGame && (
         <div className="replay-section">
           <h3>Replay Game</h3>
-          {replayIndex >= 0 && replayIndex < gameHistory.length ? (
-            <>
-              <div className="replay-board">
-                <p>
-                  <strong>Move {replayIndex}:</strong>{' '}
-                </p>
-              </div>
-              {renderRecentMove()}
-              <div className="replay-controls">
-                <button onClick={() => handleReplayControl('rewind')}>Rewind</button>
-                <button onClick={() => handleReplayControl('pause')}>Pause</button>
-                <button onClick={() => handleReplayControl('play')}>Play</button>
-                <button onClick={() => handleReplayControl('forward')}>Forward</button>
-              </div>
-            </>
-          ) : (
-            <p>No moves available for this game.</p>
-          )}
+          <div className="replay-board">{renderReplayBoard()}</div>
+          <div className="replay-controls">
+            <button onClick={() => handleReplayControl('rewind')}>Rewind</button>
+            <button onClick={() => handleReplayControl('pause')}>Pause</button>
+            <button onClick={() => handleReplayControl('play')}>Play</button>
+            <button onClick={() => handleReplayControl('forward')}>Forward</button>
+          </div>
+          <p>
+            <strong>Move {replayIndex + 1} of {selectedGame.boardStates.length}</strong>
+          </p>
         </div>
       )}
     </div>

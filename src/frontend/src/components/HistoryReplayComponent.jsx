@@ -11,7 +11,7 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
   // Replay logic
   useEffect(() => {
     let replayInterval;
-    if (isPlaying && selectedGame) {
+    if (isPlaying && selectedGame?.boardStates) {
       replayInterval = setInterval(() => {
         setReplayIndex((prevIndex) => {
           if (prevIndex < selectedGame.boardStates.length - 1) {
@@ -27,12 +27,17 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
   }, [isPlaying, selectedGame]);
 
   const handleSelectGame = (game, index) => {
-    setSelectedGame(game);
-    setReplayIndex(index);
-    setIsPlaying(false);
+    if (game && game.boardStates) {
+      setSelectedGame(game);
+      setReplayIndex(0);
+      setIsPlaying(false);
+    } else {
+      console.error("Selected game does not contain boardStates.");
+    }
   };
 
   const handleReplayControl = (action) => {
+    if (!selectedGame?.boardStates) return;
     if (action === 'play') setIsPlaying(true);
     if (action === 'pause') setIsPlaying(false);
     if (action === 'rewind') setReplayIndex((prev) => Math.max(prev - 1, 0));
@@ -41,7 +46,7 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
   };
 
   const renderReplayBoard = () => {
-    if (selectedGame && selectedGame.boardStates) {
+    if (selectedGame?.boardStates) {
       const currentBoard = selectedGame.boardStates[replayIndex];
       return (
         <div className="chess-board">
@@ -68,6 +73,7 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
   };
 
   const cardStyle = theme === 'dark' ? { backgroundColor: '#333333', color: '#ffffff' } : theme === 'solarized' ? { backgroundColor: '#f0f8ff', color: '#000000' } : { backgroundColor: '#ffffff', color: '#000000' };
+  
   return (
     <div className="history-replay-container" style={cardStyle}>
       <h2>Game History</h2>
@@ -98,7 +104,7 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
             <button onClick={() => handleReplayControl('forward')}>Forward</button>
           </div>
           <p>
-            <strong>Move {replayIndex + 1} of {selectedGame.boardStates.length}</strong>
+            <strong>Move {replayIndex + 1} of {selectedGame.boardStates?.length}</strong>
           </p>
         </div>
       )}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from './ThemeProvider';
 import './historyReplay.css';
+import ChessBoard from './ChessBoardComponent';
 
 const HistoryReplayComponent = ({ gameHistory, boardId }) => {
   const { theme } = useTheme();
@@ -14,7 +15,7 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
     if (isPlaying && selectedGame) {
       replayInterval = setInterval(() => {
         setReplayIndex((prevIndex) => {
-          if (prevIndex < selectedGame.boardStates.length - 1) {
+          if (prevIndex < gameHistory.length - 1) {
             return prevIndex + 1;
           } else {
             setIsPlaying(false);
@@ -37,12 +38,12 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
     if (action === 'pause') setIsPlaying(false);
     if (action === 'rewind') setReplayIndex((prev) => Math.max(prev - 1, 0));
     if (action === 'forward')
-      setReplayIndex((prev) => Math.min(prev + 1, selectedGame.boardStates.length - 1));
+      setReplayIndex((prev) => Math.min(prev + 1, gameHistory.length - 1));
   };
 
   const renderReplayBoard = () => {
-    if (selectedGame && selectedGame.boardStates) {
-      const currentBoard = selectedGame.boardStates[replayIndex];
+    if (selectedGame) {
+      const currentBoard = gameHistory[replayIndex];
       return (
         <div className="chess-board">
           {currentBoard.map((row, rowIndex) =>
@@ -90,7 +91,7 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
       {selectedGame && (
         <div className="replay-section">
           <h3>Replay Game</h3>
-          <div className="replay-board">{renderReplayBoard()}</div>
+          <div className="replay-board">{<ChessBoard board={gameHistory.at(replayIndex)}/>}</div>
           <div className="replay-controls">
             <button onClick={() => handleReplayControl('rewind')}>Rewind</button>
             <button onClick={() => handleReplayControl('pause')}>Pause</button>
@@ -98,7 +99,7 @@ const HistoryReplayComponent = ({ gameHistory, boardId }) => {
             <button onClick={() => handleReplayControl('forward')}>Forward</button>
           </div>
           <p>
-            <strong>Move {replayIndex + 1} of {selectedGame.boardStates.length}</strong>
+            <strong>Move {replayIndex + 1} of {gameHistory.length}</strong>
           </p>
         </div>
       )}
